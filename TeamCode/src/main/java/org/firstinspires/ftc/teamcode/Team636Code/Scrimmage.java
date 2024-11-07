@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Scrimmage extends LinearOpMode{
     Servo Jamal;
     Servo Ethan;
+
     @Override
     public void runOpMode() throws InterruptedException {
         DcMotor rightBack = hardwareMap.get(DcMotor.class,"rightBack");
@@ -88,3 +89,4 @@ public class Scrimmage extends LinearOpMode{
         }
     }
 }
+

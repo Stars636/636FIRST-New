@@ -27,15 +27,15 @@ public class AutoTest1 extends LinearOpMode {
         // Define the trajectory for moving forward
         Trajectory forwardTrajectory = drive.trajectoryBuilder(startPose)
 
-                .forward(0.15)
+                .forward(0.01)
                 .build();
 
         Trajectory backTrajectory = drive.trajectoryBuilder(startPose)
-                .back(0.15)
+                .back(0.01)
                 .build();
 
         TrajectorySequence turntfAround = drive.trajectorySequenceBuilder(startPose)
-                .turn((Math.PI/36))
+                .turn((Math.PI/2))
                 .build();
 
         // Wait for the game to start
@@ -43,8 +43,9 @@ public class AutoTest1 extends LinearOpMode {
 
         // Follow each trajectory sequentially
         if (opModeIsActive()) {
-
+            drive.followTrajectory(forwardTrajectory);
             drive.followTrajectorySequence(turntfAround);
+            drive.followTrajectory(forwardTrajectory);
         }
     }
 }

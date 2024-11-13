@@ -31,8 +31,8 @@ public class Scrimmage extends LinearOpMode{
         clawRight = hardwareMap.get(Servo.class,"clawRight");
         double positionJamal = 0.1;
         double positionEthan = 0.05;
-        double pushPositionRight = 0.52; //1 is moving forward
-        double pushPositionLeft = 0.48; // 0 is moving forward
+        double pushPositionRight = 0.5; //1 is moving forward
+        double pushPositionLeft = 0.5; // 0 is moving forward
         double verticalClawPosition = 0;
 
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

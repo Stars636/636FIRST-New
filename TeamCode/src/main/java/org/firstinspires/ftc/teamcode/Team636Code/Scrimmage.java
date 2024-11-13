@@ -24,8 +24,8 @@ public class Scrimmage extends LinearOpMode{
         pushLeft = hardwareMap.get(Servo.class,"pushLeft");
         double positionJamal = 0.1;
         double positionEthan = 0.05;
-        double pushPositionRight = 0;
-        double pushPositionLeft = 1;
+        double pushPositionRight = 0.5; //1 is moving forward
+        double pushPositionLeft = 0.5; // 0 is moving forward
 
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,15 +59,15 @@ public class Scrimmage extends LinearOpMode{
                 positionEthan -= 0.01;
             }
             if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
-                pushPositionRight += 0.001;
-                pushPositionLeft -= 0.001;
+                pushPositionRight += 0.01;
+                pushPositionLeft -= 0.01;
                 changedR = true;
             } else if(gamepad1.right_trigger == 0) {
                 changedR = false;
             }
-            if (gamepad1.left_trigger != 0 && pushPositionLeft > 0 && !changedL) {
-                pushPositionRight -= 0.001;
-                pushPositionLeft += 0.001;
+            if (gamepad1.left_trigger != 0 && pushPositionRight > 0 && !changedL) {
+                pushPositionRight -= 0.01;
+                pushPositionLeft += 0.01;
                 changedL = true;
             } else if(gamepad1.left_trigger == 0) {
                 changedL = false;
@@ -85,8 +85,8 @@ public class Scrimmage extends LinearOpMode{
 
             rotatorJamal.setPosition(positionJamal);
             clawEthan.setPosition(positionEthan);
-            //pushLeft.setPosition(pushPositionLeft); we will test one servo at a time
-            //pushRight.setPosition(pushPositionRight);
+            pushLeft.setPosition(pushPositionLeft);
+            pushRight.setPosition(pushPositionRight);
 
             telemetry.addData("Jamal Position", rotatorJamal.getPosition());
             telemetry.addData("Ethan Position", clawEthan.getPosition());

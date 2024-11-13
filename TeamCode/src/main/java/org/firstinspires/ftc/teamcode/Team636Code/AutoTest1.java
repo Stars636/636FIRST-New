@@ -35,7 +35,7 @@ public class AutoTest1 extends LinearOpMode {
                 .build();
 
         TrajectorySequence turntfAround = drive.trajectorySequenceBuilder(startPose)
-                .turn((Math.PI/36))
+                .turn((Math.PI))
                 .build();
 
         // Wait for the game to start

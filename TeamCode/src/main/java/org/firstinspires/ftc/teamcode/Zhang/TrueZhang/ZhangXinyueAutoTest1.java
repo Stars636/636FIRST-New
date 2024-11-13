@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 // In your Autonomous OpMode
 @Autonomous
-public class AutoTest1 extends LinearOpMode {
+public class ZhangXinyueAutoTest1 extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the drive

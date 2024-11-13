@@ -12,20 +12,28 @@ public class Scrimmage extends LinearOpMode{
     Servo clawEthan;
     Servo pushRight;
     Servo pushLeft;
+
+    Servo clawLeft;
+
+    Servo clawRight;
     @Override
     public void runOpMode() throws InterruptedException {
         DcMotor rightBack = hardwareMap.get(DcMotor.class,"rightBack");
         DcMotor leftBack = hardwareMap.get(DcMotor.class,"leftBack");
         DcMotor rightFront = hardwareMap.get(DcMotor.class,"rightFront");
         DcMotor leftFront = hardwareMap.get(DcMotor.class,"leftFront");
+        DcMotor verticalSlide = hardwareMap.get(DcMotor.class,"verticalSlide");
         rotatorJamal = hardwareMap.get(Servo.class,"Servo1");
         clawEthan = hardwareMap.get(Servo.class,"Servo2");
         pushRight = hardwareMap.get(Servo.class,"pushRight");
         pushLeft = hardwareMap.get(Servo.class,"pushLeft");
+        clawLeft = hardwareMap.get(Servo.class,"clawLeft");
+        clawRight = hardwareMap.get(Servo.class,"clawRight");
         double positionJamal = 0.1;
         double positionEthan = 0.05;
-        double pushPositionRight = 0.5; //1 is moving forward
-        double pushPositionLeft = 0.5; // 0 is moving forward
+        double pushPositionRight = 0.52; //1 is moving forward
+        double pushPositionLeft = 0.48; // 0 is moving forward
+        double verticalClawPosition = 0;
 
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,6 +44,7 @@ public class Scrimmage extends LinearOpMode{
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
         boolean changedR = false;
         boolean changedL = false;
+        boolean changedClaw = false;
 
 
         waitForStart();
@@ -65,13 +74,14 @@ public class Scrimmage extends LinearOpMode{
             } else if(gamepad1.right_trigger == 0) {
                 changedR = false;
             }
-            if (gamepad1.left_trigger != 0 && pushPositionRight > 0 && !changedL) {
+            if (gamepad1.left_trigger != 0 && pushPositionRight > 0  && !changedL) {
                 pushPositionRight -= 0.01;
                 pushPositionLeft += 0.01;
                 changedL = true;
             } else if(gamepad1.left_trigger == 0) {
                 changedL = false;
             }
+
 
             double joystickX = -gamepad1.left_stick_x;
             double joystickY = gamepad1.left_stick_y;

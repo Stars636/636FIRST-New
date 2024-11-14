@@ -26,20 +26,20 @@ public class Encoder extends LinearOpMode {
             double worlds = 540; // constant we used to make sure the values or revolutions and angles make sense
 
             double position = charlie.getCurrentPosition();
-            double takahiro = position/worlds; //takahiro is revolutions
-            double angle = takahiro * 360;
+            double revolutions = position/worlds; //takahiro is revolutions
+            double angle = revolutions * 360;
             double angleNormalized = angle % 360;
 
             double diameter = 3.5; // In cm
             double circumference = Math.PI * diameter;
-            double distance = circumference * takahiro;
+            double distance = circumference * revolutions;
 
 
 
             telemetry.addData("Encoder Position", position);
             telemetry.addData("Encoder Angle", angle);
             telemetry.addData("Encoder Normal Angle", angleNormalized);
-            telemetry.addData("Encoder Revolution", takahiro);
+            telemetry.addData("Encoder Revolution", revolutions);
             telemetry.addData("Distance Traveled", distance);
             /*
 

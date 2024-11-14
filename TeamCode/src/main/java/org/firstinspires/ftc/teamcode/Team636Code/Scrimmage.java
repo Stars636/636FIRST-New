@@ -23,6 +23,11 @@ public class Scrimmage extends LinearOpMode{
         DcMotor rightFront = hardwareMap.get(DcMotor.class,"rightFront");
         DcMotor leftFront = hardwareMap.get(DcMotor.class,"leftFront");
         DcMotor verticalSlide = hardwareMap.get(DcMotor.class,"verticalSlide");
+
+        verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         rotatorJamal = hardwareMap.get(Servo.class,"Servo1");
         clawEthan = hardwareMap.get(Servo.class,"Servo2");
         pushRight = hardwareMap.get(Servo.class,"pushRight");
@@ -45,6 +50,7 @@ public class Scrimmage extends LinearOpMode{
         boolean changedR = false;
         boolean changedL = false;
         boolean changedClaw = false;
+        boolean changedSlide = false;
 
 
         waitForStart();
@@ -61,11 +67,11 @@ public class Scrimmage extends LinearOpMode{
                 positionJamal -= 0.01;
             }
 
-            if (gamepad1.x && positionEthan <= 0.51500) {
-                positionEthan += 0.01;
+            if (gamepad1.x) {
+                positionEthan = 0.51500;
             }
-            if (gamepad1.y && positionEthan >= 0.01) {
-                positionEthan -= 0.01;
+            if (gamepad1.y) {
+                positionEthan = 0.01;
             }
             if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
                 pushPositionRight += 0.01;
@@ -98,10 +104,50 @@ public class Scrimmage extends LinearOpMode{
             pushLeft.setPosition(pushPositionLeft);
             pushRight.setPosition(pushPositionRight);
 
+            double worlds = 540; // constant we used to make sure the values or revolutions and angles make sense
+
+            double position = verticalSlide.getCurrentPosition();
+            double revolutions = position/worlds; //takahiro is revolutions
+            double angle = revolutions * 360;
+            double angleNormalized = angle % 360;
+
+            double diameter = 3.5; // In cm
+            double circumference = Math.PI * diameter;
+            double distance = circumference * revolutions;
+
+
+
+
+            /*
+
+             */
+            if(gamepad1.dpad_up && !changedSlide) {
+                int desiredPosition = -10; // The position (in ticks) that you want the motor to move to
+                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                verticalSlide.setPower(0.3);
+                changedSlide = true;
+            } else if (!gamepad1.dpad_up) {
+                changedSlide = false;
+            }
+            if(gamepad1.dpad_down) {
+                int desiredPosition = 0; // The position (in ticks) that you want the motor to move to
+                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                verticalSlide.setPower(0.3);
+            }
+            telemetry.addData("Encoder Position", position);
+            telemetry.addData("Encoder Angle", angle);
+            telemetry.addData("Encoder Normal Angle", angleNormalized);
+            telemetry.addData("Encoder Revolution", revolutions);
+            telemetry.addData("Distance Traveled", distance);
+
+          
+            telemetry.addData("Slide Position via Encoder", verticalSlide.getCurrentPosition());
             telemetry.addData("Jamal Position", rotatorJamal.getPosition());
             telemetry.addData("Ethan Position", clawEthan.getPosition());
-            telemetry.addData("Ethan Position", pushLeft.getPosition());
-            telemetry.addData("Ethan Position", pushRight.getPosition());
+            telemetry.addData("pushLeft Position", pushLeft.getPosition());
+            telemetry.addData("pushRight Position", pushRight.getPosition());
             telemetry.update();
 
             idle();

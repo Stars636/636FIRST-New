@@ -18,61 +18,72 @@ public class Scrimmage extends LinearOpMode{
     Servo clawRight;
     @Override
     public void runOpMode() throws InterruptedException {
+        //Initializing all the motors. Do not change this unless we change the wiring
         DcMotor rightBack = hardwareMap.get(DcMotor.class,"rightBack");
         DcMotor leftBack = hardwareMap.get(DcMotor.class,"leftBack");
         DcMotor rightFront = hardwareMap.get(DcMotor.class,"rightFront");
         DcMotor leftFront = hardwareMap.get(DcMotor.class,"leftFront");
         DcMotor verticalSlide = hardwareMap.get(DcMotor.class,"verticalSlide");
-
-        verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        // Reset the motor encoder for the slides.
+        verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //correcting the motors
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
+        //Initializing all of the servos
         rotatorJamal = hardwareMap.get(Servo.class,"Servo1");
         clawEthan = hardwareMap.get(Servo.class,"Servo2");
         pushRight = hardwareMap.get(Servo.class,"pushRight");
         pushLeft = hardwareMap.get(Servo.class,"pushLeft");
         clawLeft = hardwareMap.get(Servo.class,"clawLeft");
         clawRight = hardwareMap.get(Servo.class,"clawRight");
-        double positionJamal = 0.1;
-        double positionEthan = 0.05;
+
+        //Initial position of all the servos. When the wiring is perfected, RETEST all initial positions
+        //There is definitely a better position for all of these
+        double rotatorPosition = 0.1; //should start facing the claw
+        double intakeClawPosition = 0.05; //should start open
         double pushPositionRight = 0.5; //1 is moving forward
         double pushPositionLeft = 0.5; // 0 is moving forward
-        double verticalClawPosition = 0;
-
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        double verticalClawPosition = 0; // there is an ideal starting position. Let's test for that.
+        
+        //These booleans are for testing positions at small intervals at a time. I
+        // Ideally by scrimmage these should be removed in favor of correct positions
         boolean changedR = false;
         boolean changedL = false;
-        boolean changedClaw = false;
+        boolean changedVerticalClaw = false;
         boolean changedSlide = false;
-
-
+        // I currently don't have an efficient solution for the motor that controls the slides.
+        //If you've thought of something tell me!!
+        int count = 0;
+        
+        
         waitForStart();
-
-
-
-
+        
         while (opModeIsActive()) {
-            if (gamepad1.a && positionJamal <= 0.88) {
-                positionJamal += 0.01;
-
+            //Moves the rotator. RETEST these positions
+            if (gamepad1.a && rotatorPosition <= 0.88) {
+                rotatorPosition += 0.01;
             }
-            if (gamepad1.b && positionJamal >= 0.05) {
-                positionJamal -= 0.01;
+            if (gamepad1.b && rotatorPosition >= 0.05) {
+                rotatorPosition -= 0.01;
             }
-
+            //Moves the intake claw.
+            // The positions seem fine right now but alongside the vertical claw there may be issues
             if (gamepad1.x) {
-                positionEthan = 0.51500;
+                intakeClawPosition = 0.51500;
             }
             if (gamepad1.y) {
-                positionEthan = 0.01;
+                intakeClawPosition = 0.01;
             }
+            //Pushes the extendo. Positions need to be tested.
+            // Currently the servos make a high pitched noise that I can't stand so you may have to test this
+            //The code works, I think they are slightly offset so the servos are working when they should be rested
             if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
                 pushPositionRight += 0.01;
                 pushPositionLeft -= 0.01;
@@ -88,7 +99,39 @@ public class Scrimmage extends LinearOpMode{
                 changedL = false;
             }
 
+            //messy code for the motor for the slides.
 
+            double worlds = 540; // constant we used to make sure the values or revolutions and angles make sense
+            double position = verticalSlide.getCurrentPosition();
+            double revolutions = position/worlds; //takahiro is revolutions
+            double angle = revolutions * 360;
+            double angleNormalized = angle % 360;
+            double diameter = 3.5; // In cm
+            double circumference = Math.PI * diameter;
+            double distance = circumference * revolutions;
+
+            if(gamepad1.dpad_up && !changedSlide) {
+                count -= 1;
+                int desiredPosition = 0;
+                desiredPosition = count;
+                //int desiredPosition = -10; // The position (in ticks) that you want the motor to move to
+                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                verticalSlide.setPower(0.3);
+                changedSlide = true;
+            } else if (!gamepad1.dpad_up) {
+                changedSlide = false;
+            }
+            if(gamepad1.dpad_down) {
+                count += 1;
+                int desiredPosition = 0;
+                desiredPosition = count; // The position (in ticks) that you want the motor to move to
+                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                verticalSlide.setPower(0.3);
+            }
+
+            //natural code for driving
             double joystickX = -gamepad1.left_stick_x;
             double joystickY = gamepad1.left_stick_y;
             double joystickR = -gamepad1.right_stick_x;
@@ -99,43 +142,13 @@ public class Scrimmage extends LinearOpMode{
             rightBack.setPower(joystickY + joystickX - joystickR);
             leftBack.setPower(joystickY - joystickX + joystickR);
 
-            rotatorJamal.setPosition(positionJamal);
-            clawEthan.setPosition(positionEthan);
+            //Moves the servos
+            rotatorJamal.setPosition(rotatorPosition);
+            clawEthan.setPosition(intakeClawPosition);
             pushLeft.setPosition(pushPositionLeft);
             pushRight.setPosition(pushPositionRight);
 
-            double worlds = 540; // constant we used to make sure the values or revolutions and angles make sense
-
-            double position = verticalSlide.getCurrentPosition();
-            double revolutions = position/worlds; //takahiro is revolutions
-            double angle = revolutions * 360;
-            double angleNormalized = angle % 360;
-
-            double diameter = 3.5; // In cm
-            double circumference = Math.PI * diameter;
-            double distance = circumference * revolutions;
-
-
-
-
-            /*
-
-             */
-            if(gamepad1.dpad_up && !changedSlide) {
-                int desiredPosition = -10; // The position (in ticks) that you want the motor to move to
-                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                verticalSlide.setPower(0.3);
-                changedSlide = true;
-            } else if (!gamepad1.dpad_up) {
-                changedSlide = false;
-            }
-            if(gamepad1.dpad_down) {
-                int desiredPosition = 0; // The position (in ticks) that you want the motor to move to
-                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                verticalSlide.setPower(0.3);
-            }
+            //Telemetry
             telemetry.addData("Encoder Position", position);
             telemetry.addData("Encoder Angle", angle);
             telemetry.addData("Encoder Normal Angle", angleNormalized);

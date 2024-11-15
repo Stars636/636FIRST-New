@@ -16,6 +16,8 @@ public class Scrimmage extends LinearOpMode{
     Servo clawLeft;
 
     Servo clawRight;
+
+    Servo clawMiddle;
     @Override
     public void runOpMode() throws InterruptedException {
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -45,6 +47,8 @@ public class Scrimmage extends LinearOpMode{
         clawLeft = hardwareMap.get(Servo.class,"clawLeft");
         clawRight = hardwareMap.get(Servo.class,"clawRight");
 
+        clawMiddle = hardwareMap.get(Servo.class,"clawMiddle");
+
         //Initial position of all the servos. When the wiring is perfected, RETEST all initial positions
         //There is definitely a better position for all of these
         double rotatorPosition = 0.1; //should start facing the claw
@@ -53,7 +57,8 @@ public class Scrimmage extends LinearOpMode{
         double pushPositionLeft = 0.5; // 0 is moving forward
         double verticalClawRight = 0;
         double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
-        
+        double clawMiddlePosition = 0.05;
+
         //These booleans are for testing positions at small intervals at a time. I
         // Ideally by scrimmage these should be removed in favor of correct positions
         boolean changedR = false;
@@ -88,19 +93,28 @@ public class Scrimmage extends LinearOpMode{
             // Currently the servos make a high pitched noise that I can't stand so you may have to test this
             //The code works, I think they are slightly offset so the servos are working when they should be rested
             if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
-                pushPositionRight += 0.01;
-                pushPositionLeft -= 0.01;
+                pushPositionRight = 0.40;
+                pushPositionLeft = 0.60;
                 changedR = true;
-            } else if(gamepad1.right_trigger == 0) {
+            }else if(gamepad1.right_trigger == 0) {
                 changedR = false;
             }
             if (gamepad1.left_trigger != 0 && pushPositionRight > 0  && !changedL) {
-                pushPositionRight -= 0.01;
-                pushPositionLeft += 0.01;
+                pushPositionRight = 0.55;
+                pushPositionLeft = 0.45;
                 changedL = true;
             } else if(gamepad1.left_trigger == 0) {
                 changedL = false;
             }
+
+            //code for middle claw
+            if (gamepad1.left_bumper) {
+                clawMiddlePosition = 0.05;
+            }
+            if (gamepad1.right_bumper) {
+                clawMiddlePosition = 0.45;
+            }
+
             //should rotate the huge thingamajig at the top towards the basket
             if (gamepad1.dpad_left && !changedCleave ) {
                 verticalClawRight = 0;
@@ -114,6 +128,7 @@ public class Scrimmage extends LinearOpMode{
             } else if (!gamepad1.dpad_right) {
                 changedCleave = false;
             }
+
 
             //messy code for the motor for the slides.
 
@@ -165,6 +180,8 @@ public class Scrimmage extends LinearOpMode{
             pushLeft.setPosition(pushPositionLeft);
             pushRight.setPosition(pushPositionRight);
             clawRight.setPosition(verticalClawRight);
+
+            clawMiddle.setPosition(clawMiddlePosition);
 
             //Telemetry
             telemetry.addData("Encoder Position", position);

@@ -27,12 +27,13 @@ public class Scrimmage extends LinearOpMode{
         // Reset the motor encoder for the slides.
         verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         //correcting the motors
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -50,7 +51,8 @@ public class Scrimmage extends LinearOpMode{
         double intakeClawPosition = 0.05; //should start open
         double pushPositionRight = 0.5; //1 is moving forward
         double pushPositionLeft = 0.5; // 0 is moving forward
-        double verticalClawPosition = 0; // there is an ideal starting position. Let's test for that.
+        double verticalClawRight = 0;
+        double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
         
         //These booleans are for testing positions at small intervals at a time. I
         // Ideally by scrimmage these should be removed in favor of correct positions
@@ -58,9 +60,10 @@ public class Scrimmage extends LinearOpMode{
         boolean changedL = false;
         boolean changedVerticalClaw = false;
         boolean changedSlide = false;
+        boolean changedCleave = false;
         // I currently don't have an efficient solution for the motor that controls the slides.
         //If you've thought of something tell me!!
-        int count = 0;
+
         
         
         waitForStart();
@@ -98,12 +101,26 @@ public class Scrimmage extends LinearOpMode{
             } else if(gamepad1.left_trigger == 0) {
                 changedL = false;
             }
+            //should rotate the huge thingamajig at the top towards the basket
+            if (gamepad1.dpad_left && !changedCleave ) {
+                verticalClawRight = 0;
+                changedCleave = true;
+            } else if (!gamepad1.dpad_left) {
+                changedCleave = false;
+            }
+            if (gamepad1.dpad_right && !changedCleave ) {
+                verticalClawRight = 1;
+                changedCleave = true;
+            } else if (!gamepad1.dpad_right) {
+                changedCleave = false;
+            }
 
             //messy code for the motor for the slides.
 
-            double worlds = 540; // constant we used to make sure the values or revolutions and angles make sense
+            double constant = 540;
+            // constant we used to make sure the values or revolutions and angles make sense
             double position = verticalSlide.getCurrentPosition();
-            double revolutions = position/worlds; //takahiro is revolutions
+            double revolutions = position/constant;
             double angle = revolutions * 360;
             double angleNormalized = angle % 360;
             double diameter = 3.5; // In cm
@@ -111,25 +128,25 @@ public class Scrimmage extends LinearOpMode{
             double distance = circumference * revolutions;
 
             if(gamepad1.dpad_up && !changedSlide) {
-                count -= 1;
-                int desiredPosition = 0;
-                desiredPosition = count;
-                //int desiredPosition = -10; // The position (in ticks) that you want the motor to move to
-                verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
+                int desiredPosition = 3614;
+                verticalSlide.setTargetPosition(desiredPosition);
+                verticalSlide.setPower(0.1); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                verticalSlide.setPower(0.3);
+
                 changedSlide = true;
             } else if (!gamepad1.dpad_up) {
                 changedSlide = false;
             }
             if(gamepad1.dpad_down) {
-                count += 1;
-                int desiredPosition = 0;
-                desiredPosition = count; // The position (in ticks) that you want the motor to move to
+
+                int desiredPosition = 1;
+                // The position (in ticks) that you want the motor to move to
                 verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 verticalSlide.setPower(0.3);
+                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             }
+
 
             //natural code for driving
             double joystickX = -gamepad1.left_stick_x;
@@ -147,6 +164,7 @@ public class Scrimmage extends LinearOpMode{
             clawEthan.setPosition(intakeClawPosition);
             pushLeft.setPosition(pushPositionLeft);
             pushRight.setPosition(pushPositionRight);
+            clawRight.setPosition(verticalClawRight);
 
             //Telemetry
             telemetry.addData("Encoder Position", position);
@@ -161,6 +179,7 @@ public class Scrimmage extends LinearOpMode{
             telemetry.addData("Ethan Position", clawEthan.getPosition());
             telemetry.addData("pushLeft Position", pushLeft.getPosition());
             telemetry.addData("pushRight Position", pushRight.getPosition());
+            telemetry.addData("Vertical", verticalClawRight);
             telemetry.update();
 
             idle();

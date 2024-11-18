@@ -52,12 +52,12 @@ public class Scrimmage extends LinearOpMode{
         //Initial position of all the servos. When the wiring is perfected, RETEST all initial positions
         //There is definitely a better position for all of these
         double rotatorPosition = 0.1; //should start facing the claw
-        double intakeClawPosition = 0.05; //should start open
+        double intakeClawPosition = 0.45; //should start open
         double pushPositionRight = 0.5; //1 is moving forward
         double pushPositionLeft = 0.5; // 0 is moving forward
         double verticalClawRight = 0;
         double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
-        double clawMiddlePosition = 0.05;
+        double clawMiddlePosition = 0.45;
 
         //These booleans are for testing positions at small intervals at a time. I
         // Ideally by scrimmage these should be removed in favor of correct positions
@@ -87,14 +87,14 @@ public class Scrimmage extends LinearOpMode{
                 intakeClawPosition = 0.51500;
             }
             if (gamepad1.y) {
-                intakeClawPosition = 0.01;
+                intakeClawPosition = 0.45;
             }
             //Pushes the extendo. Positions need to be tested.
             // Currently the servos make a high pitched noise that I can't stand so you may have to test this
             //The code works, I think they are slightly offset so the servos are working when they should be rested
             if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
-                pushPositionRight = 0.40;
-                pushPositionLeft = 0.60;
+                pushPositionRight = 0.45;
+                pushPositionLeft = 0.55;
                 changedR = true;
             }else if(gamepad1.right_trigger == 0) {
                 changedR = false;

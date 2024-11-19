@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 @TeleOp
 public class Scrimmage extends LinearOpMode{
@@ -57,7 +59,7 @@ public class Scrimmage extends LinearOpMode{
         double pushPositionLeft = 0.5; // 0 is moving forward
         double verticalClawRight = 0;
         double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
-        double clawMiddlePosition = 0.45;
+        double clawMiddlePosition = 0.05;
 
         //These booleans are for testing positions at small intervals at a time. I
         // Ideally by scrimmage these should be removed in favor of correct positions
@@ -68,18 +70,19 @@ public class Scrimmage extends LinearOpMode{
         boolean changedCleave = false;
         // I currently don't have an efficient solution for the motor that controls the slides.
         //If you've thought of something tell me!!
+        ElapsedTime mStateTime = new ElapsedTime();
+        int v_state = 0;
 
-        
         
         waitForStart();
         
         while (opModeIsActive()) {
             //Moves the rotator. RETEST these positions
-            if (gamepad1.a && rotatorPosition <= 0.88) {
-                rotatorPosition += 0.01;
+            if (gamepad1.a) {
+                rotatorPosition = 0.88;
             }
-            if (gamepad1.b && rotatorPosition >= 0.05) {
-                rotatorPosition -= 0.01;
+            if (gamepad1.b) {
+                rotatorPosition = 0.16;
             }
             //Moves the intake claw.
             // The positions seem fine right now but alongside the vertical claw there may be issues
@@ -87,14 +90,14 @@ public class Scrimmage extends LinearOpMode{
                 intakeClawPosition = 0.51500;
             }
             if (gamepad1.y) {
-                intakeClawPosition = 0.45;
+                intakeClawPosition = 0.40;
             }
             //Pushes the extendo. Positions need to be tested.
             // Currently the servos make a high pitched noise that I can't stand so you may have to test this
             //The code works, I think they are slightly offset so the servos are working when they should be rested
             if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
-                pushPositionRight = 0.45;
-                pushPositionLeft = 0.55;
+                pushPositionRight = 0.43;
+                pushPositionLeft = 0.57;
                 changedR = true;
             }else if(gamepad1.right_trigger == 0) {
                 changedR = false;
@@ -112,22 +115,43 @@ public class Scrimmage extends LinearOpMode{
                 clawMiddlePosition = 0.05;
             }
             if (gamepad1.right_bumper) {
-                clawMiddlePosition = 0.45;
+                clawMiddlePosition = 0.48;
             }
 
             //should rotate the huge thingamajig at the top towards the basket
             if (gamepad1.dpad_left && !changedCleave ) {
                 verticalClawRight = 0;
+                verticalClawLeft = 1;
                 changedCleave = true;
             } else if (!gamepad1.dpad_left) {
                 changedCleave = false;
             }
             if (gamepad1.dpad_right && !changedCleave ) {
                 verticalClawRight = 1;
+                verticalClawLeft = 0;
                 changedCleave = true;
             } else if (!gamepad1.dpad_right) {
                 changedCleave = false;
             }
+            //Transfer!! In a single motion
+            if (gamepad1.left_stick_button) {
+                clawMiddlePosition = 0.05;
+                verticalClawRight = 0.07;
+                verticalClawLeft = 0.93;
+                rotatorPosition = 0.16;
+                pushPositionRight = 0.44;
+                pushPositionLeft = 0.56;
+            }
+            if (gamepad1.right_stick_button) {
+                clawMiddlePosition = 0.48;
+                sleep(500);
+                intakeClawPosition = 0.45;
+                sleep(500);
+                pushPositionRight = 0.55;
+                pushPositionLeft = 0.45;
+
+            }
+
 
 
             //messy code for the motor for the slides.
@@ -145,7 +169,7 @@ public class Scrimmage extends LinearOpMode{
             if(gamepad1.dpad_up && !changedSlide) {
                 int desiredPosition = 3614;
                 verticalSlide.setTargetPosition(desiredPosition);
-                verticalSlide.setPower(0.1); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 changedSlide = true;
@@ -157,7 +181,7 @@ public class Scrimmage extends LinearOpMode{
                 int desiredPosition = 1;
                 // The position (in ticks) that you want the motor to move to
                 verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setPower(0.3);
+                verticalSlide.setPower(0.5);
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             }
@@ -180,6 +204,7 @@ public class Scrimmage extends LinearOpMode{
             pushLeft.setPosition(pushPositionLeft);
             pushRight.setPosition(pushPositionRight);
             clawRight.setPosition(verticalClawRight);
+            clawLeft.setPosition(verticalClawLeft);
 
             clawMiddle.setPosition(clawMiddlePosition);
 

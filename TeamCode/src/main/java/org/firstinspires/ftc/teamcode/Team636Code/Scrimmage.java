@@ -41,7 +41,7 @@ public class Scrimmage extends LinearOpMode{
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -201,7 +201,7 @@ public class Scrimmage extends LinearOpMode{
             if(gamepad1.dpad_up && !changedSlide) {
                 int desiredPosition = 3614;
                 verticalSlide.setTargetPosition(desiredPosition);
-                verticalSlide.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setPower(0.6); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 changedSlide = true;
@@ -213,7 +213,7 @@ public class Scrimmage extends LinearOpMode{
                 int desiredPosition = 1;
                 // The position (in ticks) that you want the motor to move to
                 verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setPower(0.5);
+                verticalSlide.setPower(0.6);
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             }
@@ -255,6 +255,10 @@ public class Scrimmage extends LinearOpMode{
             telemetry.addData("pushLeft Position", pushLeft.getPosition());
             telemetry.addData("pushRight Position", pushRight.getPosition());
             telemetry.addData("Vertical", verticalClawRight);
+
+            telemetry.addData("X", joystickX );
+            telemetry.addData("Y", joystickY );
+            telemetry.addData("R", joystickR);
             telemetry.update();
 
             idle();

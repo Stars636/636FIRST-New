@@ -22,6 +22,10 @@ public class Scrimmage extends LinearOpMode{
     Servo clawMiddle;
     @Override
     public void runOpMode() throws InterruptedException {
+        ElapsedTime et = new ElapsedTime();
+
+
+
         //Initializing all the motors. Do not change this unless we change the wiring
         DcMotor rightBack = hardwareMap.get(DcMotor.class,"rightBack");
         DcMotor leftBack = hardwareMap.get(DcMotor.class,"leftBack");
@@ -63,98 +67,126 @@ public class Scrimmage extends LinearOpMode{
 
         //These booleans are for testing positions at small intervals at a time. I
         // Ideally by scrimmage these should be removed in favor of correct positions
-        boolean changedR = false;
-        boolean changedL = false;
-        boolean changedVerticalClaw = false;
+        boolean changedRightTrigger = false;
+        boolean changedLeftTrigger = false;
         boolean changedSlide = false;
-        boolean changedCleave = false;
+        boolean changedA = false;
+        boolean changedB = false;
+        boolean changedRightBumper = false;
+
+
         // I currently don't have an efficient solution for the motor that controls the slides.
         //If you've thought of something tell me!!
-        ElapsedTime mStateTime = new ElapsedTime();
-        int v_state = 0;
+
 
         
         waitForStart();
         
         while (opModeIsActive()) {
             //Moves the rotator. RETEST these positions
-            if (gamepad1.a) {
-                rotatorPosition = 0.88;
-            }
-            if (gamepad1.b) {
-                rotatorPosition = 0.16;
+            if (gamepad1.a && !changedA) {
+                if (rotatorPosition == 0.88) {
+                    rotatorPosition = 0.16;
+                    changedA = true;
+                } else if (rotatorPosition == 0.16) {
+                    rotatorPosition = 0.88;
+                    changedA = true;
+                } else {
+                    rotatorPosition = 0.88;
+                    changedA = true;
+                }
+
+            } else if (!gamepad1.a) {
+                changedA = false;
             }
             //Moves the intake claw.
             // The positions seem fine right now but alongside the vertical claw there may be issues
-            if (gamepad1.x) {
-                intakeClawPosition = 0.51500;
-            }
-            if (gamepad1.y) {
-                intakeClawPosition = 0.40;
+            if (gamepad1.b && !changedB) {
+                if (intakeClawPosition == 0.515) {
+                    intakeClawPosition = 0.40;
+                    changedB = true;
+                } else if (intakeClawPosition == 0.40) {
+                    intakeClawPosition = 0.515;
+                    changedB = true;
+                } else {
+                    intakeClawPosition = 0.515;
+                    changedB = true;
+                }
+            } else if(!gamepad1.b){
+                changedB = false;
             }
             //Pushes the extendo. Positions need to be tested.
             // Currently the servos make a high pitched noise that I can't stand so you may have to test this
             //The code works, I think they are slightly offset so the servos are working when they should be rested
-            if (gamepad1.right_trigger != 0 && pushPositionRight < 1 && !changedR) {
-                pushPositionRight = 0.43;
-                pushPositionLeft = 0.57;
-                changedR = true;
-            }else if(gamepad1.right_trigger == 0) {
-                changedR = false;
-            }
-            if (gamepad1.left_trigger != 0 && pushPositionRight > 0  && !changedL) {
-                pushPositionRight = 0.55;
-                pushPositionLeft = 0.45;
-                changedL = true;
-            } else if(gamepad1.left_trigger == 0) {
-                changedL = false;
-            }
 
+            if (gamepad1.right_trigger != 0 && !changedRightTrigger) {
+                if (pushPositionRight == 0.43) {
+                    pushPositionRight = 0.55;
+                    pushPositionLeft = 0.45;
+                    changedRightTrigger = true;
+                } else if (pushPositionRight == 0.55) {
+                    pushPositionRight = 0.43;
+                    pushPositionLeft = 0.57;
+                    changedRightTrigger = true;
+                } else {
+                    pushPositionRight = 0.55;
+                    pushPositionLeft = 0.45;
+                    changedRightTrigger = true;
+                }
+            } else if (gamepad1.right_trigger == 0) {
+                changedRightTrigger = false;
+            }
             //code for middle claw
-            if (gamepad1.left_bumper) {
-                clawMiddlePosition = 0.05;
+            if (gamepad1.right_bumper && !changedRightBumper) {
+                if (clawMiddlePosition == 0.48) {
+                    clawMiddlePosition = 0.05;
+                    changedRightBumper = true;
+                } else if (clawMiddlePosition == 0.05) {
+                    clawMiddlePosition = 0.48;
+                    changedRightBumper = true;
+                }
+            } else if (!gamepad1.right_bumper) {
+                changedRightBumper = false;
             }
-            if (gamepad1.right_bumper) {
-                clawMiddlePosition = 0.48;
-            }
-
             //should rotate the huge thingamajig at the top towards the basket
-            if (gamepad1.dpad_left && !changedCleave ) {
-                verticalClawRight = 0;
-                verticalClawLeft = 1;
-                changedCleave = true;
-            } else if (!gamepad1.dpad_left) {
-                changedCleave = false;
-            }
-            if (gamepad1.dpad_right && !changedCleave ) {
-                verticalClawRight = 1;
-                verticalClawLeft = 0;
-                changedCleave = true;
-            } else if (!gamepad1.dpad_right) {
-                changedCleave = false;
+            if (gamepad1.left_trigger != 0 && !changedLeftTrigger) {
+                if(verticalClawLeft == 0.96) {
+                    verticalClawRight = 1;
+                    verticalClawLeft = 0;
+                    changedLeftTrigger = true;
+                } else if (verticalClawLeft == 0) {
+                    verticalClawRight = 0.04;
+                    verticalClawLeft = 0.96;
+                    changedLeftTrigger = true;
+                } else {
+                    verticalClawRight = 1;
+                    verticalClawLeft = 0;
+                }
+            } else if(gamepad1.left_trigger == 0) {
+                changedLeftTrigger = false;
             }
             //Transfer!! In a single motion
-            if (gamepad1.left_stick_button) {
+            if (gamepad1.left_bumper) {
                 clawMiddlePosition = 0.05;
-                verticalClawRight = 0.07;
-                verticalClawLeft = 0.93;
+                verticalClawRight = 0.04;
+                verticalClawLeft = 0.96;
                 rotatorPosition = 0.16;
-                pushPositionRight = 0.44;
-                pushPositionLeft = 0.56;
+                pushPositionRight = 0.445;
+                pushPositionLeft = 0.565;
             }
-            if (gamepad1.right_stick_button) {
+            if (gamepad1.x) {
                 clawMiddlePosition = 0.48;
-                sleep(500);
+            }
+            if (gamepad1.y) {
                 intakeClawPosition = 0.45;
-                sleep(500);
                 pushPositionRight = 0.55;
                 pushPositionLeft = 0.45;
-
             }
 
 
 
-            //messy code for the motor for the slides.
+
+            //messy code for the motor for the slides
 
             double constant = 540;
             // constant we used to make sure the values or revolutions and angles make sense
@@ -209,13 +241,14 @@ public class Scrimmage extends LinearOpMode{
             clawMiddle.setPosition(clawMiddlePosition);
 
             //Telemetry
-            telemetry.addData("Encoder Position", position);
-            telemetry.addData("Encoder Angle", angle);
-            telemetry.addData("Encoder Normal Angle", angleNormalized);
-            telemetry.addData("Encoder Revolution", revolutions);
-            telemetry.addData("Distance Traveled", distance);
+            //This part feels like clutter
+           // telemetry.addData("Encoder Position", position);
+            //telemetry.addData("Encoder Angle", angle);
+            //telemetry.addData("Encoder Normal Angle", angleNormalized);
+            //telemetry.addData("Encoder Revolution", revolutions);
+            //telemetry.addData("Distance Traveled", distance);
 
-          
+          //Telemetry
             telemetry.addData("Slide Position via Encoder", verticalSlide.getCurrentPosition());
             telemetry.addData("Jamal Position", rotatorJamal.getPosition());
             telemetry.addData("Ethan Position", clawEthan.getPosition());

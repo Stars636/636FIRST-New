@@ -60,44 +60,45 @@ public class AutoIn30Minutes extends LinearOpMode {
         double verticalClawRight = 0;
         double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
         double clawMiddlePosition = 0.48;
-        rightBack.setPower(0.1);
-        rightFront.setPower(0.1);
-        leftBack.setPower(0.1);
-        leftFront.setPower(0.1);
 
-        if (opModeIsActive()) {
+        waitForStart();
+
+        while (opModeIsActive()) {
+            clawMiddlePosition = 0.48;
             clawMiddle.setPosition(clawMiddlePosition);
 
             et.reset();
             while (et.milliseconds() < 500);
-            sleep(1000);
+            sleep(500);
 
             et.reset();
-            while (et.milliseconds() < 500) {
+            while (et.milliseconds() < 1000) {
                 double joystickX = 0;
-                double joystickY = -0.01;
+                double joystickY = -0.3;
                 double joystickR = 0;
                 rightFront.setPower(joystickY - joystickX - joystickR);
                 leftFront.setPower(joystickY + joystickX + joystickR);
                 rightBack.setPower(joystickY + joystickX - joystickR);
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
-            sleep(1000);
+            sleep(500);
+
             et.reset();
-            while (et.milliseconds() < 500) {
+            while (et.milliseconds() < 23) {
                 double joystickX = 0;
                 double joystickY = 0;
-                double joystickR = 0.01;
+                double joystickR = -0.25;
                 rightFront.setPower(joystickY - joystickX - joystickR);
                 leftFront.setPower(joystickY + joystickX + joystickR);
                 rightBack.setPower(joystickY + joystickX - joystickR);
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
             sleep(1000);
+
             et.reset();
-            while (et.milliseconds() < 500) {
+            while (et.milliseconds() < 1000) {
                 double joystickX = 0;
-                double joystickY = -0.01;
+                double joystickY = 0.25;
                 double joystickR = 0;
                 rightFront.setPower(joystickY - joystickX - joystickR);
                 leftFront.setPower(joystickY + joystickX + joystickR);
@@ -105,21 +106,63 @@ public class AutoIn30Minutes extends LinearOpMode {
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
             sleep(1000);
+
             et.reset();
-            while (et.milliseconds() < 500) {
+            while (et.milliseconds() < 1350) {
+                double joystickX = 0;
+                double joystickY = 0;
+                double joystickR = 0;
+                rightFront.setPower(joystickY - joystickX - joystickR);
+                leftFront.setPower(joystickY + joystickX + joystickR);
+                rightBack.setPower(joystickY + joystickX - joystickR);
+                leftBack.setPower(joystickY - joystickX + joystickR);
                 int desiredPosition = 3614;
                 verticalSlide.setTargetPosition(desiredPosition);
-                verticalSlide.setPower(0.6); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setPower(0.8); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
+            sleep(500);
+            et.reset();
+            while (et.milliseconds() < 500);
+
+
+            sleep(500);
+            verticalClawRight = 1;
+            verticalClawLeft = 0;
+            clawRight.setPosition(verticalClawRight);
+            clawLeft.setPosition(verticalClawLeft);
+
             sleep(1000);
+            et.reset();
+            while (et.milliseconds() < 500);
+
+            clawMiddlePosition = 0.05;
+            clawMiddle.setPosition(clawMiddlePosition);
+
+            sleep(1000);
+            et.reset();
+            while (et.milliseconds() < 500);
+
+            verticalClawRight = 0;
+            verticalClawLeft = 1;
+            clawRight.setPosition(verticalClawRight);
+            clawLeft.setPosition(verticalClawLeft);
+
+            et.reset();
+            while (et.milliseconds() < 20000) {
+                double joystickX = 0;
+                double joystickY = 0;
+                double joystickR = 0;
+                rightFront.setPower(joystickY - joystickX - joystickR);
+                leftFront.setPower(joystickY + joystickX + joystickR);
+                rightBack.setPower(joystickY + joystickX - joystickR);
+                leftBack.setPower(joystickY - joystickX + joystickR);
+                int desiredPosition = 1;
+                verticalSlide.setTargetPosition(desiredPosition);
+                verticalSlide.setPower(0.8); // Tells the motor that the position it should go to is desiredPosition
+                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
             
-
-
-
-
-
-
 
         }
         /*

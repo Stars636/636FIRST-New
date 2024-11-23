@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp
-public class Scrimmage extends LinearOpMode{
+public class OldScrimmage extends LinearOpMode{
     Servo rotatorJamal;
     Servo clawEthan;
     Servo pushRight;
@@ -74,6 +74,7 @@ public class Scrimmage extends LinearOpMode{
         boolean changedA = false;
         boolean changedB = false;
         boolean changedRightBumper = false;
+        int desiredPosition = 3500;
 
 
         // I currently don't have an efficient solution for the motor that controls the slides.
@@ -200,7 +201,7 @@ public class Scrimmage extends LinearOpMode{
             double distance = circumference * revolutions;
 
             if(gamepad1.dpad_up && !changedSlide) {
-                int desiredPosition = 3614;
+                desiredPosition += 10;
                 verticalSlide.setTargetPosition(desiredPosition);
                 verticalSlide.setPower(0.6); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -211,7 +212,7 @@ public class Scrimmage extends LinearOpMode{
             }
             if(gamepad1.dpad_down) {
 
-                int desiredPosition = 1;
+                desiredPosition = 1;
                 // The position (in ticks) that you want the motor to move to
                 verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setPower(0.6);

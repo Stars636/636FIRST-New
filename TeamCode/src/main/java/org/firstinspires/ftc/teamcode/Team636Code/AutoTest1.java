@@ -44,7 +44,7 @@ public class AutoTest1 extends LinearOpMode {
         waitForStart();
 
         // Follow each trajectory sequentially
-        if (opModeIsActive()) {
+        while (opModeIsActive()) {
             drive.followTrajectory(forwardTrajectory);
             drive.followTrajectorySequence(turntfAround);
             drive.followTrajectory(forwardTrajectory);

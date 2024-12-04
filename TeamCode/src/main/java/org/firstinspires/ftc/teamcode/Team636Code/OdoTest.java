@@ -24,8 +24,9 @@ public class OdoTest extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DcMotor rightFront = hardwareMap.get(DcMotor.class,"rightFront");
         DcMotor rightBack = hardwareMap.get(DcMotor.class,"rightBack");
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 

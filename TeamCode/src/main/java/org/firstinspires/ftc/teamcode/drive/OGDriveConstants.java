@@ -15,23 +15,9 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  * These are not the only parameters; some are located in the localizer classes, drive base classes,
  * and op modes themselves.
  */
-/*
- * Constants shared between multiple drive types.
- *
- * TODO: Tune or adjust the following constants to fit your robot. Note that the non-final
- * fields may also be edited through the dashboard (connect to the robot's WiFi network and
- * navigate to https://192.168.49.1:8080/dash). Make sure to save the values here after you
- * adjust them in the dashboard; **config variable changes don't persist between app restarts**.
- *
- * These are not the only parameters; some are located in the localizer classes, drive base classes,
- * and op modes themselves.
- */
-@Config
-public class DriveConstants {
 
-    /*
-     * These are motor constants that should be listed online for your motors.
-     */
+@Config
+public class OGDriveConstants {
 
     /*
      * These are motor constants that should be listed online for your motors.
@@ -49,7 +35,7 @@ public class DriveConstants {
      */
     public static final boolean RUN_USING_ENCODER = false;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-            17.81155759934999);
+            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -59,20 +45,19 @@ public class DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 1.8898; // in
+    public static double WHEEL_RADIUS = 2; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 13.5; // in
+    public static double TRACK_WIDTH = 1; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
      * the built-in velocity PID, *these values are fine as is*. However, if you do not have drive
      * motor encoders or have elected not to use them for velocity control, these values should be
-     * empirically tuned. kv = 0.00934, ks = 0.07036, ka = 0.00002
-     * empirically tuned. kv = 0.00925, ks = 0.07124, ka = 0.00002
-     *///kv = 0.00940, ks = 0.08259, ka = 0.00002
-    public static double kV = 0.02; // 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0.002;
-    public static double kStatic = -0.02;
+     * empirically tuned.
+     */
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0;
+    public static double kStatic = 0;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -81,43 +66,18 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    /*
-     * Note from LearnRoadRunner.com:
-     * The velocity and acceleration constraints were calculated based on the following equation:
-     * ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85
-     * Resulting in 52.48291908330528 in/s.
-     * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
-     * This is capped at 85% because there are a number of variables that will prevent your bot from actually
-     * reaching this maximum velocity: voltage dropping over the game, bot weight, general mechanical inefficiencies, etc.
-     * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically
-     * max velocity. The theoretically maximum velocity is 61.74461068624151 in/s.
-     * Just make sure that your bot can actually reach this maximum velocity. Path following will be detrimentally
-     * affected if it is aiming for a velocity not actually possible.
-     *
-     * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
-     * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
-     * to degrade. As of now, it simply mirrors the velocity, resulting in 52.48291908330528 in/s/s
-     *
-     * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
-     * You are free to raise this on your own if you would like. It is best determined through experimentation.
-
-     */
-    // just messed with these feb 1, idk if they will mess stuff up, but try retuning fosho
-    public static double MAX_VEL = 30; // 70;//47.91064797707293; //72.38830997134116; turned down for some wiggle room
-    public static double MAX_ACCEL = 30; //50;//57.91064797707293;
-    public static double MAX_ANG_VEL = Math.toRadians(180); // sugg max: 215.7045259853722//real max: 269.6306574817152
-    public static double MAX_ANG_ACCEL = Math.toRadians(50); //real max:
-
-
+    public static double MAX_VEL = 30;
+    public static double MAX_ACCEL = 30;
+    public static double MAX_ANG_VEL = Math.toRadians(60);
+    public static double MAX_ANG_ACCEL = Math.toRadians(60);
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
      */
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR =
-            RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
-            RevHubOrientationOnRobot.UsbFacingDirection.UP;
-
+            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
 
     public static double encoderTicksToInches(double ticks) {
@@ -132,4 +92,5 @@ public class DriveConstants {
         // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
         return 32767 / ticksPerSecond;
     }
+
 }

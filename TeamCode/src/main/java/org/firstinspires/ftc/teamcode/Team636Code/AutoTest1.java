@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class AutoTest1 extends LinearOpMode {
     @Override
     public void runOpMode() {
+        ElapsedTime et = new ElapsedTime();
         // Initialize the drive
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -27,11 +29,16 @@ public class AutoTest1 extends LinearOpMode {
         // Define the trajectory for moving forward
         Trajectory forwardTrajectory = drive.trajectoryBuilder(startPose)
 
-                .forward(0.01)
+                .forward(10)
+                .build();
+        Trajectory forwardTrajectory2 = drive.trajectoryBuilder(startPose)
+
+                .forward(10)
                 .build();
 
+
         Trajectory backTrajectory = drive.trajectoryBuilder(startPose)
-                .back(0.01)
+                .back(10)
                 .build();
 
         TrajectorySequence turntfAround = drive.trajectorySequenceBuilder(startPose)
@@ -40,6 +47,7 @@ public class AutoTest1 extends LinearOpMode {
 
                 .build();
 
+
         // Wait for the game to start
         waitForStart();
 
@@ -47,7 +55,13 @@ public class AutoTest1 extends LinearOpMode {
         while (opModeIsActive()) {
             drive.followTrajectory(forwardTrajectory);
             drive.followTrajectorySequence(turntfAround);
-            drive.followTrajectory(forwardTrajectory);
+            drive.followTrajectory(forwardTrajectory2);
+
+            et.reset();
+            while (et.milliseconds() < 30000);
+
+
+
         }
     }
 }

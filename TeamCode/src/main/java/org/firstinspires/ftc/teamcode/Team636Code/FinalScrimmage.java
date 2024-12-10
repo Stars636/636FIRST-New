@@ -4,11 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp
+@TeleOp(name = "FinalScrimmage", group = "Scrimmage")
 public class FinalScrimmage extends LinearOpMode{
     Servo rotatorJamal;
     Servo clawEthan;
@@ -21,7 +23,7 @@ public class FinalScrimmage extends LinearOpMode{
 
     Servo clawMiddle;
 
-
+    VoltageSensor voltageSensor;
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
@@ -43,7 +45,7 @@ public class FinalScrimmage extends LinearOpMode{
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -213,7 +215,7 @@ public class FinalScrimmage extends LinearOpMode{
             double distance = circumference * revolutions;
 
             if(gamepad2.dpad_up && !changedSlide) {
-                int desiredPosition = 3614;
+                int desiredPosition = 5038;
                 verticalSlide.setTargetPosition(desiredPosition);
                 verticalSlide.setPower(0.6); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -224,13 +226,18 @@ public class FinalScrimmage extends LinearOpMode{
             }
             if(gamepad2.dpad_down) {
 
-                int desiredPosition = 1;
+                int desiredPosition = 0;
                 // The position (in ticks) that you want the motor to move to
                 verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setPower(0.6);
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 verticalClawRight = 0.02;
                 verticalClawLeft = 0.98;
+
+
+            }
+            if (verticalSlide.getCurrentPosition() < 5) {
+                verticalSlide.setPower(0);
 
             }
 

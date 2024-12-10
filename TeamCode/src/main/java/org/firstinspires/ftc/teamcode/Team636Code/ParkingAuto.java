@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.Team636Code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous
-public class AutoIn30Minutes extends LinearOpMode {
+@Autonomous(name = "RightScrimmageAuto", group = "Scrimmage")
+public class ParkingAuto extends LinearOpMode {
     Servo rotatorJamal;
     Servo clawEthan;
     Servo pushRight;
@@ -37,7 +38,7 @@ public class AutoIn30Minutes extends LinearOpMode {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -60,22 +61,13 @@ public class AutoIn30Minutes extends LinearOpMode {
         double verticalClawRight = 0;
         double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
         double clawMiddlePosition = 0.48;
-        rightBack.setPower(0.1);
-        rightFront.setPower(0.1);
-        leftBack.setPower(0.1);
-        leftFront.setPower(0.1);
 
-        if (opModeIsActive()) {
-            clawMiddle.setPosition(clawMiddlePosition);
+        waitForStart();
 
-            et.reset();
-            while (et.milliseconds() < 500);
-            sleep(1000);
-
-            et.reset();
-            while (et.milliseconds() < 500) {
-                double joystickX = 0;
-                double joystickY = -0.01;
+        while (opModeIsActive()) {
+            while (et.milliseconds() < 1000) {
+                double joystickX = -0.4;
+                double joystickY = 0;
                 double joystickR = 0;
                 rightFront.setPower(joystickY - joystickX - joystickR);
                 leftFront.setPower(joystickY + joystickX + joystickR);
@@ -83,43 +75,17 @@ public class AutoIn30Minutes extends LinearOpMode {
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
             sleep(1000);
-            et.reset();
-            while (et.milliseconds() < 500) {
+            while (et.milliseconds() < 2800) {
                 double joystickX = 0;
                 double joystickY = 0;
-                double joystickR = 0.01;
-                rightFront.setPower(joystickY - joystickX - joystickR);
-                leftFront.setPower(joystickY + joystickX + joystickR);
-                rightBack.setPower(joystickY + joystickX - joystickR);
-                leftBack.setPower(joystickY - joystickX + joystickR);
-            }
-            sleep(1000);
-            et.reset();
-            while (et.milliseconds() < 500) {
-                double joystickX = 0;
-                double joystickY = -0.01;
                 double joystickR = 0;
                 rightFront.setPower(joystickY - joystickX - joystickR);
                 leftFront.setPower(joystickY + joystickX + joystickR);
                 rightBack.setPower(joystickY + joystickX - joystickR);
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
-            sleep(1000);
-            et.reset();
-            while (et.milliseconds() < 500) {
-                int desiredPosition = 3614;
-                verticalSlide.setTargetPosition(desiredPosition);
-                verticalSlide.setPower(0.6); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-            sleep(1000);
+
             
-
-
-
-
-
-
 
         }
         /*

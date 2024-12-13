@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 // In your Autonomous OpMode
 @Autonomous
-public class AutoTest1 extends LinearOpMode {
+public class Adarsh_AutoTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         ElapsedTime et = new ElapsedTime();
@@ -43,14 +43,6 @@ public class AutoTest1 extends LinearOpMode {
                 .forward(25)
                 .build();
 
-        Trajectory strafeRight = drive.trajectoryBuilder(forwardTrajectory.end())
-                .strafeRight(30)
-                .build();
-
-        Trajectory strafeLeft = drive.trajectoryBuilder(strafeRight.end())
-                .strafeLeft(30)
-                .build();
-
         Trajectory backTrajectory = drive.trajectoryBuilder(strafeLeft.end())
                 .back(40)
                 .build();
@@ -63,8 +55,6 @@ public class AutoTest1 extends LinearOpMode {
             drive.followTrajectory(forwardTrajectory);
             //drive.turn(Math.PI);
             //drive.followTrajectorySequence(turnAround);
-            drive.followTrajectory(strafeRight);
-            drive.followTrajectory(strafeLeft);
             drive.followTrajectory(backTrajectory);
 
             et.reset();

@@ -1,15 +1,19 @@
-package org.firstinspires.ftc.teamcode.Team636Code;
+package org.firstinspires.ftc.teamcode.AutoTests;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp
-public class CalvinTeleOp extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+
+@Autonomous
+public class CalvinFinalAuto extends LinearOpMode {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
@@ -60,10 +64,13 @@ public class CalvinTeleOp extends LinearOpMode {
     public static double horizontalSlidesExtendedPositionLeft;
     public static double horizontalSlidesExtendedPositionRight;
 
-
-
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {''
+        //IDEALLY
+        //if you copy paste the correct trajectories from another test you've run, then this auto should work
+        //or you can test in meep meep but we dont know the correct constants yet cuz the bots not done
+        //so yeah
+
         ElapsedTime et = new ElapsedTime();
 
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -112,19 +119,40 @@ public class CalvinTeleOp extends LinearOpMode {
         elbowServoLeft = hardwareMap.get(Servo.class,"elbowServoLeft");
         elbowServoRight = hardwareMap.get(Servo.class,"elbowServoRight");
 
-
-        //These booleans are also for testing positions at small intervals at a time
-        boolean changedRightTrigger = false;
-        boolean changedLeftTrigger = false;
-        boolean changedSlide = false;
-        boolean changedA = false;
-        boolean changedB = false;
-        boolean changedRightBumper = false;
-        boolean changedZhangCynthia = false;
-        boolean changedY = false;
-        //Initial!!
-
         initialPositions();
+
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        // Define the starting pose (e.g., starting point on the field)
+        Pose2d startPose = new Pose2d(0, 0, 0);
+
+        // Set the initial pose of the robot
+        drive.setPoseEstimate(startPose);
+
+        // Define the trajectory for moving forward
+
+        TrajectorySequence a1 = drive.trajectorySequenceBuilder(startPose)
+                .splineToLinearHeading(new Pose2d(3, 3, Math.toRadians(-45)), Math.toRadians(0))
+                .build();
+
+        TrajectorySequence a2 = drive.trajectorySequenceBuilder(a1.end())
+                .splineToLinearHeading(new Pose2d(3, -3, Math.toRadians(0)), Math.toRadians(-45))
+                .build();
+        TrajectorySequence a3 = drive.trajectorySequenceBuilder(a2.end())
+                .splineToLinearHeading(new Pose2d(-3, 3, Math.toRadians(-45)), Math.toRadians(0))
+                .build();
+        TrajectorySequence a4 = drive.trajectorySequenceBuilder(a3.end())
+                .splineToLinearHeading(new Pose2d(3, 0, Math.toRadians(0)), Math.toRadians(-45))
+                .build();
+        TrajectorySequence a5 = drive.trajectorySequenceBuilder(a4.end())
+                .splineToLinearHeading(new Pose2d(-3, 0, Math.toRadians(-45)), Math.toRadians(0))
+                .build();
+        TrajectorySequence a6 = drive.trajectorySequenceBuilder(a5.end())
+                .splineToLinearHeading(new Pose2d(3, -3, Math.toRadians(0)), Math.toRadians(-45))
+                .build();
+        TrajectorySequence a7 = drive.trajectorySequenceBuilder(a6.end())
+                .splineToLinearHeading(new Pose2d(-3, 3, Math.toRadians(-45)), Math.toRadians(0))
+                .build();
 
         //we will create macros in the future, to remove room for error
         waitForStart();
@@ -133,92 +161,154 @@ public class CalvinTeleOp extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            //Moves the elbow. TEST these positions
-            if (gamepad2.b && !changedB) {
-                if (elbowServoRight.getPosition() == elbowInsidePositionRight) {
-                    extend();
-                    changedB = true;
-                } else if (elbowServoRight.getPosition() == elbowOutsidePositionRight) {
-                    retrieve();
-                    changedB = true;
-                }
-            } else if (!gamepad2.b) {
-                changedB = false;
-            }
+            grabSample();
+            drive.followTrajectorySequence(a1);
 
-            //Activate  the intake
+            et.reset();
+            while (et.milliseconds() < 250);
 
-            if (gamepad2.a) {
+            lift();
+            dunk();
+
+            et.reset();
+            while (et.milliseconds() < 2000);
+
+            dropSample();
+            passive();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+
+            fall();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+            drive.followTrajectorySequence(a2);
+
+            extend();
+
+            et.reset();
+            while (et.milliseconds() < 2000){
                 intake();
-            } else {
-                passive();
-            }
-            //Reverse. I chose this button(because the old bot had no equivalent), so if you want another one then do it
-            if (gamepad2.x){
-                eject();
-            } else {
-                passive();
-            }
-            //Pushes the extendo. Positions need to be tested.
-            //Test these positionsssss
-            if (gamepad2.right_trigger != 0 && !changedRightTrigger) {
-                if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPositionRight){
-                    extend();
-                    changedRightTrigger = true;
-                } else if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPositionRight) {
-                    retrieve();
-                    changedRightTrigger = true;
-                }
-            } else if (gamepad2.right_trigger == 0) {
-                changedRightTrigger = false;
             }
 
-            //code for l claw
-            if (gamepad2.y && !changedY) {
-                if (claw.getPosition() == clawOpenPosition) {
-                    grabSample();
-                    changedY = true;
-                } else if (claw.getPosition() == clawClosedPosition) {
-                    dropSample();
-                    changedY = true;
-                }
-            } else if(!gamepad2.y) {
-                changedY = false;
+            passive();
+            retrieve();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+
+            grab();
+
+            et.reset();
+            while (et.milliseconds() < 1000);
+
+            grabSample();
+
+            drive.followTrajectorySequence(a3);
+
+            lift();
+            dunk();
+
+            et.reset();
+            while (et.milliseconds() < 2000);
+
+            dropSample();
+            passive();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+
+            fall();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+            drive.followTrajectorySequence(a4);
+
+            extend();
+
+            et.reset();
+            while (et.milliseconds() < 2000){
+                intake();
             }
-            //rotates the claw. there is much better way to do this, but this works for now
-            //you have to continuously hold to dunk it
-            if (gamepad2.left_trigger != 0 && !changedLeftTrigger) {
-                if(claw.getPosition() == clawClosedPosition) {
-                    dunk();
-                } else if(claw.getPosition() == clawOpenPosition) {
-                    grab();
-                } else {
-                    passive();
-                }
-            } else if (gamepad2.left_trigger == 0) {
-                passive();
-                changedLeftTrigger = true;
+
+            passive();
+            retrieve();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+
+            grab();
+
+            et.reset();
+            while (et.milliseconds() < 1000);
+
+            grabSample();
+
+            drive.followTrajectorySequence(a5);
+
+            lift();
+            dunk();
+
+            et.reset();
+            while (et.milliseconds() < 2000);
+
+            dropSample();
+            passive();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+
+            fall();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+            drive.followTrajectorySequence(a6);
+
+            extend();
+
+            et.reset();
+            while (et.milliseconds() < 2000){
+                intake();
             }
 
-            if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
-                rise();
-            }
+            passive();
+            retrieve();
 
+            et.reset();
+            while (et.milliseconds() < 250);
 
-            double joystickX = -gamepad1.left_stick_x;
-            double joystickY = gamepad1.left_stick_y;
-            double joystickR = -gamepad1.right_stick_x;
+            grab();
 
+            et.reset();
+            while (et.milliseconds() < 1000);
 
-            rightFront.setPower(joystickY - joystickX - joystickR);
-            leftFront.setPower(joystickY + joystickX + joystickR);
-            rightBack.setPower(joystickY + joystickX - joystickR);
-            leftBack.setPower(joystickY - joystickX + joystickR);
+            grabSample();
+
+            drive.followTrajectorySequence(a7);
+
+            lift();
+            dunk();
+
+            et.reset();
+            while (et.milliseconds() < 2000);
+
+            dropSample();
+            passive();
+
+            et.reset();
+            while (et.milliseconds() < 250);
+
+            fall();
+
+            et.reset();
+            while (et.milliseconds() < 30000);
+
 
         }
 
-    }
 
+    }
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
@@ -253,6 +343,11 @@ public class CalvinTeleOp extends LinearOpMode {
         shaqRight.setPosition(clawPassivePositionRight);
     }
 
+    public void truePassive() {
+        continuousIntakeLeft.setPower(0);
+        continuousIntakeRight.setPower(0);
+    }
+
     public void retrieve(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
@@ -276,6 +371,23 @@ public class CalvinTeleOp extends LinearOpMode {
         verticalSlidesLeft.setPower(gamepad2.left_stick_y);
         verticalSlidesRight.setPower(gamepad2.left_stick_y);
     }
+    public void lift(){
+
+        verticalSlidesLeft.setTargetPosition(verticalSlideHighScoringPositionLimit);
+        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(verticalSlideHighScoringPositionLimit);
+        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void fall(){
+        verticalSlidesLeft.setTargetPosition(verticalSlideHighScoringPositionLimit);
+        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(verticalSlideHighScoringPositionLimit);
+        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     public void dunk() {
         shaqLeft.setPosition(clawScorePositionLeft);
@@ -284,6 +396,5 @@ public class CalvinTeleOp extends LinearOpMode {
 
 
 
-
-
 }
+

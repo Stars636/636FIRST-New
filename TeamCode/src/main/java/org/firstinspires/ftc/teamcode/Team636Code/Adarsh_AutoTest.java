@@ -20,12 +20,7 @@ public class Adarsh_AutoTest extends LinearOpMode {
         // Initialize the drive
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        TrajectorySequence turnAround = drive.trajectorySequenceBuilder(forwardTrajectory.end())
-                .turn((Math.PI))
-                .build();
 
-
-        Trajectory forwardTrajectory2 = drive.trajectoryBuilder(forwardTrajectory.end())
 
 
         // Define the starting pose (e.g., starting point on the field)
@@ -34,28 +29,12 @@ public class Adarsh_AutoTest extends LinearOpMode {
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);
 
-        // Define the trajectory for moving forward
-        Trajectory forwardTrajectory = drive.trajectoryBuilder(startPose``)
-
-                .forward(25)
-                .build();
-
-                .forward(25)
-                .build();
-
-        Trajectory backTrajectory = drive.trajectoryBuilder(strafeLeft.end())
-                .back(40)
-                .build();
 
         // Wait for the game to start
         waitForStart();
 
         // Follow each trajectory sequentially
         while (opModeIsActive()) {
-            drive.followTrajectory(forwardTrajectory);
-            //drive.turn(Math.PI);
-            //drive.followTrajectorySequence(turnAround);
-            drive.followTrajectory(backTrajectory);
 
             et.reset();
             while (et.milliseconds() < 30000);

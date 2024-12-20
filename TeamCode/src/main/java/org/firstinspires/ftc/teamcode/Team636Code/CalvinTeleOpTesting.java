@@ -35,7 +35,7 @@ public class CalvinTeleOpTesting extends LinearOpMode {
     DcMotor verticalSlidesLeft;
 
 
-    public static double clawOpenPosition;
+    public static double clawOpenPosition = 0;
     public static double clawClosedPosition;
 
     public static double clawPassivePositionLeft;
@@ -52,7 +52,7 @@ public class CalvinTeleOpTesting extends LinearOpMode {
     public static double elbowInsidePositionRight;
     public static double elbowOutsidePositionRight;
 
-    public static double verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
+    public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
 
     public static double horizontalSlidesInitialPositionLeft;
     public static double horizontalSlidesInitialPositionRight;
@@ -104,7 +104,7 @@ public class CalvinTeleOpTesting extends LinearOpMode {
 
         horizontalSlidesLeft = hardwareMap.get(Servo.class,"horizontalSlidesLeft");
         horizontalSlidesRight = hardwareMap.get(Servo.class,"horizontalSlidesRight");
-        continuousIntakeLeft = hardwareMap.get(CRServo.class," continuousIntakeLeft"); //setPower
+        continuousIntakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
         continuousIntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         claw = hardwareMap.get(Servo.class,"claw");
         shaqLeft = hardwareMap.get(Servo.class,"shaqLeft");
@@ -200,7 +200,7 @@ public class CalvinTeleOpTesting extends LinearOpMode {
                 changedLeftTrigger = true;
             }
 
-            if (gamepad2.left_stick_y != 0 && verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
+            if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
                 rise();
             }
 

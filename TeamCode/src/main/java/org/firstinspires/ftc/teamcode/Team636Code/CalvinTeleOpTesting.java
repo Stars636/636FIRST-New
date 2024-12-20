@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
-public class CalvinTeleOp extends LinearOpMode {
+public class CalvinTeleOpTesting extends LinearOpMode {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;

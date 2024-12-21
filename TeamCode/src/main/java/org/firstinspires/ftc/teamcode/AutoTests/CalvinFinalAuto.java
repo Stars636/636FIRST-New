@@ -65,7 +65,7 @@ public class CalvinFinalAuto extends LinearOpMode {
     public static double horizontalSlidesExtendedPositionRight;
 
     @Override
-    public void runOpMode() throws InterruptedException {''
+    public void runOpMode() throws InterruptedException {
         //IDEALLY
         //if you copy paste the correct trajectories from another test you've run, then this auto should work
         //or you can test in meep meep but we dont know the correct constants yet cuz the bots not done
@@ -124,34 +124,35 @@ public class CalvinFinalAuto extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // Define the starting pose (e.g., starting point on the field)
-        Pose2d startPose = new Pose2d(0, 0, 0);
-
+        Pose2d startPose = new Pose2d(0, 0, Math.PI/2);
+        double xInitial = 0;
+        double yIntitial = 0;
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);
 
         // Define the trajectory for moving forward
 
         TrajectorySequence a1 = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(3, 3, Math.toRadians(-45)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
                 .build();
 
         TrajectorySequence a2 = drive.trajectorySequenceBuilder(a1.end())
-                .splineToLinearHeading(new Pose2d(3, -3, Math.toRadians(0)), Math.toRadians(-45))
+                .splineToLinearHeading(new Pose2d(xInitial, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
                 .build();
         TrajectorySequence a3 = drive.trajectorySequenceBuilder(a2.end())
-                .splineToLinearHeading(new Pose2d(-3, 3, Math.toRadians(-45)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
                 .build();
         TrajectorySequence a4 = drive.trajectorySequenceBuilder(a3.end())
-                .splineToLinearHeading(new Pose2d(3, 0, Math.toRadians(0)), Math.toRadians(-45))
+                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
                 .build();
         TrajectorySequence a5 = drive.trajectorySequenceBuilder(a4.end())
-                .splineToLinearHeading(new Pose2d(-3, 0, Math.toRadians(-45)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
                 .build();
         TrajectorySequence a6 = drive.trajectorySequenceBuilder(a5.end())
-                .splineToLinearHeading(new Pose2d(3, -3, Math.toRadians(0)), Math.toRadians(-45))
+                .splineToLinearHeading(new Pose2d(xInitial - 24, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
                 .build();
         TrajectorySequence a7 = drive.trajectorySequenceBuilder(a6.end())
-                .splineToLinearHeading(new Pose2d(-3, 3, Math.toRadians(-45)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
                 .build();
 
         //we will create macros in the future, to remove room for error

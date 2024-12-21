@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
-public class CalvinFinalAuto extends LinearOpMode {
+public class CalvinFinalBasketAuto extends LinearOpMode {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
@@ -132,27 +132,30 @@ public class CalvinFinalAuto extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
+        Pose2d scorePose = new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45));
         TrajectorySequence a1 = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                .splineToLinearHeading(scorePose, Math.toRadians(90))
                 .build();
-
         TrajectorySequence a2 = drive.trajectorySequenceBuilder(a1.end())
-                .splineToLinearHeading(new Pose2d(xInitial, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(xInitial - 4, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
                 .build();
         TrajectorySequence a3 = drive.trajectorySequenceBuilder(a2.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                .splineToLinearHeading(scorePose, Math.toRadians(90))
                 .build();
         TrajectorySequence a4 = drive.trajectorySequenceBuilder(a3.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(xInitial - 14, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
                 .build();
         TrajectorySequence a5 = drive.trajectorySequenceBuilder(a4.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                .splineToLinearHeading(scorePose, Math.toRadians(90))
                 .build();
         TrajectorySequence a6 = drive.trajectorySequenceBuilder(a5.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 24, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(xInitial - 20, yIntitial + 30, Math.toRadians(120)), Math.toRadians(45))
                 .build();
         TrajectorySequence a7 = drive.trajectorySequenceBuilder(a6.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                .splineToLinearHeading(scorePose, Math.toRadians(90))
+                .build();
+        TrajectorySequence a8 = drive.trajectorySequenceBuilder(a7.end())
+                .splineToLinearHeading(new Pose2d(xInitial + 23, yIntitial + 64, Math.toRadians(180)), Math.toRadians(45))
                 .build();
 
         //we will create macros in the future, to remove room for error
@@ -301,6 +304,10 @@ public class CalvinFinalAuto extends LinearOpMode {
             while (et.milliseconds() < 250);
 
             fall();
+
+            drive.followTrajectorySequence(a8);
+
+            dunk();
 
             et.reset();
             while (et.milliseconds() < 30000);

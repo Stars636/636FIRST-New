@@ -23,12 +23,28 @@ public class Adarsh_AutoTest extends LinearOpMode {
 
 
 
+
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
 
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);
 
+<<<<<<< Updated upstream
+=======
+        // Define the trajectory for moving forward
+        Trajectory forwardTrajectory = drive.trajectoryBuilder(startPose)
+
+                .forward(25)
+                .build();
+
+                .forward(25)
+                .build();
+
+        Trajectory backTrajectory = drive.trajectoryBuilder(strafeLeft.end())
+                .back(40)
+                .build();
+>>>>>>> Stashed changes
 
         // Wait for the game to start
         waitForStart();

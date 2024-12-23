@@ -21,18 +21,18 @@ public class MeepMeepTesting {
 
         //Basket Auto, pretty good, high basket auto is currently based on this
         RoadRunnerBotEntity basketCalvin = new DefaultBotBuilder(meepMeep)
-                .setDimensions(12, 15)
+                .setDimensions(12, 12)
                 .setStartPose(new Pose2d(xInitial, yInitial, PI/2))
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(xInitial, yInitial, PI/2))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xInitial - 4, yInitial + 30, Math.toRadians(90)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xInitial - 14, yInitial + 30, Math.toRadians(90)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xInitial - 20, yInitial + 30, Math.toRadians(120)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xInitial + 23, yInitial + 64, Math.toRadians(540)), Math.toRadians(45))
                         .build());
 
@@ -102,9 +102,9 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                //.addEntity(basketCalvin)
+                .addEntity(basketCalvin)
                 //.addEntity(speciCalvin) //you can comment out addentity lines if you dont wanna see them simultaneuosly
-                .addEntity(specimenCalvin)
+                //.addEntity(specimenCalvin)
                 .start();
     }
 }

@@ -29,7 +29,7 @@ public class OdoBasketTest extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45));
+        Pose2d scorePose = new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45));
         TrajectorySequence a1 = drive.trajectorySequenceBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(90))
                 .build();
@@ -70,7 +70,7 @@ public class OdoBasketTest extends LinearOpMode {
             drive.followTrajectorySequence(a5);
             drive.followTrajectorySequence(a6);
             drive.followTrajectorySequence(a7);
-            drive.followTrajectorySequence(a8);
+            //drive.followTrajectorySequence(a8);
 
 
             et.reset();

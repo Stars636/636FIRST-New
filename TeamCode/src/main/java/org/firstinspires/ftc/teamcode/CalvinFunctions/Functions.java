@@ -64,6 +64,13 @@ public class Functions {
     public static double horizontalSlidesExtendedPositionLeft;
     public static double horizontalSlidesExtendedPositionRight;
 
+    public static double specimenPickupPositionLeft;
+    public static double specimenPickupPositionRight;
+    public static int specimenStartPickupVerticalSlides;
+    public static int specimenFinishPickupVerticalSlides;
+    public static int specimenStartDepositVerticalSlides;
+    public static int specimenFinishDepositVerticalSlides;
+
     public Functions (HardwareMap hardwareMap) {
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotor.class,"rightBack");
@@ -193,7 +200,32 @@ public class Functions {
         shaqRight.setPosition(clawScorePositionRight);
     }
 
+    public void specimenPickUp() {
+        claw.setPosition(clawOpenPosition);
 
+        verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
+        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
+        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        shaqLeft.setPosition(specimenPickupPositionLeft);
+        shaqRight.setPosition(specimenPickupPositionRight);
+
+        ElapsedTime et = new ElapsedTime();
+        et.reset();
+        while(et.milliseconds() < 5000);
+        claw.setPosition(clawClosedPosition);
+        et.reset();
+        while(et.milliseconds() < 1000);
+        verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
 }
 

@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.AutoTests;
+package org.firstinspires.ftc.teamcode.CalvinFunctions;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,12 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
-public class CalvinFinalBasketAuto extends LinearOpMode {
+public class Functions {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
@@ -64,15 +64,7 @@ public class CalvinFinalBasketAuto extends LinearOpMode {
     public static double horizontalSlidesExtendedPositionLeft;
     public static double horizontalSlidesExtendedPositionRight;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        //IDEALLY
-        //if you copy paste the correct trajectories from another test you've run, then this auto should work
-        //or you can test in meep meep but we dont know the correct constants yet cuz the bots not done
-        //so yeah
-
-        ElapsedTime et = new ElapsedTime();
-
+    public Functions (HardwareMap hardwareMap) {
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotor.class,"rightBack");
         leftBack = hardwareMap.get(DcMotor.class,"leftBack");
@@ -119,203 +111,7 @@ public class CalvinFinalBasketAuto extends LinearOpMode {
         elbowServoLeft = hardwareMap.get(Servo.class,"elbowServoLeft");
         elbowServoRight = hardwareMap.get(Servo.class,"elbowServoRight");
 
-        initialPositions();
-
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        // Define the starting pose (e.g., starting point on the field)
-        Pose2d startPose = new Pose2d(0, 0, Math.PI/2);
-        double xInitial = 0;
-        double yInitial = 0;
-        // Set the initial pose of the robot
-        drive.setPoseEstimate(startPose);
-
-        // Define the trajectory for moving forward
-
-        Pose2d scorePose = new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45));
-        TrajectorySequence a1 = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(scorePose, Math.toRadians(90))
-                .build();
-        TrajectorySequence a2 = drive.trajectorySequenceBuilder(a1.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 4, yInitial + 30, Math.toRadians(90)), Math.toRadians(45))
-                .build();
-        TrajectorySequence a3 = drive.trajectorySequenceBuilder(a2.end())
-                .splineToLinearHeading(scorePose, Math.toRadians(90))
-                .build();
-        TrajectorySequence a4 = drive.trajectorySequenceBuilder(a3.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 14, yInitial + 30, Math.toRadians(90)), Math.toRadians(45))
-                .build();
-        TrajectorySequence a5 = drive.trajectorySequenceBuilder(a4.end())
-                .splineToLinearHeading(scorePose, Math.toRadians(90))
-                .build();
-        TrajectorySequence a6 = drive.trajectorySequenceBuilder(a5.end())
-                .splineToLinearHeading(new Pose2d(xInitial - 20, yInitial + 30, Math.toRadians(120)), Math.toRadians(45))
-                .build();
-        TrajectorySequence a7 = drive.trajectorySequenceBuilder(a6.end())
-                .splineToLinearHeading(scorePose, Math.toRadians(90))
-                .build();
-        TrajectorySequence a8 = drive.trajectorySequenceBuilder(a7.end())
-                .splineToLinearHeading(new Pose2d(xInitial + 23, yInitial + 64, Math.toRadians(180)), Math.toRadians(45))
-                .build();
-
         //we will create macros in the future, to remove room for error
-        waitForStart();
-
-        telemetry.addLine("Best Wishes.");
-        telemetry.update();
-
-        while (opModeIsActive()) {
-            grabSample();
-            drive.followTrajectorySequence(a1);
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            lift();
-            dunk();
-
-            et.reset();
-            while (et.milliseconds() < 2000);
-
-            dropSample();
-            passive();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            fall();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-            drive.followTrajectorySequence(a2);
-
-            extend();
-
-            et.reset();
-            while (et.milliseconds() < 2000){
-                intake();
-            }
-
-            passive();
-            retrieve();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            grab();
-
-            et.reset();
-            while (et.milliseconds() < 1000);
-
-            grabSample();
-
-            drive.followTrajectorySequence(a3);
-
-            lift();
-            dunk();
-
-            et.reset();
-            while (et.milliseconds() < 2000);
-
-            dropSample();
-            passive();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            fall();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-            drive.followTrajectorySequence(a4);
-
-            extend();
-
-            et.reset();
-            while (et.milliseconds() < 2000){
-                intake();
-            }
-
-            passive();
-            retrieve();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            grab();
-
-            et.reset();
-            while (et.milliseconds() < 1000);
-
-            grabSample();
-
-            drive.followTrajectorySequence(a5);
-
-            lift();
-            dunk();
-
-            et.reset();
-            while (et.milliseconds() < 2000);
-
-            dropSample();
-            passive();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            fall();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-            drive.followTrajectorySequence(a6);
-
-            extend();
-
-            et.reset();
-            while (et.milliseconds() < 2000){
-                intake();
-            }
-
-            passive();
-            retrieve();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            grab();
-
-            et.reset();
-            while (et.milliseconds() < 1000);
-
-            grabSample();
-
-            drive.followTrajectorySequence(a7);
-
-            lift();
-            dunk();
-
-            et.reset();
-            while (et.milliseconds() < 2000);
-
-            dropSample();
-            passive();
-
-            et.reset();
-            while (et.milliseconds() < 250);
-
-            fall();
-
-            drive.followTrajectorySequence(a8);
-
-            dunk();
-
-            et.reset();
-            while (et.milliseconds() < 30000);
-
-
-        }
-
-
     }
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
@@ -349,11 +145,6 @@ public class CalvinFinalBasketAuto extends LinearOpMode {
         continuousIntakeRight.setPower(0);
         shaqLeft.setPosition(clawPassivePositionLeft);
         shaqRight.setPosition(clawPassivePositionRight);
-    }
-
-    public void truePassive() {
-        continuousIntakeLeft.setPower(0);
-        continuousIntakeRight.setPower(0);
     }
 
     public void retrieve(){

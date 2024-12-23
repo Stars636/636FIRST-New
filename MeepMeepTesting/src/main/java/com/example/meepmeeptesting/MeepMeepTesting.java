@@ -5,7 +5,6 @@ import static java.lang.Math.PI;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.rowlandhall.meepmeep.MeepMeep;
-import org.rowlandhall.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark;
 import org.rowlandhall.meepmeep.roadrunner.DefaultBotBuilder;
 import org.rowlandhall.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 

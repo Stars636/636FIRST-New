@@ -65,6 +65,7 @@ public class Functions {
     public static double horizontalSlidesExtendedPositionRight;
 
     public Functions (HardwareMap hardwareMap) {
+
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotor.class,"rightBack");
         leftBack = hardwareMap.get(DcMotor.class,"leftBack");
@@ -192,7 +193,6 @@ public class Functions {
         shaqLeft.setPosition(clawScorePositionLeft);
         shaqRight.setPosition(clawScorePositionRight);
     }
-
 
 
 }

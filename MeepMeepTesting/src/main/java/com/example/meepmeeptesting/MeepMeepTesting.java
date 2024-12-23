@@ -40,6 +40,7 @@ public class MeepMeepTesting {
         //You can see how splines are not always the best
         //also how does your path translate in the real world?
         //good luck!
+
         RoadRunnerBotEntity speciCalvin = new DefaultBotBuilder(meepMeep)
                 .setDimensions(12, 15)
                 .setStartPose(new Pose2d(xStart, yStart, PI/2))
@@ -64,11 +65,46 @@ public class MeepMeepTesting {
                         .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(90)), Math.toRadians(270))
                         .build());
 
+        //specimen auto! yay
+        RoadRunnerBotEntity specimenCalvin = new DefaultBotBuilder(meepMeep)
+                .setDimensions(12, 15)
+                .setStartPose(new Pose2d(xStart, yStart, 3*PI/2))
+                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(xStart, yStart, 3*PI/2))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 32, yStart + 26, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
+
+                        .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
+
+                        .build());
+
+
+
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(basketCalvin)
-                .addEntity(speciCalvin) //you can comment out addentity lines if you dont wanna see them simultaneuosly
+                //.addEntity(basketCalvin)
+                //.addEntity(speciCalvin) //you can comment out addentity lines if you dont wanna see them simultaneuosly
+                .addEntity(specimenCalvin)
                 .start();
     }
 }

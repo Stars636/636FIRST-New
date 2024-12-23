@@ -12,8 +12,8 @@ import org.rowlandhall.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
-        double xInitial = -44; //i have initial variables because in real life i think the robot will start from zero
-        double yIntitial = -64;// so use inital variables haha
+        double xInitial = -44; //i have Initial variables because in real life i think the robot will start from zero
+        double yInitial = -64;// so use Initial variables haha
 
         double xStart = 0;
         double yStart = -64;
@@ -23,18 +23,18 @@ public class MeepMeepTesting {
         //Basket Auto, pretty good, high basket auto is currently based on this
         RoadRunnerBotEntity basketCalvin = new DefaultBotBuilder(meepMeep)
                 .setDimensions(12, 15)
-                .setStartPose(new Pose2d(xInitial, yIntitial, PI/2))
+                .setStartPose(new Pose2d(xInitial, yInitial, PI/2))
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(xInitial, yIntitial, PI/2))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xInitial - 4, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xInitial - 14, yIntitial + 30, Math.toRadians(90)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xInitial - 20, yIntitial + 30, Math.toRadians(120)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(xInitial - 12, yIntitial + 12, Math.toRadians(45)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xInitial + 23, yIntitial + 64, Math.toRadians(540)), Math.toRadians(45))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(xInitial, yInitial, PI/2))
+                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 4, yInitial + 30, Math.toRadians(90)), Math.toRadians(45))
+                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 14, yInitial + 30, Math.toRadians(90)), Math.toRadians(45))
+                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial - 20, yInitial + 30, Math.toRadians(120)), Math.toRadians(45))
+                        .splineToLinearHeading(new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xInitial + 23, yInitial + 64, Math.toRadians(540)), Math.toRadians(45))
                         .build());
 
         //Specimen auto, very bad, but I want to give Uchida and Zhang something to see and base their ideas off of

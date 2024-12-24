@@ -26,14 +26,13 @@ public class Functions {
     Servo horizontalSlidesLeft;
     Servo horizontalSlidesRight;
 
-    DcMotor rightBack;
+    public DcMotor rightBack;
 
-    DcMotor rightFront;
+    public DcMotor rightFront;
 
-    DcMotor leftBack;
+    public DcMotor leftBack;
 
-    DcMotor leftFront;
-
+    public DcMotor leftFront;
     DcMotor verticalSlidesRight;
 
     DcMotor verticalSlidesLeft;
@@ -80,6 +79,14 @@ public class Functions {
     public static int specimenStartDepositVerticalSlides;
     public static int specimenFinishDepositVerticalSlides;
 
+    public boolean changedRightTrigger = false;
+    public boolean changedLeftTrigger = false;
+    public boolean changedSlide = false;
+    public boolean changedA = false;
+    public boolean changedB = false;
+    public boolean changedRightBumper = false;
+    public boolean changedZhangCynthia = false;
+    public boolean changedY = false;
     public Functions (HardwareMap hardwareMap) {
 
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -129,6 +136,8 @@ public class Functions {
         intakeRotator = hardwareMap.get(Servo.class,"intakeRotator");
 
         //we will create macros in the future, to remove room for error
+
+
     }
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
@@ -225,7 +234,7 @@ public class Functions {
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         shaq.setPosition(specimenPickupPositionRight);
-        clawRotator.setPosition(specimenPickupPositionRight);
+        clawRotator.setPosition(specimenClawRotation);
 
         ElapsedTime et = new ElapsedTime();
         et.reset();
@@ -241,6 +250,86 @@ public class Functions {
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void rotateElbow(boolean buttonPressed) {
+        if (buttonPressed && !changedB) {
+            if (elbow.getPosition() == elbowInsidePositionRight) {
+                extend();
+                changedB = true;
+            } else if (elbow.getPosition() == elbowOutsidePositionRight) {
+                retrieve();
+                changedB = true;
+            }
+        } else if (!buttonPressed) {
+            changedB = false;
+        }
+    }
 
+    public void activateIntake(boolean buttonPressed) {
+        if (buttonPressed) {
+            intake();
+        } else {
+            passive();
+        }
+    }
+
+    public void activateEject(boolean buttonPressed) {
+        if (buttonPressed){
+            eject();
+        } else {
+            passive();
+        }
+    }
+
+    public void activateExtendo(double buttonPressed) {
+        if (buttonPressed != 0 && !changedRightTrigger) {
+            if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPositionRight){
+                extend();
+                changedRightTrigger = true;
+            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPositionRight) {
+                retrieve();
+                changedRightTrigger = true;
+            }
+        } else if (buttonPressed == 0) {
+            changedRightTrigger = false;
+        }
+    }
+
+    public void activateClaw(boolean buttonPressed) {
+        //code for l claw
+        if (buttonPressed && !changedY) {
+            if (claw.getPosition() == clawOpenPosition) {
+                grabSample();
+                changedY = true;
+            } else if (claw.getPosition() == clawClosedPosition) {
+                dropSample();
+                changedY = true;
+            }
+        } else if(!buttonPressed) {
+            changedY = false;
+        }
+    }
+
+    public void activateClawRotator(double buttonPressed) {
+        //this could be so much better
+        if (buttonPressed != 0 && !changedLeftTrigger) {
+            if(claw.getPosition() == clawClosedPosition) {
+                dunk();
+            } else if(claw.getPosition() == clawOpenPosition) {
+                grab();
+            } else {
+                passive();
+            }
+        } else if (buttonPressed == 0) {
+            passive();
+            changedLeftTrigger = true;
+        }
+    }
+
+    public void activateVerticalSlides(double buttonPressed) {
+        if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
+            verticalSlidesLeft.setPower(buttonPressed);
+            verticalSlidesRight.setPower(buttonPressed);
+        }
+    }
 }
 

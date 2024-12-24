@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Team636Code;
+package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,15 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
-public class CalvinTeleOp extends LinearOpMode {
+public class CurrentCalvinTeleOp extends LinearOpMode {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
-    Servo shaqLeft;
-    Servo shaqRight;
+    Servo shaq;
+    Servo clawRotator;
 
-    Servo elbowServoLeft;
-    Servo elbowServoRight;
+    Servo elbow;
+    Servo intakeRotator;
 
     Servo horizontalSlidesLeft;
     Servo horizontalSlidesRight;
@@ -38,20 +38,27 @@ public class CalvinTeleOp extends LinearOpMode {
     public static double clawOpenPosition;
     public static double clawClosedPosition;
 
-    public static double clawPassivePositionLeft;
 
     public static double clawPassivePositionRight;
-    public static double clawRetrievePositionLeft;
+
+    public static double clawPassiveRotation;
 
     public static double clawRetrievePositionRight;
-    public static double clawScorePositionLeft;
+
+    public static double clawPickUpRotation;
+
     public static double clawScorePositionRight;
 
-    public static double elbowInsidePositionLeft;
-    public static double elbowOutsidePositionLeft;
+    public static double clawScoreRotation;
+
     public static double elbowInsidePositionRight;
     public static double elbowOutsidePositionRight;
 
+    public static double intakePassiveRotation;
+
+    public static double intakeActiveRotation;
+
+    public static double intakePickUpRotation;
     public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
 
     public static double horizontalSlidesInitialPositionLeft;
@@ -59,6 +66,15 @@ public class CalvinTeleOp extends LinearOpMode {
 
     public static double horizontalSlidesExtendedPositionLeft;
     public static double horizontalSlidesExtendedPositionRight;
+
+
+    public static double specimenPickupPositionRight;
+    public static int specimenStartPickupVerticalSlides;
+
+    public static double specimenClawRotation;
+    public static int specimenFinishPickupVerticalSlides;
+    public static int specimenStartDepositVerticalSlides;
+    public static int specimenFinishDepositVerticalSlides;
 
 
 
@@ -107,10 +123,10 @@ public class CalvinTeleOp extends LinearOpMode {
         continuousIntakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
         continuousIntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         claw = hardwareMap.get(Servo.class,"claw");
-        shaqLeft = hardwareMap.get(Servo.class,"shaqLeft");
-        shaqRight = hardwareMap.get(Servo.class,"shaqRight");
-        elbowServoLeft = hardwareMap.get(Servo.class,"elbowServoLeft");
-        elbowServoRight = hardwareMap.get(Servo.class,"elbowServoRight");
+        shaq = hardwareMap.get(Servo.class,"shaq");
+        intakeRotator = hardwareMap.get(Servo.class,"intakeRotator");
+        elbow = hardwareMap.get(Servo.class,"elbow");
+        intakeRotator = hardwareMap.get(Servo.class,"intakeRotator");
 
 
         //These booleans are also for testing positions at small intervals at a time
@@ -135,10 +151,10 @@ public class CalvinTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             //Moves the elbow. TEST these positions
             if (gamepad2.b && !changedB) {
-                if (elbowServoRight.getPosition() == elbowInsidePositionRight) {
+                if (elbow.getPosition() == elbowInsidePositionRight) {
                     extend();
                     changedB = true;
-                } else if (elbowServoRight.getPosition() == elbowOutsidePositionRight) {
+                } else if (elbow.getPosition() == elbowOutsidePositionRight) {
                     retrieve();
                     changedB = true;
                 }
@@ -202,6 +218,8 @@ public class CalvinTeleOp extends LinearOpMode {
 
             if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
                 rise();
+                //verticalSlidesLeft.setPower(gamepad2.left_stick_y);
+                //verticalSlidesRight.setPower(gamepad2.left_stick_y);
             }
 
 
@@ -215,6 +233,7 @@ public class CalvinTeleOp extends LinearOpMode {
             rightBack.setPower(joystickY + joystickX - joystickR);
             leftBack.setPower(joystickY - joystickX + joystickR);
 
+
         }
 
     }
@@ -223,63 +242,111 @@ public class CalvinTeleOp extends LinearOpMode {
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
         claw.setPosition(clawOpenPosition);
-        shaqLeft.setPosition(clawPassivePositionLeft);
-        shaqRight.setPosition(clawPassivePositionRight);
-        elbowServoLeft.setPosition(elbowInsidePositionLeft);
-        elbowServoRight.setPosition(elbowInsidePositionRight);
+        shaq.setPosition(clawPassivePositionRight);
+        clawRotator.setPosition(clawPassiveRotation);
+        elbow.setPosition(intakePassiveRotation);
+        intakeRotator.setPosition(elbowInsidePositionRight);
     }
 
     public void extend(){
         horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesExtendedPositionRight);
-        elbowServoLeft.setPosition(elbowOutsidePositionLeft);
-        elbowServoRight.setPosition(elbowOutsidePositionRight);
+        elbow.setPosition(elbowOutsidePositionRight);
+        intakeRotator.setPosition(intakeActiveRotation);
     }
 
     public void intake(){
         continuousIntakeLeft.setPower(1);
         continuousIntakeRight.setPower(-1);
+        intakeRotator.setPosition(intakeActiveRotation);
     }
 
     public void eject() {
         continuousIntakeLeft.setPower(-1);
         continuousIntakeRight.setPower(1);
+        intakeRotator.setPosition(intakeActiveRotation);
     }
 
     public void passive() {
         continuousIntakeLeft.setPower(0);
         continuousIntakeRight.setPower(0);
-        shaqLeft.setPosition(clawPassivePositionLeft);
-        shaqRight.setPosition(clawPassivePositionRight);
+        shaq.setPosition(clawPassivePositionRight);
+        clawRotator.setPosition(clawPassiveRotation);
     }
 
     public void retrieve(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
-
+        intakeRotator.setPosition(intakePickUpRotation);
     }
 
     public void grabSample(){
         claw.setPosition(clawClosedPosition);
     }
 
-    public void grab(){
-        shaqLeft.setPosition(clawRetrievePositionLeft);
-        shaqRight.setPosition(clawRetrievePositionRight);
-    }
-
     public void dropSample(){
         claw.setPosition(clawOpenPosition);
     }
+
+    public void grab(){
+        shaq.setPosition(clawRetrievePositionRight);
+        clawRotator.setPosition(clawPickUpRotation);
+    }
+
+
 
     public void rise(){
         verticalSlidesLeft.setPower(gamepad2.left_stick_y);
         verticalSlidesRight.setPower(gamepad2.left_stick_y);
     }
+    public void lift(){
+        verticalSlidesLeft.setTargetPosition(verticalSlideHighScoringPositionLimit);
+        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(verticalSlideHighScoringPositionLimit);
+        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void fall(){
+        verticalSlidesLeft.setTargetPosition(0);
+        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(0);
+        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     public void dunk() {
-        shaqLeft.setPosition(clawScorePositionLeft);
-        shaqRight.setPosition(clawScorePositionRight);
+        shaq.setPosition(clawScorePositionRight);
+        clawRotator.setPosition(clawScoreRotation);
+    }
+
+    public void specimenPickUp() {
+        claw.setPosition(clawOpenPosition);
+
+
+        verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
+        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
+        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        shaq.setPosition(specimenPickupPositionRight);
+        clawRotator.setPosition(specimenClawRotation);
+
+        ElapsedTime et = new ElapsedTime();
+        et.reset();
+        while(et.milliseconds() < 5000);
+        claw.setPosition(clawClosedPosition);
+        et.reset();
+        while(et.milliseconds() < 1000);
+        verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 

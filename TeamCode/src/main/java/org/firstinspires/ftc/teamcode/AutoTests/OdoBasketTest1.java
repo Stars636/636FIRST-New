@@ -1,27 +1,22 @@
 package org.firstinspires.ftc.teamcode.AutoTests;
 
+// Import necessary classes
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CalvinFunctions.Calvin;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-
+// In your Autonomous OpMode
 @Autonomous
-
-public class BasketAutoCalvinFinal extends LinearOpMode {
-
+public class OdoBasketTest1 extends LinearOpMode {
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         ElapsedTime et = new ElapsedTime();
-
-        Calvin calvin = new Calvin(hardwareMap);
-
-        calvin.initialPositions();
-
+        // Initialize the drive
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // Define the starting pose (e.g., starting point on the field)
@@ -33,7 +28,7 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(xInitial - 12, yInitial + 12, Math.toRadians(45));
+        Pose2d scorePose = new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45));
         TrajectorySequence a1 = drive.trajectorySequenceBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(90))
                 .build();
@@ -65,143 +60,21 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
         telemetry.addLine("Best Wishes.");
         telemetry.update();
 
-
+        // Follow each trajectory sequentially
         while (opModeIsActive()) {
-            calvin.grabSample();
             drive.followTrajectorySequence(a1);
-
-            calvin.wait(0.5);
-
-            calvin.lift();
-            calvin.dunk();
-
-            calvin.wait(2);
-
-            calvin.dropSample();
-            calvin.passive();
-
-            calvin.wait(0.5);
-
-            calvin.fall();
-
-            calvin.wait(2);
             drive.followTrajectorySequence(a2);
-
-            calvin.extend();
-
-            et.reset();
-            while (et.milliseconds() < 2000){
-                calvin.intake();
-            }
-
-            calvin.passive();
-            calvin.retrieve();
-
-
-            calvin.wait(0.5);
-            calvin.grab();
-
-
-            calvin.wait(1);
-
-            calvin.grabSample();
-
             drive.followTrajectorySequence(a3);
-
-            calvin.lift();
-            calvin.dunk();
-
-
-            calvin.wait(2);
-
-            calvin.dropSample();
-            calvin.passive();
-
-            calvin.wait(0.5);
-
-            calvin.fall();
-
-            calvin.wait(0.5);
             drive.followTrajectorySequence(a4);
-
-            calvin.extend();
-
-            et.reset();
-            while (et.milliseconds() < 2000){
-                calvin.intake();
-            }
-
-            calvin.passive();
-            calvin.retrieve();
-
-            calvin.wait(0.5);
-
-            calvin.grab();
-
-            calvin.wait(1);
-
-            calvin.grabSample();
-
             drive.followTrajectorySequence(a5);
-
-            calvin.lift();
-            calvin.dunk();
-
-            calvin.wait(2);
-
-            calvin.dropSample();
-            calvin.passive();
-
-            calvin.wait(0.5);
-
-            calvin.fall();
-
-            et.reset();
-            calvin.wait(0.5);
             drive.followTrajectorySequence(a6);
+            drive.followTrajectorySequence(a7);
+            //drive.followTrajectorySequence(a8);
 
-            calvin.extend();
 
             et.reset();
-            while (et.milliseconds() < 2000){
-                calvin.intake();
-            }
+            while (et.milliseconds() < 30000);
 
-            calvin.passive();
-            calvin.retrieve();
-
-
-            calvin.wait(0.5);
-
-            calvin.grab();
-
-
-            calvin.wait(1);
-
-            calvin.grabSample();
-
-            drive.followTrajectorySequence(a7);
-
-            calvin.lift();
-            calvin.dunk();
-
-            calvin.wait(2);
-
-            calvin.dropSample();
-            calvin.passive();
-
-            calvin.wait(0.5);
-
-            calvin.fall();
-
-            drive.followTrajectorySequence(a8);
-
-            calvin.hang();
-
-            calvin.wait(0.5);
-
-
-            calvin.wait(30000);
 
 
         }

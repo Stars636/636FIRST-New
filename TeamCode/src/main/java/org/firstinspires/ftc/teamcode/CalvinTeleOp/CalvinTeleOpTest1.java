@@ -5,10 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.CalvinFunctions.Calvin;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp
-public class CalvinTeleOpEfficient extends LinearOpMode {
+public class CalvinTeleOpTest1 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,7 +44,7 @@ public class CalvinTeleOpEfficient extends LinearOpMode {
             calvin.activateClawRotator(gamepad2.left_trigger);
 
             calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper);
-            
+
 
             calvin.passiveOrInitial(gamepad2.dpad_up);
 

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.CalvinFunctions.Calvin;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp
 public class CalvinTeleOpEfficient extends LinearOpMode {
@@ -45,11 +46,11 @@ public class CalvinTeleOpEfficient extends LinearOpMode {
 
             calvin.returnAfterDeposit(gamepad2.right_bumper);
 
-            calvin.returnToPassive(gamepad2.dpad_up);
-
-            calvin.returnToInitial(gamepad1.dpad_down);
+            calvin.passiveOrInitial(gamepad2.dpad_up);
 
             calvin.activateVerticalSlides(gamepad2.left_stick_y);
+
+            calvin.cheat1(telemetry);
 
             calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 

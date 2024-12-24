@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.CalvinFunctions;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.CalvinFunctions.HelperFunctions.PromiseCheatCode;
 
 
 public class Calvin {
@@ -94,7 +96,12 @@ public class Calvin {
 
     private VoltageSensor vs;
 
+    private ElapsedTime buttonTimer = new ElapsedTime();
+    private boolean buttonPreviouslyPressed = false;
+
     int pressCount = 0; // counts button presses
+
+    PromiseCheatCode cheatCode1;
     public Calvin(HardwareMap hardwareMap) {
         vs = hardwareMap.voltageSensor.get("Control Hub");
 
@@ -139,6 +146,8 @@ public class Calvin {
 
         //we will create macros in the future, to remove room for error
 
+        //cheat codes!!
+        cheatCode1 = new PromiseCheatCode(leftFront, rightFront, leftBack, rightBack);
 
     }
     public DcMotor getVerticalSlidesRight() {
@@ -454,6 +463,26 @@ public class Calvin {
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
+    public void passiveOrInitial(boolean buttonPressed) {
+        if (buttonPressed && !buttonPreviouslyPressed) {
+
+            buttonTimer.reset();
+            buttonPreviouslyPressed = true;
+        } else if (!buttonPressed && buttonPreviouslyPressed) {
+
+            buttonPreviouslyPressed = false;
+
+            // is it a tap or a hold??
+            double pressDuration = buttonTimer.milliseconds();
+            if (pressDuration < 800) {
+
+                returnToPassive(buttonPressed);
+            } else {
+
+                returnToInitial(buttonPressed);
+            }
+        }
+    }
 
     public void returnToPassive(boolean buttonPressed) {
         passive();
@@ -502,6 +531,10 @@ public class Calvin {
         leftFront.setPower(ly + joystickX + joystickR);
         rightBack.setPower(ly + joystickX - joystickR);
         leftBack.setPower(ly - joystickX + joystickR);
+    }
+
+    public void cheat1(Telemetry telemetry) {
+        cheatCode1.processInputs(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
     }
 }
 //else if (verticalSlidesLeft.getCurrentPosition() >= verticalSlideHighScoringPositionLimit)

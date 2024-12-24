@@ -12,12 +12,12 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 
-public class Test1_DOES_FUNCTION_LIST_WORK extends LinearOpMode {
+public class BasketAutoCalvinFinal extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
-        
+
         Calvin calvin = new Calvin(hardwareMap);
 
         calvin.initialPositions();

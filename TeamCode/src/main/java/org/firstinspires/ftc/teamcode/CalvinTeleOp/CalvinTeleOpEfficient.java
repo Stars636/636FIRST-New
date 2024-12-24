@@ -15,30 +15,14 @@ import org.firstinspires.ftc.teamcode.CalvinFunctions.Functions;
 @TeleOp
 public class CalvinTeleOpEfficient extends LinearOpMode {
 
-    private Functions functions;
-
-
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
-        functions = new Functions(hardwareMap);
+        Functions functions = new Functions(hardwareMap);
 
         functions.initialPositions();
-
-        //These booleans are also for testing positions at small intervals at a time
-        boolean changedRightTrigger = false;
-        boolean changedLeftTrigger = false;
-        boolean changedSlide = false;
-        boolean changedA = false;
-        boolean changedB = false;
-        boolean changedRightBumper = false;
-        boolean changedZhangCynthia = false;
-        boolean changedY = false;
         //Initial!!
-
-        functions.initialPositions();
-
         //we will create macros in the future, to remove room for error
         waitForStart();
 
@@ -64,7 +48,6 @@ public class CalvinTeleOpEfficient extends LinearOpMode {
             functions.activateClawRotator(gamepad2.left_trigger);
 
             functions.activateVerticalSlides(gamepad2.left_stick_y);
-
 
             double joystickX = -gamepad1.left_stick_x;
             double joystickY = gamepad1.left_stick_y;

@@ -49,7 +49,7 @@ public class Auto_COPYFROMHERE extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            
+
         }
     }
 }

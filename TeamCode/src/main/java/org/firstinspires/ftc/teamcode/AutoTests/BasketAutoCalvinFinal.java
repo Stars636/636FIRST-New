@@ -70,25 +70,21 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.grabSample();
             drive.followTrajectorySequence(a1);
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
 
             calvin.lift();
             calvin.dunk();
 
-            et.reset();
-            while (et.milliseconds() < 2000);
+            calvin.wait(2);
 
             calvin.dropSample();
             calvin.passive();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
 
             calvin.fall();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(2);
             drive.followTrajectorySequence(a2);
 
             calvin.extend();
@@ -101,13 +97,12 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.passive();
             calvin.retrieve();
 
-            et.reset();
-            while (et.milliseconds() < 250);
 
+            calvin.wait(0.5);
             calvin.grab();
 
-            et.reset();
-            while (et.milliseconds() < 1000);
+
+            calvin.wait(1);
 
             calvin.grabSample();
 
@@ -116,19 +111,17 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.lift();
             calvin.dunk();
 
-            et.reset();
-            while (et.milliseconds() < 2000);
+
+            calvin.wait(2);
 
             calvin.dropSample();
             calvin.passive();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
 
             calvin.fall();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
             drive.followTrajectorySequence(a4);
 
             calvin.extend();
@@ -141,13 +134,11 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.passive();
             calvin.retrieve();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
 
             calvin.grab();
 
-            et.reset();
-            while (et.milliseconds() < 1000);
+            calvin.wait(1);
 
             calvin.grabSample();
 
@@ -156,19 +147,17 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.lift();
             calvin.dunk();
 
-            et.reset();
-            while (et.milliseconds() < 2000);
+            calvin.wait(2);
 
             calvin.dropSample();
             calvin.passive();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
 
             calvin.fall();
 
             et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
             drive.followTrajectorySequence(a6);
 
             calvin.extend();
@@ -181,13 +170,13 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.passive();
             calvin.retrieve();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+
+            calvin.wait(0.5);
 
             calvin.grab();
 
-            et.reset();
-            while (et.milliseconds() < 1000);
+
+            calvin.wait(1);
 
             calvin.grabSample();
 
@@ -196,23 +185,23 @@ public class BasketAutoCalvinFinal extends LinearOpMode {
             calvin.lift();
             calvin.dunk();
 
-            et.reset();
-            while (et.milliseconds() < 2000);
+            calvin.wait(2);
 
             calvin.dropSample();
             calvin.passive();
 
-            et.reset();
-            while (et.milliseconds() < 250);
+            calvin.wait(0.5);
 
             calvin.fall();
 
             drive.followTrajectorySequence(a8);
 
-            calvin.dunk();
+            calvin.hang();
 
-            et.reset();
-            while (et.milliseconds() < 30000);
+            calvin.wait(0.5);
+
+
+            calvin.wait(30000);
 
 
         }

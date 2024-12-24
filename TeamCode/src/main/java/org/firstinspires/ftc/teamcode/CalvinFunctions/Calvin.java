@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -53,6 +54,8 @@ public class Calvin {
 
     public static double clawScoreRotation;
 
+    public static double clawHangRotation;
+
     public static double elbowInsidePositionRight;
     public static double elbowOutsidePositionRight;
 
@@ -89,8 +92,11 @@ public class Calvin {
 
     public boolean changedLeftBumper = false;
 
+    private VoltageSensor vs;
+
     int pressCount = 0; // counts button presses
     public Calvin(HardwareMap hardwareMap) {
+        vs = hardwareMap.voltageSensor.get("Control Hub");
 
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotor.class,"rightBack");
@@ -140,6 +146,11 @@ public class Calvin {
     }
     public DcMotor getVerticalSlidesLeft() {
         return verticalSlidesLeft;
+    }
+    public void wait(double seconds) {
+        ElapsedTime calvinTimer = new ElapsedTime();
+        calvinTimer.reset();
+        while(calvinTimer.seconds() < seconds);
     }
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
@@ -256,6 +267,9 @@ public class Calvin {
         verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+    public void hang() {
+        clawRotator.setPosition(clawHangRotation);
+    }
 
     public void dunk() {
         shaq.setPosition(clawScorePositionRight);
@@ -353,6 +367,8 @@ public class Calvin {
             changedY = false;
         }
     }
+
+
 
     public void activateClawRotator(double buttonPressed) {
         //this could be so much better

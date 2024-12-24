@@ -26,7 +26,9 @@ public class CalvinTeleOpEfficient extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            calvin.checkHardwareInitialization(telemetry);
+
+
+            calvin.cheat1(telemetry);
             //Moves the elbow. TEST these positions
             calvin.rotateElbow(gamepad2.b);
             //Activate  the intake
@@ -42,15 +44,14 @@ public class CalvinTeleOpEfficient extends LinearOpMode {
             //you have to continuously hold to dunk it
             calvin.activateClawRotator(gamepad2.left_trigger);
 
-            calvin.specimenPickupMacro(gamepad2.left_bumper);
-
-            calvin.returnAfterDeposit(gamepad2.right_bumper);
+            calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper);
+            
 
             calvin.passiveOrInitial(gamepad2.dpad_up);
 
             calvin.activateVerticalSlides(gamepad2.left_stick_y);
 
-            calvin.cheat1(telemetry);
+
 
             calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 

@@ -1,0 +1,1362 @@
+package org.firstinspires.ftc.teamcode.AutoTests.LastYearsAutos;
+
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
+import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import java.util.ArrayList;
+import java.util.List;
+
+// correctly detects both pipelines
+@Disabled
+@Autonomous(name = "cleanCodeRed")
+public class cleanCodeRed extends LinearOpMode {
+    /** MAKE SURE TO CHANGE THE FOV AND THE RESOLUTIONS ACCORDINGLY **/
+    private static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
+    private static final int CAMERA_HEIGHT = 360; // height of wanted camera resolution
+    private static final double FOV = 40;
+
+    private double strafeApril;
+    private double distanceApril;
+    private boolean isDetectingWhite = false;
+
+    OpenCvCamera controlHubCam;
+    OpenCvCamera aprilTagCam;
+    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    static final double FEET_PER_METER = 3.28084;
+
+    // Lens intrinsics
+    // UNITS ARE PIXELS
+    // NOTE: this calibration is for the C920 webcam at 800x448.
+    // You will need to do your own calibration for other configurations!
+    double fx = 821.993;
+    double fy = 821.993;
+    double cx = 330.489;
+    double cy = 248.997;
+    double side = 0;
+
+    // UNITS ARE METERS
+    double tagsize = 0.166;
+
+    int ID_TAG_OF_INTEREST_LEFT = 1; // Tag ID 18 from the 36h11 family
+    int ID_TAG_OF_INTEREST_MID = 2;
+    int ID_TAG_OF_INTEREST_RIGHT = 3;
+    int numFramesWithoutDetection = 0;
+    final float DECIMATION_HIGH = 3;
+    final float DECIMATION_LOW = 2;
+    final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
+    final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
+
+    private BNO055IMU imu;
+    private double cX = 0;
+    private double cY = 0;
+    private double width = 0;
+    private double angle = 0;
+
+    // Calculate the distance using the formula
+    public static final double objectWidthInRealWorldUnits = 3.75;  // Replace with the actual width of the object in real-world units
+    public static final double focalLength = 416;  // Replace with the focal length of the camera in pixels
+
+    @Override
+    public void runOpMode() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        DcMotor motorLinearSlides1 = hardwareMap.dcMotor.get("motorLinearSlides1");
+        DcMotor motorLinearSlides2 = hardwareMap.dcMotor.get("motorLinearSlides2");
+
+        DcMotor activeIntake = hardwareMap.dcMotor.get("activeIntake");
+
+        Servo twisty = hardwareMap.servo.get("twisty");
+        twisty.setDirection(Servo.Direction.FORWARD);
+
+        motorLinearSlides1.setZeroPowerBehavior(BRAKE);
+        motorLinearSlides2.setZeroPowerBehavior(BRAKE);
+
+        activeIntake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        activeIntake.setZeroPowerBehavior(BRAKE);
+
+        Servo leftPickup = hardwareMap.servo.get("leftPickup");
+        Servo rightPickup = hardwareMap.servo.get("rightPickup");
+
+        leftPickup.setDirection(Servo.Direction.FORWARD);
+        rightPickup.setDirection(Servo.Direction.FORWARD);
+
+        Servo wristServo = hardwareMap.servo.get("wristServo");
+        wristServo.setDirection(Servo.Direction.FORWARD);
+
+        // finally the arm thingy
+        Servo armServoRight = hardwareMap.servo.get("armServoRight");
+        Servo armServoLeft = hardwareMap.servo.get("armServoLeft");
+
+        // one of these will have to be reversed
+        armServoRight.setDirection(Servo.Direction.FORWARD);
+        armServoLeft.setDirection(Servo.Direction.FORWARD);
+
+        // for initializing cameras
+        int[] viewportContainerIds = OpenCvCameraFactory.getInstance()
+                .splitLayoutForMultipleViewports(
+                        cameraMonitorViewId, //The container we're splitting
+                        2, //The number of sub-containers to create
+                        OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
+
+        // initialize cameras and detection pipeline
+        controlHubCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), viewportContainerIds[0]);
+        aprilTagCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), viewportContainerIds[1]);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+
+        // open cameras safely
+        controlHubCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                controlHubCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Control hub cam:", "failed");
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
+        aprilTagCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                aprilTagCam.setPipeline(aprilTagDetectionPipeline);
+                aprilTagCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("April tag cam:", "failed");
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        dashboard.startCameraStream(controlHubCam, 30);
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        while(!isStarted() && !isStopRequested()) {
+            if (getAngleTarget(cX) < 6.6) {
+                side = 3;
+                telemetry.addLine("right side!");
+                telemetry.addData("Side:", side);
+                telemetry.update();
+            } else if (getAngleTarget(cX) > 6.6 && getAngleTarget(cX) < 14.8) {
+                side = 2;
+                telemetry.addLine("middle!");
+                telemetry.addData("Side:", side);
+                telemetry.update();
+            } else if (getAngleTarget(cX) > 14.8) {
+                side = 1;
+                telemetry.addLine("left side!");
+                telemetry.addData("Side:", side);
+                telemetry.update();
+            } else {
+                telemetry.addLine("were fuckkkkkkkkkkkked");
+            }
+
+            telemetry.update();
+            sleep(20);
+        }
+
+        while(!isStopRequested()) {
+            if (side == 1) {
+                Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0))
+                        .splineTo(new Vector2d(28, 5), Math.toRadians(30),
+                                SampleMecanumDrive.getVelocityConstraint(30, Math.toRadians(50), DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(20))
+                        .build();
+                Trajectory traj2 = drive.trajectoryBuilder(traj1.end(), true)
+                        .splineTo(new Vector2d(28, -23), Math.toRadians(-90),
+                                SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(30))
+                        .build();
+                drive.followTrajectory(traj1);
+                drive.followTrajectory(traj2);
+                twisty.setPosition(.15);
+                // TODO: why does he do this twice?
+                dashboard.stopCameraStream();
+                dashboard.startCameraStream(aprilTagCam, 30);
+                sleep(50);
+
+                ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+                for (AprilTagDetection tag : currentDetections) {
+                    Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
+                    dashboard.stopCameraStream();
+                    dashboard.startCameraStream(aprilTagCam, 30);
+                    if (tag.id == 5) {
+                        if (rot.firstAngle > -3) {
+                            strafeApril = 9;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle > -10 && rot.firstAngle < -3) {
+                            strafeApril = 6;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle < -10) {
+                            strafeApril = 4.5;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        }
+                    } else if (tag.id == 6) {
+                        if (rot.firstAngle > -3) {
+                            strafeApril = 17;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle > -10 && rot.firstAngle < -3) {
+                            strafeApril = 15;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle < -10) {
+                            strafeApril = 13;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        }
+                    } else if (tag.id == 4) {
+                        strafeApril = 4;
+                        distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                    }
+                    else{
+                        strafeApril = 2;
+                        distanceApril = -32;
+                    }
+
+                    Trajectory traj1a = drive.trajectoryBuilder(new Pose2d(28, -23, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(strafeApril + 28, distanceApril, Math.toRadians(90)))
+                            .build();
+                    Trajectory traj2a = drive.trajectoryBuilder(traj1a.end())
+                            .splineToConstantHeading(new Vector2d(49, -10), Math.toRadians(90))
+                            .splineToConstantHeading(new Vector2d(50, 55), Math.toRadians(90))
+                            .addTemporalMarker(1, () -> {
+                                dashboard.stopCameraStream();
+                                dashboard.startCameraStream(controlHubCam, 30);
+                                isDetectingWhite = true;
+                                controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                                telemetry.addData("opmode: ", "active");
+                                telemetry.addData("angle:", getAngleTarget(cX) - 10);
+                                telemetry.addData("distance:", getDistance(width) * .58);
+                                telemetry.update();
+                            })
+                            .build();
+
+                    drive.followTrajectory(traj1a);
+                    drive.followTrajectory(traj2a);
+
+                    // change pipeline so it detects white pixels now
+
+                    telemetry.addData("opmode: ", "active");
+                    telemetry.addData("angle:", getAngleTarget(cX) - 10);
+                    telemetry.addData("distance:", getDistance(width) * .58);
+                    telemetry.update();
+                    // TODO: change y value, check if it helps get to pixel stack
+
+
+                    if ((getAngleTarget(cX) - 10.9) < 0 && (.58 * getDistance(width)) < 30) {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(), true)
+                                .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(51, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(51, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58 * getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+
+
+                    } else if ((getAngleTarget(cX) - 10.9) >= 0 && (.58 * getDistance(width)) < 30) {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(), true)
+                                .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(51, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(51, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58 * getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+                        }
+                    } else {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d(47, 68, Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(), true)
+                                .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(51, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(51, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58 * getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+                        }
+                    }
+                    sleep(5000000);
+                }
+            } else if (side == 2) {
+                Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0))
+                        .forward(28)
+                        .build();
+                Trajectory traj2 = drive.trajectoryBuilder(traj1.end(), true)
+                        .splineToLinearHeading(new Pose2d(28, -23, Math.toRadians(90)), Math.toRadians(0),
+                                SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(30))
+                        .build();
+                drive.followTrajectory(traj1);
+                drive.followTrajectory(traj2);
+                twisty.setPosition(.15);
+                dashboard.stopCameraStream();
+                dashboard.startCameraStream(aprilTagCam, 30);
+                telemetry.addLine("Just restarted robot here");
+                sleep(100);
+                ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+                for (AprilTagDetection tag : currentDetections) {
+                    Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
+                    dashboard.stopCameraStream();
+                    dashboard.startCameraStream(aprilTagCam, 30);
+
+                    // TODO: ask david about strafeApril
+                    if (tag.id == 5){
+                        strafeApril = -3;
+                        distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                    } else if (tag.id == 6){
+                        if (rot.firstAngle > -3) {
+                            strafeApril = 8;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                        } else if (rot.firstAngle > -10 && rot.firstAngle < -3) {
+                            strafeApril = 6;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                        } else if (rot.firstAngle < -10) {
+                            strafeApril = 4;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                        }
+                    } else if (tag.id == 4) {
+                        if (rot.firstAngle > -3) {
+                            strafeApril = -3;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                        } else if (rot.firstAngle > -10 && rot.firstAngle < -3) {
+                            strafeApril = -6;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                        } else if (rot.firstAngle < -10) {
+                            strafeApril = -8;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+                        }
+                    }
+                    else{
+                        strafeApril = -3;
+                        distanceApril = -32;
+                    }
+                    Trajectory traj1a = drive.trajectoryBuilder(new Pose2d(28, -23, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(strafeApril+28, distanceApril, Math.toRadians(90)))
+                            .build();
+
+                    Trajectory traj2a = drive.trajectoryBuilder(traj1a.end())
+                            .splineToConstantHeading(new Vector2d(48, -10), Math.toRadians(90))
+                            .splineToConstantHeading(new Vector2d(48, 55), Math.toRadians(90))
+                            .addTemporalMarker(1, () -> {
+                                dashboard.stopCameraStream();
+                                dashboard.startCameraStream(controlHubCam, 30);
+                                isDetectingWhite = true;
+                                controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                                telemetry.addData("opmode: ", "active");
+                                telemetry.addData("angle:", getAngleTarget(cX) - 10);
+                                telemetry.addData("distance:", getDistance(width) * .58);
+                                telemetry.update();
+                            })
+                            .build();
+
+                    drive.followTrajectory(traj1a);
+                    drive.followTrajectory(traj2a);
+                    dashboard.stopCameraStream();
+                    dashboard.startCameraStream(controlHubCam, 30);
+                    isDetectingWhite = true;
+                    controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                    // change pipeline so it detects white pixels now
+                    telemetry.addData("opmode: ", "active");
+                    telemetry.addData("angle:", getAngleTarget(cX) - 10);
+                    telemetry.addData("distance:", getDistance(width) * .58);
+                    telemetry.update();
+                    // TODO: change y value, check if it helps get to pixel stack
+
+
+                    if ((getAngleTarget(cX) - 10.9) < 0 && (.58*getDistance(width)) < 30) {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d((.5*(getAngleTarget(cX) - 10.9))+47, -((-.58*getDistance(width))-53), Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(),true)
+                                .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(51, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(51, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(500);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58*getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+
+
+
+
+                    } else if ((getAngleTarget(cX) - 10.9) >= 0 && (.58*getDistance(width)) < 30) {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(), true)
+                                .splineToConstantHeading(new Vector2d(50, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(51, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(51, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58 * getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+                        else{
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 *(2.9)) + 47, -((-.58 * 20) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+                        }
+                    }
+                    else{
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d(47, 68, Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(),true)
+                                .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(48, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(48, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58*getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(53, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+                    }
+                    sleep(5000000);
+                }
+            } else if (side == 3) {
+                Trajectory traj1 = drive.trajectoryBuilder(new Pose2d(0, 0))
+                        .lineToLinearHeading(new Pose2d(20, -13, Math.toRadians(0)))
+                        .build();
+                Trajectory traj2 = drive.trajectoryBuilder(traj1.end(),true)
+                        .splineToLinearHeading(new Pose2d(28, -23, Math.toRadians(90)), Math.toRadians(90))
+                        .build();
+
+                drive.followTrajectory(traj1);
+                drive.followTrajectory(traj2);
+                twisty.setPosition(.15);
+                dashboard.stopCameraStream();
+                dashboard.startCameraStream(aprilTagCam, 30);
+                sleep(50);
+
+                ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+                for (AprilTagDetection tag : currentDetections) {
+                    Orientation rot = Orientation.getOrientation(tag.pose.R, AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES);
+                    dashboard.stopCameraStream();
+                    dashboard.startCameraStream(aprilTagCam, 30);
+
+                    if (tag.id == 5) {
+                        if (rot.firstAngle > -3) {
+                            strafeApril = -5;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle > -10 && rot.firstAngle < -3) {
+                            strafeApril = -7;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle < -10) {
+                            strafeApril = -9;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        }
+                    } else if (tag.id == 4) {
+                        if (rot.firstAngle > -3) {
+                            strafeApril = -12;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle > -10 && rot.firstAngle < -3) {
+                            strafeApril = -13;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        } else if (rot.firstAngle < -10) {
+                            strafeApril = -16;
+                            distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                        }
+                    } else if (tag.id == 6) {
+                        strafeApril = -2;
+                        distanceApril = (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 23);
+
+                    }
+                    else {
+                        strafeApril = -2;
+                        distanceApril = -32;
+                    }
+
+                    Trajectory traj1a = drive.trajectoryBuilder(new Pose2d(28, -23, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(strafeApril+28, distanceApril, Math.toRadians(90)))
+                            .build();
+                    Trajectory traj2a = drive.trajectoryBuilder(traj1a.end())
+                            .splineToConstantHeading(new Vector2d(48, -10), Math.toRadians(90))
+                            .splineToConstantHeading(new Vector2d(48, 55), Math.toRadians(90))
+                            .addTemporalMarker(1, () -> {
+                                dashboard.stopCameraStream();
+                                dashboard.startCameraStream(controlHubCam, 30);
+                                isDetectingWhite = true;
+                                controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                                telemetry.addData("opmode: ", "active");
+                                telemetry.addData("angle:", getAngleTarget(cX) - 10);
+                                telemetry.addData("distance:", getDistance(width) * .58);
+                                telemetry.update();
+                            })
+                            .build();
+
+                    drive.followTrajectory(traj1a);
+                    drive.followTrajectory(traj2a);
+
+                    // change pipeline so it detects white pixels now
+
+                    telemetry.addData("opmode: ", "active");
+                    telemetry.addData("angle:", getAngleTarget(cX) - 10);
+                    telemetry.addData("distance:", getDistance(width) * .58);
+                    telemetry.update();
+                    // TODO: change y value, check if it helps get to pixel stack
+
+
+                    if ((getAngleTarget(cX) - 10.9) < 0 && (.58*getDistance(width)) < 30) {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d((.5*(getAngleTarget(cX) - 10.9))+47, -((-.58*getDistance(width))-53), Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(),true)
+                                .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(48, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(48, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58*getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+
+
+
+
+                    } else if ((getAngleTarget(cX) - 10.9) >= 0 && (.58*getDistance(width)) < 30) {
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(), true)
+                                .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(48, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(48, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58 * getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+                    }
+                    else{
+                        Trajectory traj4 = drive.trajectoryBuilder(traj2a.end())
+                                .lineToLinearHeading(new Pose2d(47, 68, Math.toRadians(90)))
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.55);
+                                    activeIntake.setPower(-1);
+                                })
+                                .build();
+                        Trajectory traj5 = drive.trajectoryBuilder(traj4.end(),true)
+                                .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                .addTemporalMarker(0, () -> {
+                                    twisty.setPosition(.1);
+                                })
+                                .addTemporalMarker(0, () -> {
+                                    activeIntake.setPower(0);
+                                })
+
+                                .build();
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(500);
+
+                        Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+                                .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                .build();
+
+                        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                                .splineToConstantHeading(new Vector2d(48, -10), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(48, 55), Math.toRadians(90))
+                                .build();
+
+                        drive.followTrajectory(traj4);
+                        drive.followTrajectory(traj5);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(aprilTagCam, 30);
+                        sleep(100);
+                        drive.followTrajectory(traj6);
+                        sleep(100);
+                        drive.followTrajectory(traj7);
+                        dashboard.stopCameraStream();
+                        dashboard.startCameraStream(controlHubCam, 30);
+                        isDetectingWhite = true;
+                        controlHubCam.setPipeline(new YellowBlobDetectionPipeline(isDetectingWhite));
+                        sleep(1000);
+                        if ((getAngleTarget(cX) - 10.9) < 0 && (.58*getDistance(width)) < 30) {
+                            Trajectory traj8 = drive.trajectoryBuilder(traj7.end())
+                                    .lineToLinearHeading(new Pose2d((.5 * (getAngleTarget(cX) - 10.9)) + 47, -((-.58 * getDistance(width)) - 53), Math.toRadians(90)))
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.55);
+                                        activeIntake.setPower(-1);
+                                    })
+                                    .build();
+                            Trajectory traj9 = drive.trajectoryBuilder(traj8.end(), true)
+                                    .splineToConstantHeading(new Vector2d(48, -5), Math.toRadians(90))
+                                    .splineToConstantHeading(new Vector2d(28, -23), Math.toRadians(90))
+
+                                    .addTemporalMarker(0, () -> {
+                                        twisty.setPosition(.1);
+                                    })
+                                    .addTemporalMarker(0, () -> {
+                                        activeIntake.setPower(0);
+                                    })
+
+                                    .build();
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(500);
+
+                            Trajectory traj10 = drive.trajectoryBuilder(traj9.end())
+                                    .lineToLinearHeading(new Pose2d(28, (-((tag.pose.z * FEET_PER_METER * 1.8) - 4) - 20), Math.toRadians(90)))
+                                    .build();
+
+                            drive.followTrajectory(traj8);
+                            drive.followTrajectory(traj9);
+                            dashboard.stopCameraStream();
+                            dashboard.startCameraStream(aprilTagCam, 30);
+                            sleep(100);
+                            drive.followTrajectory(traj10);
+
+
+                        }
+                    }
+                    sleep(5000000);
+                }
+            }
+        }
+    }
+
+    class YellowBlobDetectionPipeline extends OpenCvPipeline {
+        boolean isDetectingWhite;
+        Scalar lower = new Scalar(0, 0, 0);
+        Scalar upper = new Scalar(0, 0, 0);
+
+        YellowBlobDetectionPipeline(boolean isDetectingWhite_) {
+            isDetectingWhite = isDetectingWhite_;
+        }
+
+        @Override
+        public Mat processFrame(Mat input) {
+            // Preprocess the frame to detect yellow regions
+            Mat yellowMask = preprocessFrame(input);
+
+            // Find contours of the detected yellow regions
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchy = new Mat();
+            Imgproc.findContours(yellowMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+            // Find the largest yellow contour (blob)
+            MatOfPoint largestContour = findLargestContour(contours);
+
+            if (largestContour != null) {
+                telemetry.addData("cX: ", cX);
+
+                // Draw a red outline around the largest detected object
+                Imgproc.drawContours(input, contours, contours.indexOf(largestContour), new Scalar(255, 0, 0), 2);
+                // Calculate the width of the bounding box
+                width = calculateWidth(largestContour);
+
+                // Display the width next to the label
+                String widthLabel = "Width: " + (int) width + " pixels";
+                Imgproc.putText(input, widthLabel, new Point(cX + 10, cY + 20), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 255, 0), 2);
+                //Display the Distance
+                String distanceLabel = "Distance: " + String.format("%.2f", getDistance(width)) + " inches";
+                Imgproc.putText(input, distanceLabel, new Point(cX + 10, cY + 60), Imgproc.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 255, 0), 2);
+                // Calculate the centroid of the largest contour
+                Moments moments = Imgproc.moments(largestContour);
+                cX = moments.get_m10() / moments.get_m00();
+                cY = moments.get_m01() / moments.get_m00();
+
+                // Draw a dot at the centroid
+                String label = "(" + (int) cX + ", " + (int) cY + ")";
+                Imgproc.putText(input, label, new Point(cX + 10, cY), Imgproc.FONT_HERSHEY_COMPLEX, 0.5, new Scalar(0, 255, 0), 2);
+                Imgproc.circle(input, new Point(cX, cY), 5, new Scalar(0, 255, 0), -1);
+            }
+            return input;
+        }
+
+        private Mat preprocessFrame(Mat frame) {
+            Mat hsvFrame = new Mat();
+            Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_BGR2HSV);
+
+            // HSV for detecting red colour
+            if (isDetectingWhite) {
+                lower = new Scalar(0, 0, 200);
+                upper = new Scalar(180, 10, 255);
+            } else {
+                lower = new Scalar(100, 100, 100);
+                upper = new Scalar(180, 255, 255);
+            }
+
+            Mat yellowMask = new Mat();
+            Core.inRange(hsvFrame, lower, upper, yellowMask);
+            hsvFrame.release();
+
+            Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+            Imgproc.morphologyEx(yellowMask, yellowMask, Imgproc.MORPH_OPEN, kernel);  // remove noise
+            Imgproc.morphologyEx(yellowMask, yellowMask, Imgproc.MORPH_CLOSE, kernel);  // add in pixels
+            kernel.release();
+
+            return yellowMask;
+        }
+
+        private MatOfPoint findLargestContour(List<MatOfPoint> contours) {
+            double maxArea = 0;
+            MatOfPoint largestContour = null;
+
+            for (MatOfPoint contour : contours) {
+                double area = Imgproc.contourArea(contour);
+                if (area > maxArea) {
+                    maxArea = area;
+                    largestContour = contour;
+                }
+            }
+            return largestContour;
+        }
+
+        private double calculateWidth(MatOfPoint contour) {
+            Rect boundingRect = Imgproc.boundingRect(contour);
+            return boundingRect.width;
+        }
+    }
+
+    private static double getAngleTarget(double objMidpoint){
+        double midpoint = -((objMidpoint - (CAMERA_WIDTH/2))*FOV)/CAMERA_WIDTH;
+        return midpoint;
+    }
+
+    private static double getDistance(double width){
+        double distance = (objectWidthInRealWorldUnits * focalLength) / width;
+        return distance;
+    }
+}

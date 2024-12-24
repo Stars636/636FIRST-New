@@ -395,10 +395,19 @@ public class Calvin {
         }
     }
 
-    public void specimenPickupMacro(boolean buttonPressed) {
+    public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
         //macro!!
         if (buttonPressed) {
             pressCount++;
+        }
+
+        if (reverseButton) {
+            if (pressCount == 0) {
+                pressCount = 4;
+            }
+            else {
+                pressCount--;
+            }
         }
 
         if (pressCount == 1) {
@@ -486,6 +495,7 @@ public class Calvin {
 
     public void returnToPassive(boolean buttonPressed) {
         passive();
+        returnAfterDeposit(buttonPressed);
     }
 
     public void returnToInitial(boolean buttonPressed) {

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CalvinFunctions.Functions;
+import org.firstinspires.ftc.teamcode.CalvinFunctions.Calvin;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -14,14 +14,13 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 public class Test1_DOES_FUNCTION_LIST_WORK extends LinearOpMode {
 
-    private Functions functions;
-
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
-        functions = new Functions(hardwareMap);
+        
+        Calvin calvin = new Calvin(hardwareMap);
 
-        functions.initialPositions();
+        calvin.initialPositions();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -68,149 +67,149 @@ public class Test1_DOES_FUNCTION_LIST_WORK extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            functions.grabSample();
+            calvin.grabSample();
             drive.followTrajectorySequence(a1);
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.lift();
-            functions.dunk();
+            calvin.lift();
+            calvin.dunk();
 
             et.reset();
             while (et.milliseconds() < 2000);
 
-            functions.dropSample();
-            functions.passive();
+            calvin.dropSample();
+            calvin.passive();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.fall();
+            calvin.fall();
 
             et.reset();
             while (et.milliseconds() < 250);
             drive.followTrajectorySequence(a2);
 
-            functions.extend();
+            calvin.extend();
 
             et.reset();
             while (et.milliseconds() < 2000){
-                functions.intake();
+                calvin.intake();
             }
 
-            functions.passive();
-            functions.retrieve();
+            calvin.passive();
+            calvin.retrieve();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.grab();
+            calvin.grab();
 
             et.reset();
             while (et.milliseconds() < 1000);
 
-            functions.grabSample();
+            calvin.grabSample();
 
             drive.followTrajectorySequence(a3);
 
-            functions.lift();
-            functions.dunk();
+            calvin.lift();
+            calvin.dunk();
 
             et.reset();
             while (et.milliseconds() < 2000);
 
-            functions.dropSample();
-            functions.passive();
+            calvin.dropSample();
+            calvin.passive();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.fall();
+            calvin.fall();
 
             et.reset();
             while (et.milliseconds() < 250);
             drive.followTrajectorySequence(a4);
 
-            functions.extend();
+            calvin.extend();
 
             et.reset();
             while (et.milliseconds() < 2000){
-                functions.intake();
+                calvin.intake();
             }
 
-            functions.passive();
-            functions.retrieve();
+            calvin.passive();
+            calvin.retrieve();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.grab();
+            calvin.grab();
 
             et.reset();
             while (et.milliseconds() < 1000);
 
-            functions.grabSample();
+            calvin.grabSample();
 
             drive.followTrajectorySequence(a5);
 
-            functions.lift();
-            functions.dunk();
+            calvin.lift();
+            calvin.dunk();
 
             et.reset();
             while (et.milliseconds() < 2000);
 
-            functions.dropSample();
-            functions.passive();
+            calvin.dropSample();
+            calvin.passive();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.fall();
+            calvin.fall();
 
             et.reset();
             while (et.milliseconds() < 250);
             drive.followTrajectorySequence(a6);
 
-            functions.extend();
+            calvin.extend();
 
             et.reset();
             while (et.milliseconds() < 2000){
-                functions.intake();
+                calvin.intake();
             }
 
-            functions.passive();
-            functions.retrieve();
+            calvin.passive();
+            calvin.retrieve();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.grab();
+            calvin.grab();
 
             et.reset();
             while (et.milliseconds() < 1000);
 
-            functions.grabSample();
+            calvin.grabSample();
 
             drive.followTrajectorySequence(a7);
 
-            functions.lift();
-            functions.dunk();
+            calvin.lift();
+            calvin.dunk();
 
             et.reset();
             while (et.milliseconds() < 2000);
 
-            functions.dropSample();
-            functions.passive();
+            calvin.dropSample();
+            calvin.passive();
 
             et.reset();
             while (et.milliseconds() < 250);
 
-            functions.fall();
+            calvin.fall();
 
             drive.followTrajectorySequence(a8);
 
-            functions.dunk();
+            calvin.dunk();
 
             et.reset();
             while (et.milliseconds() < 30000);

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
-public class CurrentCalvinTeleOp extends LinearOpMode {
+public class BackUpTeleOp extends LinearOpMode {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
@@ -215,13 +215,16 @@ public class CurrentCalvinTeleOp extends LinearOpMode {
                 passive();
                 changedLeftTrigger = true;
             }
-
             if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
-                rise();
-                //verticalSlidesLeft.setPower(gamepad2.left_stick_y);
-                //verticalSlidesRight.setPower(gamepad2.left_stick_y);
+                verticalSlidesLeft.setPower(gamepad2.left_stick_y);
+                verticalSlidesRight.setPower(gamepad2.left_stick_y);
+            } else if (verticalSlidesLeft.getCurrentPosition() < 0) {
+                verticalSlidesLeft.setPower(Math.max(gamepad2.left_stick_y, 0));  // Only allow positive power
+                verticalSlidesRight.setPower(Math.max(gamepad2.left_stick_y, 0));
+            } else if (verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+                verticalSlidesLeft.setPower(Math.min(gamepad2.left_stick_y, 0));  // Only allow negative power
+                verticalSlidesRight.setPower(Math.min(gamepad2.left_stick_y, 0));
             }
-
 
             double joystickX = -gamepad1.left_stick_x;
             double joystickY = gamepad1.left_stick_y;

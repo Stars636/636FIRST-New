@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode.CalvinFunctions;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,8 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Functions {
+
+public class Calvin {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
@@ -47,7 +46,7 @@ public class Functions {
     public static double clawPassiveRotation;
 
     public static double clawRetrievePositionRight;
-    
+
     public static double clawPickUpRotation;
 
     public static double clawScorePositionRight;
@@ -56,11 +55,11 @@ public class Functions {
 
     public static double elbowInsidePositionRight;
     public static double elbowOutsidePositionRight;
-    
+
     public static double intakePassiveRotation;
-    
+
     public static double intakeActiveRotation;
-    
+
     public static double intakePickUpRotation;
     public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
 
@@ -87,7 +86,11 @@ public class Functions {
     public boolean changedRightBumper = false;
     public boolean changedZhangCynthia = false;
     public boolean changedY = false;
-    public Functions (HardwareMap hardwareMap) {
+
+    public boolean changedLeftBumper = false;
+
+    int pressCount = 0; // counts button presses
+    public Calvin(HardwareMap hardwareMap) {
 
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotor.class,"rightBack");
@@ -117,13 +120,6 @@ public class Functions {
         verticalSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         verticalSlidesRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
         horizontalSlidesLeft = hardwareMap.get(Servo.class,"horizontalSlidesLeft");
         horizontalSlidesRight = hardwareMap.get(Servo.class,"horizontalSlidesRight");
@@ -139,6 +135,12 @@ public class Functions {
 
 
     }
+    public DcMotor getVerticalSlidesRight() {
+        return verticalSlidesRight;
+    }
+    public DcMotor getVerticalSlidesLeft() {
+        return verticalSlidesLeft;
+    }
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
@@ -147,6 +149,40 @@ public class Functions {
         clawRotator.setPosition(clawPassiveRotation);
         elbow.setPosition(intakePassiveRotation);
         intakeRotator.setPosition(elbowInsidePositionRight);
+    }
+
+    public void checkHardwareInitialization(Telemetry telemetry) {
+        if (rightFront == null) {
+            telemetry.addData("ERROR", "Motor initialization failed");
+            telemetry.addData("ERROR", "rightFront");
+            telemetry.update();
+        }
+        if (leftFront == null) {
+            telemetry.addData("ERROR", "Motor initialization failed");
+            telemetry.addData("ERROR", "leftFront");
+            telemetry.update();
+        }
+        if (rightBack == null) {
+            telemetry.addData("ERROR", "Motor initialization failed");
+            telemetry.addData("ERROR", "rightBack");
+            telemetry.update();
+        }
+        if (leftBack == null) {
+            telemetry.addData("ERROR", "Motor initialization failed");
+            telemetry.addData("ERROR", "leftBack");
+            telemetry.update();
+        }
+
+        if (verticalSlidesLeft == null) {
+            telemetry.addData("ERROR", "Motor initialization failed");
+            telemetry.addData("ERROR", "verticalSlidesLeft");
+            telemetry.update();
+        }
+        if (verticalSlidesRight == null) {
+            telemetry.addData("ERROR", "Motor initialization failed");
+            telemetry.addData("ERROR", "verticalSlidesRight");
+            telemetry.update();
+        }
     }
 
     public void extend(){
@@ -166,6 +202,10 @@ public class Functions {
         continuousIntakeLeft.setPower(-1);
         continuousIntakeRight.setPower(1);
         intakeRotator.setPosition(intakeActiveRotation);
+    }
+    public void intakePassive() {
+        continuousIntakeLeft.setPower(0);
+        continuousIntakeRight.setPower(0);
     }
 
     public void passive() {
@@ -238,16 +278,21 @@ public class Functions {
 
         ElapsedTime et = new ElapsedTime();
         et.reset();
-        while(et.milliseconds() < 5000);
-        claw.setPosition(clawClosedPosition);
-        et.reset();
-        while(et.milliseconds() < 1000);
-        verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
-        verticalSlidesLeft.setPower(0.5);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
-        verticalSlidesRight.setPower(0.5);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        if (et.milliseconds() > 5000) {
+            claw.setPosition(clawClosedPosition);
+        }
+
+
+        if (et.milliseconds() > 6000) {
+            verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
 
     public void rotateElbow(boolean buttonPressed) {
@@ -268,7 +313,7 @@ public class Functions {
         if (buttonPressed) {
             intake();
         } else {
-            passive();
+            intakePassive();
         }
     }
 
@@ -276,7 +321,7 @@ public class Functions {
         if (buttonPressed){
             eject();
         } else {
-            passive();
+            intakePassive();
         }
     }
 
@@ -325,11 +370,123 @@ public class Functions {
         }
     }
 
-    public void activateVerticalSlides(double buttonPressed) {
-        if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
-            verticalSlidesLeft.setPower(buttonPressed);
-            verticalSlidesRight.setPower(buttonPressed);
+    public void specimenPickupMacro(boolean buttonPressed) {
+        //macro!!
+        if (buttonPressed) {
+            pressCount++;
         }
+
+        if (pressCount == 1) {
+
+            claw.setPosition(clawOpenPosition); //open the claw
+
+            verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //move the slides
+
+            shaq.setPosition(specimenPickupPositionRight);
+            clawRotator.setPosition(specimenClawRotation);
+
+        } else if (pressCount == 2) {
+
+            if (!verticalSlidesLeft.isBusy() && !verticalSlidesRight.isBusy()) {
+                claw.setPosition(clawClosedPosition);
+
+            }
+        } else if (pressCount == 3) {
+            // picks up the specimen from the wall
+            verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        } else if (pressCount == 4) {
+            verticalSlidesLeft.setTargetPosition(specimenFinishDepositVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenFinishDepositVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            pressCount = 0; // Reset the press count
+        } else if (pressCount > 4) {
+            // just in case some nonsense happens
+            pressCount = 0;
+        }
+        //
+    }
+    public void returnAfterDeposit(boolean buttonPressed) {
+        //yayyyy
+        claw.setPosition(clawOpenPosition);
+
+        clawRotator.setPosition(clawPassiveRotation);
+
+        shaq.setPosition(clawPassivePositionRight);
+
+        verticalSlidesLeft.setTargetPosition(0);
+        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(0);
+        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+
+    public void returnToPassive(boolean buttonPressed) {
+        passive();
+    }
+
+    public void returnToInitial(boolean buttonPressed) {
+        initialPositions();
+    }
+
+    public void activateVerticalSlides(double buttonPressed) {
+        double scaledInput;
+        double absInput = Math.abs(buttonPressed);
+        double sqrInput = Math.sqrt(absInput);
+        double deadzone = 0.09;
+
+        //Prevent jittery Movements
+        if (absInput > deadzone) {
+            scaledInput = buttonPressed * sqrInput;
+        } else {
+            scaledInput = 0;
+        }
+
+        //
+
+
+        if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
+            verticalSlidesLeft.setPower(scaledInput);
+            verticalSlidesRight.setPower(scaledInput);
+        }else if (verticalSlidesLeft.getCurrentPosition() < 0) {
+            verticalSlidesLeft.setPower(Math.max(scaledInput, 0));  // Only allow positive power
+            verticalSlidesRight.setPower(Math.max(scaledInput, 0));
+        } else if (verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+            verticalSlidesLeft.setPower(Math.min(scaledInput, 0));  // Only allow negative power
+            verticalSlidesRight.setPower(Math.min(scaledInput, 0));
+        }
+
+
+    }
+
+    public void driveMotors(DcMotor lf, DcMotor rf, DcMotor lb, DcMotor rb, double lx, double ly, double rx) {
+        double joystickX = -lx;
+        double joystickR = -rx;
+
+
+        rightFront.setPower(ly - joystickX - joystickR);
+        leftFront.setPower(ly + joystickX + joystickR);
+        rightBack.setPower(ly + joystickX - joystickR);
+        leftBack.setPower(ly - joystickX + joystickR);
     }
 }
+//else if (verticalSlidesLeft.getCurrentPosition() >= verticalSlideHighScoringPositionLimit)
 

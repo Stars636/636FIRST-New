@@ -18,7 +18,7 @@ public class Auto_COPYFROMHERE extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
-        Calvin calvin = new Calvin(hardwareMap);
+        Calvin calvin = new Calvin(hardwareMap, telemetry);
 
         calvin.initialPositions();
 

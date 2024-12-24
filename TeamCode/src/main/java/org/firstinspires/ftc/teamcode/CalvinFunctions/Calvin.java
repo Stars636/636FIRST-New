@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.CalvinFunctions;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -38,6 +39,8 @@ public class Calvin {
     DcMotor verticalSlidesRight;
 
     DcMotor verticalSlidesLeft;
+
+    private Limelight3A limelight;
 
 
     public static double clawOpenPosition;
@@ -102,7 +105,7 @@ public class Calvin {
     int pressCount = 0; // counts button presses
 
     PromiseCheatCode cheatCode1;
-    public Calvin(HardwareMap hardwareMap) {
+    public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
         vs = hardwareMap.voltageSensor.get("Control Hub");
 
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -124,6 +127,17 @@ public class Calvin {
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+
+        telemetry.setMsTransmissionInterval(11);
+        limelight.setPollRateHz(100);
+
+        limelight.pipelineSwitch(0);
+
+        /*
+         * Starts polling for data.
+         */
+        limelight.start();
 
         verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

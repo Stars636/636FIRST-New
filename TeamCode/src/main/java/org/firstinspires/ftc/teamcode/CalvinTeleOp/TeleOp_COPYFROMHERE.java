@@ -13,7 +13,7 @@ public class TeleOp_COPYFROMHERE extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
-        Calvin calvin = new Calvin(hardwareMap);
+        Calvin calvin = new Calvin(hardwareMap, telemetry);
 
         calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();

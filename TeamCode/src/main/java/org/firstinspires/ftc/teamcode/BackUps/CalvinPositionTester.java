@@ -13,7 +13,7 @@ public class CalvinPositionTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
-        Calvin functions = new Calvin(hardwareMap);
+        Calvin functions = new Calvin(hardwareMap, telemetry);
 
         functions.initialPositions();
         //Initial!!

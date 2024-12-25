@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 // In your Autonomous OpMode
 @Autonomous
-public class  AutoTest2 extends LinearOpMode {
+public class AutoTest2 extends LinearOpMode {
     @Override
     public void runOpMode() {
         ElapsedTime et = new ElapsedTime();

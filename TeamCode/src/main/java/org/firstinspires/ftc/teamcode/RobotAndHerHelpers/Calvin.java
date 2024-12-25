@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CalvinFunctions;
+package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
@@ -6,39 +6,43 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.CalvinFunctions.HelperFunctions.PromiseCheatCode;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
 
 
 public class Calvin {
-    CRServo continuousIntakeLeft;
-    CRServo continuousIntakeRight;
-    Servo claw;
-    Servo shaq;
-    Servo clawRotator;
+    public CRServo continuousIntakeLeft;
+    public CRServo continuousIntakeRight;
+    public ServoImplEx claw;
+    public ServoImplEx shaq;
+    public ServoImplEx clawRotator;
 
-    Servo elbow;
-    Servo intakeRotator;
+    public ServoImplEx elbow;
+    public ServoImplEx intakeRotator;
 
-    Servo horizontalSlidesLeft;
-    Servo horizontalSlidesRight;
+    public ServoImplEx horizontalSlidesLeft;
+    public ServoImplEx horizontalSlidesRight;
 
-    public DcMotor rightBack;
+    public DcMotorEx rightBack;
 
-    public DcMotor rightFront;
+    public DcMotorEx rightFront;
 
-    public DcMotor leftBack;
+    public DcMotorEx leftBack;
 
-    public DcMotor leftFront;
-    DcMotor verticalSlidesRight;
+    public DcMotorEx leftFront;
+    public DcMotorImplEx verticalSlidesRight;
 
-    DcMotor verticalSlidesLeft;
+    public DcMotorImplEx verticalSlidesLeft;
 
     private Limelight3A limelight;
 
@@ -47,22 +51,22 @@ public class Calvin {
     public static double clawClosedPosition;
 
 
-    public static double clawPassivePositionRight;
+    public static double clawPassivePosition;
 
     public static double clawPassiveRotation;
 
-    public static double clawRetrievePositionRight;
+    public static double clawRetrievePosition;
 
     public static double clawPickUpRotation;
 
-    public static double clawScorePositionRight;
+    public static double clawScorePosition;
 
     public static double clawScoreRotation;
 
     public static double clawHangRotation;
 
-    public static double elbowInsidePositionRight;
-    public static double elbowOutsidePositionRight;
+    public static double elbowInsidePosition;
+    public static double elbowOutsidePosition;
 
     public static double intakePassiveRotation;
 
@@ -71,28 +75,30 @@ public class Calvin {
     public static double intakePickUpRotation;
     public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
 
-    public static double horizontalSlidesInitialPositionLeft;
-    public static double horizontalSlidesInitialPositionRight;
+    public static double horizontalSlidesInitialPosition;
 
-    public static double horizontalSlidesExtendedPositionLeft;
-    public static double horizontalSlidesExtendedPositionRight;
+    public static double horizontalSlidesExtendedPosition;
 
 
-    public static double specimenPickupPositionRight;
+    public static double specimenPickupPosition;
     public static int specimenStartPickupVerticalSlides;
 
     public static double specimenClawRotation;
     public static int specimenFinishPickupVerticalSlides;
-    public static int specimenStartDepositVerticalSlides;
+
     public static int specimenFinishDepositVerticalSlides;
 
     public boolean changedRightTrigger = false;
     public boolean changedLeftTrigger = false;
-    public boolean changedSlide = false;
-    public boolean changedA = false;
+
+
     public boolean changedB = false;
+
+
     public boolean changedRightBumper = false;
-    public boolean changedZhangCynthia = false;
+    public boolean changedZhang = false;
+
+    public boolean changedUchida = false;
     public boolean changedY = false;
 
     public boolean changedLeftBumper = false;
@@ -102,30 +108,18 @@ public class Calvin {
     private ElapsedTime buttonTimer = new ElapsedTime();
     private boolean buttonPreviouslyPressed = false;
 
+    private final double proportion = 1.0;
+
+    private final double integral = 0.1;
+
+    private final double  derivative = 0.05;
+    //public PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
+
     int pressCount = 0; // counts button presses
 
     PromiseCheatCode cheatCode1;
     public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
         vs = hardwareMap.voltageSensor.get("Control Hub");
-
-        //Initializing all the motors. Do not change this unless we change the wiring
-        rightBack = hardwareMap.get(DcMotor.class,"rightBack");
-        leftBack = hardwareMap.get(DcMotor.class,"leftBack");
-        rightFront = hardwareMap.get(DcMotor.class,"rightFront");
-        leftFront = hardwareMap.get(DcMotor.class,"leftFront");
-
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
-        verticalSlidesLeft = hardwareMap.get(DcMotor.class,"verticalSlidesLeft");
-        verticalSlidesRight = hardwareMap.get(DcMotor.class,"verticalSlidesRight");
-        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
@@ -139,24 +133,50 @@ public class Calvin {
          */
         limelight.start();
 
-        verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //Initializing all the motors. Do not change this unless we change the wiring
+        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
+        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
+        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
+
+        rightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
+        verticalSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
+        verticalSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
+        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
+        verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
 
 
-        verticalSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        verticalSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        verticalSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesRight.setMode(DcMotorImplEx.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
+        verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
         verticalSlidesRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        horizontalSlidesLeft = hardwareMap.get(Servo.class,"horizontalSlidesLeft");
-        horizontalSlidesRight = hardwareMap.get(Servo.class,"horizontalSlidesRight");
+        horizontalSlidesLeft = hardwareMap.get(ServoImplEx.class,"horizontalSlidesLeft");
+        horizontalSlidesRight = hardwareMap.get(ServoImplEx.class,"horizontalSlidesRight");
+        //one of these must be reversed
+        horizontalSlidesLeft.setDirection(Servo.Direction.FORWARD);
+        horizontalSlidesRight.setDirection(Servo.Direction.REVERSE);
         continuousIntakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
         continuousIntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
-        claw = hardwareMap.get(Servo.class,"claw");
-        shaq = hardwareMap.get(Servo.class,"shaq");
-        intakeRotator = hardwareMap.get(Servo.class,"intakeRotator");
-        elbow = hardwareMap.get(Servo.class,"elbow");
-        intakeRotator = hardwareMap.get(Servo.class,"intakeRotator");
+        claw = hardwareMap.get(ServoImplEx.class,"claw");
+        shaq = hardwareMap.get(ServoImplEx.class,"shaq");
+        intakeRotator = hardwareMap.get(ServoImplEx.class,"intakeRotator");
+        elbow = hardwareMap.get(ServoImplEx.class,"elbow");
+        intakeRotator = hardwareMap.get(ServoImplEx.class,"intakeRotator");
 
         //we will create macros in the future, to remove room for error
 
@@ -176,13 +196,13 @@ public class Calvin {
         while(calvinTimer.seconds() < seconds);
     }
     public void initialPositions(){
-        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
-        horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
+        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
         claw.setPosition(clawOpenPosition);
-        shaq.setPosition(clawPassivePositionRight);
+        shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
         elbow.setPosition(intakePassiveRotation);
-        intakeRotator.setPosition(elbowInsidePositionRight);
+        intakeRotator.setPosition(elbowInsidePosition);
     }
 
     public void checkHardwareInitialization(Telemetry telemetry) {
@@ -220,9 +240,9 @@ public class Calvin {
     }
 
     public void extend(){
-        horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPositionLeft);
-        horizontalSlidesRight.setPosition(horizontalSlidesExtendedPositionRight);
-        elbow.setPosition(elbowOutsidePositionRight);
+        horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesExtendedPosition);
+        elbow.setPosition(elbowOutsidePosition);
         intakeRotator.setPosition(intakeActiveRotation);
     }
 
@@ -245,13 +265,13 @@ public class Calvin {
     public void passive() {
         continuousIntakeLeft.setPower(0);
         continuousIntakeRight.setPower(0);
-        shaq.setPosition(clawPassivePositionRight);
+        shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
     }
 
     public void retrieve(){
-        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
-        horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
+        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
         intakeRotator.setPosition(intakePickUpRotation);
     }
 
@@ -264,7 +284,7 @@ public class Calvin {
     }
 
     public void grab(){
-        shaq.setPosition(clawRetrievePositionRight);
+        shaq.setPosition(clawRetrievePosition);
         clawRotator.setPosition(clawPickUpRotation);
     }
 
@@ -295,7 +315,7 @@ public class Calvin {
     }
 
     public void dunk() {
-        shaq.setPosition(clawScorePositionRight);
+        shaq.setPosition(clawScorePosition);
         clawRotator.setPosition(clawScoreRotation);
     }
 
@@ -310,7 +330,7 @@ public class Calvin {
         verticalSlidesRight.setPower(0.5);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        shaq.setPosition(specimenPickupPositionRight);
+        shaq.setPosition(specimenPickupPosition);
         clawRotator.setPosition(specimenClawRotation);
 
         ElapsedTime et = new ElapsedTime();
@@ -334,16 +354,18 @@ public class Calvin {
 
     public void rotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
-            if (elbow.getPosition() == elbowInsidePositionRight) {
+            if (elbow.getPosition() == elbowInsidePosition) {
                 extend();
                 changedB = true;
-            } else if (elbow.getPosition() == elbowOutsidePositionRight) {
+            } else if (elbow.getPosition() == elbowOutsidePosition) {
                 retrieve();
                 changedB = true;
             }
         } else if (!buttonPressed) {
             changedB = false;
         }
+
+
     }
 
     public void activateIntake(boolean buttonPressed) {
@@ -364,10 +386,10 @@ public class Calvin {
 
     public void activateExtendo(double buttonPressed) {
         if (buttonPressed != 0 && !changedRightTrigger) {
-            if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPositionRight){
+            if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition){
                 extend();
                 changedRightTrigger = true;
-            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPositionRight) {
+            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPosition) {
                 retrieve();
                 changedRightTrigger = true;
             }
@@ -411,17 +433,24 @@ public class Calvin {
 
     public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
         //macro!!
-        if (buttonPressed) {
+        if (buttonPressed && !changedLeftBumper) {
             pressCount++;
+            changedLeftBumper = true;
+        } else if (!buttonPressed) {
+            changedLeftBumper = false;
         }
 
-        if (reverseButton) {
+        if (reverseButton && !changedRightBumper) {
             if (pressCount == 0) {
                 pressCount = 4;
+                changedRightBumper = true;
             }
             else {
                 pressCount--;
+                changedRightBumper = true;
             }
+        } else if (!reverseButton) {
+            changedRightBumper = false;
         }
 
         if (pressCount == 1) {
@@ -436,7 +465,7 @@ public class Calvin {
             verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //move the slides
 
-            shaq.setPosition(specimenPickupPositionRight);
+            shaq.setPosition(specimenPickupPosition);
             clawRotator.setPosition(specimenClawRotation);
 
         } else if (pressCount == 2) {
@@ -471,12 +500,13 @@ public class Calvin {
         //
     }
     public void returnAfterDeposit(boolean buttonPressed) {
+
         //yayyyy
         claw.setPosition(clawOpenPosition);
 
         clawRotator.setPosition(clawPassiveRotation);
 
-        shaq.setPosition(clawPassivePositionRight);
+        shaq.setPosition(clawPassivePosition);
 
         verticalSlidesLeft.setTargetPosition(0);
         verticalSlidesLeft.setPower(0.5);
@@ -508,12 +538,24 @@ public class Calvin {
     }
 
     public void returnToPassive(boolean buttonPressed) {
-        passive();
-        returnAfterDeposit(buttonPressed);
+        if (buttonPressed && !changedZhang) {
+            passive();
+            returnAfterDeposit(buttonPressed);
+            changedZhang = true;
+        } else if(!buttonPressed){
+            changedZhang = false;
+        }
+
     }
 
     public void returnToInitial(boolean buttonPressed) {
-        initialPositions();
+        if (buttonPressed && !changedUchida) {
+            initialPositions();
+            changedUchida = true;
+        } else if(!buttonPressed){
+            changedUchida = false;
+        }
+
     }
 
     public void activateVerticalSlides(double buttonPressed) {
@@ -548,10 +590,10 @@ public class Calvin {
         double joystickR = -rx;
 
 
-        rightFront.setPower(ly - joystickX - joystickR);
-        leftFront.setPower(ly + joystickX + joystickR);
-        rightBack.setPower(ly + joystickX - joystickR);
-        leftBack.setPower(ly - joystickX + joystickR);
+        rf.setPower(ly - joystickX - joystickR);
+        lf.setPower(ly + joystickX + joystickR);
+        rb.setPower(ly + joystickX - joystickR);
+        lb.setPower(ly - joystickX + joystickR);
     }
 
     public void cheat1(Telemetry telemetry) {

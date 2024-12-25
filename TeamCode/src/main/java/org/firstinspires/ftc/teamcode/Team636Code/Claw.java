@@ -17,11 +17,6 @@ public class Claw extends LinearOpMode {
 
         double position = 0.0;
 
-        /*
-        jamal.setMode(Servo.RunMode.STOP_AND_RESET_ENCODER);
-        jamal.getPosition()// Reset the motr encoder
-        jamal.setMode(Servo.RunMode.RUN_WITHOUT_ENCODER);
-        */
 
 
         waitForStart();

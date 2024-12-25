@@ -151,8 +151,8 @@ public class Calvin {
         verticalSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
-        verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
+        //verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
+        //verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
 
 
 

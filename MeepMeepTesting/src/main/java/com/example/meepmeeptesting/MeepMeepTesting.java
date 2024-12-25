@@ -43,11 +43,11 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity speciCalvin = new DefaultBotBuilder(meepMeep)
                 .setDimensions(12, 15)
-                .setStartPose(new Pose2d(xStart, yStart, PI/2))
+                .setStartPose(new Pose2d(xStart, yStart, 3*PI/2))
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(xStart, yStart, PI/2))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(90)), Math.toRadians(90))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(xStart, yStart, 3*PI/2))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
                         .splineToLinearHeading(new Pose2d(xStart + 25, yStart + 25, Math.toRadians(70)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xStart + 35, yStart + 40, Math.toRadians(0)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xStart + 35, yStart + 35, Math.toRadians(280)), Math.toRadians(0))
@@ -55,14 +55,14 @@ public class MeepMeepTesting {
                         .splineToLinearHeading(new Pose2d(xStart + 45, yStart + 35, Math.toRadians(280)), Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(xStart + 55, yStart + 40, Math.toRadians(0)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xStart + 55, yStart + 35, Math.toRadians(270)), Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(270)), Math.toRadians(300))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(90)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(270)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(90)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(270)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(90)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(270)), Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(90)), Math.toRadians(300))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
                         .build());
 
         //specimen auto! yay
@@ -83,16 +83,16 @@ public class MeepMeepTesting {
                         .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
                         .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
                         .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
-
+                        //CYNTHIA I FOUND SOMETHING COOL
                         .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        //.splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        //.splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270))
+                        //.splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
                         .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
 
                         .build());
@@ -104,7 +104,7 @@ public class MeepMeepTesting {
                 .setBackgroundAlpha(0.95f)
                 .addEntity(basketCalvin)
                 //.addEntity(speciCalvin) //you can comment out addentity lines if you dont wanna see them simultaneuosly
-                //.addEntity(specimenCalvin)
+                .addEntity(specimenCalvin)
                 .start();
     }
 }

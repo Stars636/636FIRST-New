@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.BackUps;
+package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
-@Autonomous
-public class CalvinAutoTest0 extends LinearOpMode {
+@TeleOp
+public class BackUpTeleOp extends LinearOpMode {
     CRServo continuousIntakeLeft;
     CRServo continuousIntakeRight;
     Servo claw;
@@ -77,13 +77,10 @@ public class CalvinAutoTest0 extends LinearOpMode {
     public static int specimenStartDepositVerticalSlides;
     public static int specimenFinishDepositVerticalSlides;
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
-        //IDEALLY
-        //if you copy paste the correct trajectories from another test you've run, then this auto should work
-        //or you can test in meep meep but we dont know the correct constants yet cuz the bots not done
-        //so yeah
-
         ElapsedTime et = new ElapsedTime();
 
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -132,6 +129,16 @@ public class CalvinAutoTest0 extends LinearOpMode {
         elbow = hardwareMap.get(Servo.class,"elbow");
         intakeRotator = hardwareMap.get(Servo.class,"intakeRotator");
 
+
+        //These booleans are also for testing positions at small intervals at a time
+        boolean changedRightTrigger = false;
+        boolean changedLeftTrigger = false;
+
+        boolean changedB = false;
+
+        boolean changedY = false;
+        //Initial!!
+
         initialPositions();
 
         //we will create macros in the future, to remove room for error
@@ -141,11 +148,98 @@ public class CalvinAutoTest0 extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
+            //Moves the elbow. TEST these positions
+            if (gamepad2.b && !changedB) {
+                if (elbow.getPosition() == elbowInsidePositionRight) {
+                    extend();
+                    changedB = true;
+                } else if (elbow.getPosition() == elbowOutsidePositionRight) {
+                    retrieve();
+                    changedB = true;
+                }
+            } else if (!gamepad2.b) {
+                changedB = false;
+            }
+
+            //Activate  the intake
+
+            if (gamepad2.a) {
+                intake();
+            } else {
+                passive();
+            }
+            //Reverse. I chose this button(because the old bot had no equivalent), so if you want another one then do it
+            if (gamepad2.x){
+                eject();
+            } else {
+                passive();
+            }
+            //Pushes the extendo. Positions need to be tested.
+            //Test these positionsssss
+            if (gamepad2.right_trigger != 0 && !changedRightTrigger) {
+                if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPositionRight){
+                    extend();
+                    changedRightTrigger = true;
+                } else if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPositionRight) {
+                    retrieve();
+                    changedRightTrigger = true;
+                }
+            } else if (gamepad2.right_trigger == 0) {
+                changedRightTrigger = false;
+            }
+
+            //code for l claw
+            if (gamepad2.y && !changedY) {
+                if (claw.getPosition() == clawOpenPosition) {
+                    grabSample();
+                    changedY = true;
+                } else if (claw.getPosition() == clawClosedPosition) {
+                    dropSample();
+                    changedY = true;
+                }
+            } else if(!gamepad2.y) {
+                changedY = false;
+            }
+            //rotates the claw. there is much better way to do this, but this works for now
+            //you have to continuously hold to dunk it
+            if (gamepad2.left_trigger != 0 && !changedLeftTrigger) {
+                if(claw.getPosition() == clawClosedPosition) {
+                    dunk();
+                } else if(claw.getPosition() == clawOpenPosition) {
+                    grab();
+                } else {
+                    passive();
+                }
+            } else if (gamepad2.left_trigger == 0) {
+                passive();
+                changedLeftTrigger = true;
+            }
+            if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
+                verticalSlidesLeft.setPower(gamepad2.left_stick_y);
+                verticalSlidesRight.setPower(gamepad2.left_stick_y);
+            } else if (verticalSlidesLeft.getCurrentPosition() < 0) {
+                verticalSlidesLeft.setPower(Math.max(gamepad2.left_stick_y, 0));  // Only allow positive power
+                verticalSlidesRight.setPower(Math.max(gamepad2.left_stick_y, 0));
+            } else if (verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+                verticalSlidesLeft.setPower(Math.min(gamepad2.left_stick_y, 0));  // Only allow negative power
+                verticalSlidesRight.setPower(Math.min(gamepad2.left_stick_y, 0));
+            }
+
+            double joystickX = -gamepad1.left_stick_x;
+            double joystickY = gamepad1.left_stick_y;
+            double joystickR = -gamepad1.right_stick_x;
+
+
+            rightFront.setPower(joystickY - joystickX - joystickR);
+            leftFront.setPower(joystickY + joystickX + joystickR);
+            rightBack.setPower(joystickY + joystickX - joystickR);
+            leftBack.setPower(joystickY - joystickX + joystickR);
+
 
         }
 
-
     }
+
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPositionLeft);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPositionRight);
@@ -241,7 +335,7 @@ public class CalvinAutoTest0 extends LinearOpMode {
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         shaq.setPosition(specimenPickupPositionRight);
-        clawRotator.setPosition(specimenPickupPositionRight);
+        clawRotator.setPosition(specimenClawRotation);
 
         ElapsedTime et = new ElapsedTime();
         et.reset();
@@ -259,5 +353,6 @@ public class CalvinAutoTest0 extends LinearOpMode {
 
 
 
-}
 
+
+}

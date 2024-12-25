@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.Team636Code;
+package org.firstinspires.ftc.teamcode.Team636Code.RandomTests;
 
 // Import necessary classes
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 
 // In your Autonomous OpMode
 @Autonomous
-public class AutoTest1 extends LinearOpMode {
+public class AutoTest2 extends LinearOpMode {
     @Override
     public void runOpMode() {
         ElapsedTime et = new ElapsedTime();
@@ -29,43 +30,31 @@ public class AutoTest1 extends LinearOpMode {
         // Define the trajectory for moving forward
         Trajectory forwardTrajectory = drive.trajectoryBuilder(startPose)
 
-                .forward(25)
+                .forward(24)
                 .build();
 
 
-        TrajectorySequence turnAround = drive.trajectorySequenceBuilder(forwardTrajectory.end())
+        Trajectory backTrajectory = drive.trajectoryBuilder(startPose)
+                .back(10)
+                .build();
+
+        TrajectorySequence turntfAround = drive.trajectorySequenceBuilder(startPose)
                 .turn((Math.PI))
                 .build();
 
-
-        Trajectory forwardTrajectory2 = drive.trajectoryBuilder(forwardTrajectory.end())
-
+        TrajectorySequence sequence1 = drive.trajectorySequenceBuilder(startPose)
                 .forward(25)
+                .turn(Math.PI)
+                .lineTo(new Vector2d(15))
                 .build();
 
-        Trajectory strafeRight = drive.trajectoryBuilder(forwardTrajectory.end())
-                .strafeRight(30)
-                .build();
-
-        Trajectory strafeLeft = drive.trajectoryBuilder(strafeRight.end())
-                .strafeLeft(30)
-                .build();
-
-        Trajectory backTrajectory = drive.trajectoryBuilder(turnAround.end())
-                .back(40)
-                .build();
 
         // Wait for the game to start
         waitForStart();
 
         // Follow each trajectory sequentially
         while (opModeIsActive()) {
-            drive.followTrajectory(forwardTrajectory);
-            drive.turn(Math.PI);
-            drive.followTrajectorySequence(turnAround);
-            drive.followTrajectory(strafeRight);
-            drive.followTrajectory(strafeLeft);
-            drive.followTrajectory(backTrajectory);
+            drive.followTrajectorySequence(sequence1);
 
             et.reset();
             while (et.milliseconds() < 30000);

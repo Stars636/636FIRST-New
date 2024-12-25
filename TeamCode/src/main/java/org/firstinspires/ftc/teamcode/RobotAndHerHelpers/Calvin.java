@@ -118,7 +118,7 @@ public class Calvin {
     private VoltageSensor vs;
 
     private ElapsedTime buttonTimer = new ElapsedTime();
-    private boolean buttonPreviouslyPressed = false;
+   // private boolean buttonPreviouslyPressed = false;
 
     private final double proportion = 1.0;
 
@@ -579,7 +579,41 @@ public class Calvin {
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
+    enum PassiveOrInitialState {
+        IDLE, BUTTON_PRESSED, TAP, HOLD
+    }
+
+    PassiveOrInitialState passiveOrInitialState = PassiveOrInitialState.IDLE;
+
     public void passiveOrInitial(boolean buttonPressed) {
+        switch (passiveOrInitialState) {
+            case IDLE:
+                if (buttonPressed) {
+                    passiveOrInitialState = PassiveOrInitialState.BUTTON_PRESSED;
+                    buttonTimer.reset();
+                }
+                break;
+            case BUTTON_PRESSED:
+                if (!buttonPressed) {
+                    if (buttonTimer.milliseconds() < 800) {
+                        passiveOrInitialState = PassiveOrInitialState.TAP;
+                    } else {
+                        passiveOrInitialState = PassiveOrInitialState.HOLD;
+                    }
+                }
+                break;
+            case TAP:
+                returnToPassive(buttonPressed);
+                passiveOrInitialState = PassiveOrInitialState.IDLE;
+                break;
+            case HOLD:
+                returnToInitial(buttonPressed);
+                passiveOrInitialState = PassiveOrInitialState.IDLE;
+                break;
+        }
+    }
+
+    /*public void passiveOrInitial(boolean buttonPressed) {
         if (buttonPressed && !buttonPreviouslyPressed) {
 
             buttonTimer.reset();
@@ -598,7 +632,7 @@ public class Calvin {
                 returnToInitial(buttonPressed);
             }
         }
-    }
+    }*/
 
     public void returnToPassive(boolean buttonPressed) {
         if (buttonPressed && !changedZhang) {

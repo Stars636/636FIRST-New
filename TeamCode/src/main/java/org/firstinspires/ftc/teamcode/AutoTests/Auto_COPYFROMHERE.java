@@ -26,8 +26,8 @@ public class Auto_COPYFROMHERE extends LinearOpMode {
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, Math.PI/2);
         //if you are coming from meep meep, define your initial here
-        double xInitial;
-        double yInitial ;
+        //double xStart;
+        //double yStart;
 
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);

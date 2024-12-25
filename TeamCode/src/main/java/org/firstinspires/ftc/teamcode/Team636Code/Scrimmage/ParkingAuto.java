@@ -1,15 +1,14 @@
-package org.firstinspires.ftc.teamcode.Team636Code;
+package org.firstinspires.ftc.teamcode.Team636Code.Scrimmage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "LeftScrimmageAuto", group = "Scrimmage")
-public class HighBasketAuto extends LinearOpMode {
+@Autonomous(name = "RightScrimmageAuto", group = "Scrimmage")
+public class ParkingAuto extends LinearOpMode {
     Servo rotatorJamal;
     Servo clawEthan;
     Servo pushRight;
@@ -65,41 +64,9 @@ public class HighBasketAuto extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            clawMiddlePosition = 0.48;
-            clawMiddle.setPosition(clawMiddlePosition);
-
-            et.reset();
-            while (et.milliseconds() < 500);
-            sleep(500);
-
-            et.reset();
-            while (et.milliseconds() < 1050) {
-                double joystickX = 0;
-                double joystickY = -0.3;
-                double joystickR = 0;
-                rightFront.setPower(joystickY - joystickX - joystickR);
-                leftFront.setPower(joystickY + joystickX + joystickR);
-                rightBack.setPower(joystickY + joystickX - joystickR);
-                leftBack.setPower(joystickY - joystickX + joystickR);
-            }
-            sleep(500);
-
-            et.reset();
-            while (et.milliseconds() < 50) {
-                double joystickX = 0;
+            while (et.milliseconds() < 1000) {
+                double joystickX = -0.4;
                 double joystickY = 0;
-                double joystickR = -0.21;
-                rightFront.setPower(joystickY - joystickX - joystickR);
-                leftFront.setPower(joystickY + joystickX + joystickR);
-                rightBack.setPower(joystickY + joystickX - joystickR);
-                leftBack.setPower(joystickY - joystickX + joystickR);
-            }
-            sleep(1000);
-
-            et.reset();
-            while (et.milliseconds() < 1050) {
-                double joystickX = 0;
-                double joystickY = 0.25;
                 double joystickR = 0;
                 rightFront.setPower(joystickY - joystickX - joystickR);
                 leftFront.setPower(joystickY + joystickX + joystickR);
@@ -107,12 +74,7 @@ public class HighBasketAuto extends LinearOpMode {
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
             sleep(1000);
-
-
-
-
-            et.reset();
-            while (et.milliseconds() < 1350) {
+            while (et.milliseconds() < 2800) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = 0;
@@ -120,56 +82,7 @@ public class HighBasketAuto extends LinearOpMode {
                 leftFront.setPower(joystickY + joystickX + joystickR);
                 rightBack.setPower(joystickY + joystickX - joystickR);
                 leftBack.setPower(joystickY - joystickX + joystickR);
-                int desiredPosition = 5038;
-                verticalSlide.setTargetPosition(desiredPosition);
-                verticalSlide.setPower(0.8); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            sleep(500);
-            et.reset();
-            while (et.milliseconds() < 500);
-
-
-            sleep(500);
-            verticalClawRight = 1;
-            verticalClawLeft = 0;
-            clawRight.setPosition(verticalClawRight);
-            clawLeft.setPosition(verticalClawLeft);
-
-            sleep(1000);
-            et.reset();
-            while (et.milliseconds() < 500);
-
-            clawMiddlePosition = 0.05;
-            clawMiddle.setPosition(clawMiddlePosition);
-
-            sleep(1000);
-            et.reset();
-            while (et.milliseconds() < 500);
-
-            verticalClawRight = 0;
-            verticalClawLeft = 1;
-            clawRight.setPosition(verticalClawRight);
-            clawLeft.setPosition(verticalClawLeft);
-
-            et.reset();
-            while (et.milliseconds() < 20000) {
-                double joystickX = 0;
-                double joystickY = 0;
-                double joystickR = 0;
-                rightFront.setPower(joystickY - joystickX - joystickR);
-                leftFront.setPower(joystickY + joystickX + joystickR);
-                rightBack.setPower(joystickY + joystickX - joystickR);
-                leftBack.setPower(joystickY - joystickX + joystickR);
-                int desiredPosition = 0;
-                verticalSlide.setTargetPosition(desiredPosition);
-                verticalSlide.setPower(0.8); // Tells the motor that the position it should go to is desiredPosition
-                verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                if(verticalSlide.getCurrentPosition() == 0) {
-                    verticalSlide.setPower(0);
-                }
-            }
-
 
             
 

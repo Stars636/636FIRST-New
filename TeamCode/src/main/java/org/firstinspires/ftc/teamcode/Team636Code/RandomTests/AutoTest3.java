@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Team636Code;
+package org.firstinspires.ftc.teamcode.Team636Code.RandomTests;
 
 // Import necessary classes
 
@@ -10,11 +10,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 // In your Autonomous OpMode
 @Autonomous
-public class AutoTest2 extends LinearOpMode {
+public class AutoTest3 extends LinearOpMode {
     @Override
     public void runOpMode() {
         ElapsedTime et = new ElapsedTime();
@@ -27,40 +26,31 @@ public class AutoTest2 extends LinearOpMode {
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);
 
-        // Define the trajectory for moving forward
-        Trajectory forwardTrajectory = drive.trajectoryBuilder(startPose)
-
-                .forward(24)
+        Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(10)
                 .build();
 
-
-        Trajectory backTrajectory = drive.trajectoryBuilder(startPose)
-                .back(10)
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+                .splineTo(new Vector2d(5, 6), 0)
+                .splineTo(new Vector2d(9, -10), 0)
                 .build();
 
-        TrajectorySequence turntfAround = drive.trajectorySequenceBuilder(startPose)
-                .turn((Math.PI))
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
+                .splineTo(new Vector2d(5, 6), 0)
+                .splineTo(new Vector2d(9, -10), 0)
                 .build();
 
-        TrajectorySequence sequence1 = drive.trajectorySequenceBuilder(startPose)
-                .forward(25)
-                .turn(Math.PI)
-                .lineTo(new Vector2d(15))
-                .build();
-
-
-        // Wait for the game to start
         waitForStart();
 
-        // Follow each trajectory sequentially
         while (opModeIsActive()) {
-            drive.followTrajectorySequence(sequence1);
+            drive.followTrajectory(traj1);
+            drive.followTrajectory(traj2);
+            drive.followTrajectory(traj3);
 
             et.reset();
             while (et.milliseconds() < 30000);
 
-
-
         }
+
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Team636Code;
+package org.firstinspires.ftc.teamcode.Team636Code.ImportantTests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp
 
-public class Practice extends LinearOpMode {
+public class NormalDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 

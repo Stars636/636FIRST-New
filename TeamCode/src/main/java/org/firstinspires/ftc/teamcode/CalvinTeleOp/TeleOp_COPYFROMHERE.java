@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
+import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,10 +19,11 @@ public class TeleOp_COPYFROMHERE extends LinearOpMode {
         calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();
 
-        waitForStart();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();
+
+        waitForStart();
 
         while (opModeIsActive()) {
 

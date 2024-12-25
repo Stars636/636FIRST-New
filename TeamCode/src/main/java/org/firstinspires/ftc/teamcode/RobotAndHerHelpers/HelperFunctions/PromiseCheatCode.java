@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,13 +12,13 @@ import java.util.List;
 
 public class PromiseCheatCode {
     //please write one for fun!!
-    public DcMotor leftFront, leftBack, rightFront, rightBack;
+    public DcMotorEx leftFront, leftBack, rightFront, rightBack;
     private static final String[] cheatCode = {"up", "up", "down", "down", "left", "right", "left", "right", "B", "A", "start"};
     private List<String> inputTracker = new ArrayList<>();
     private static int maxInput = cheatCode.length;
 
 
-    public PromiseCheatCode(DcMotor leftFront, DcMotor rightFront, DcMotor leftBack, DcMotor rightBack) {
+    public PromiseCheatCode(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack) {
         this.leftFront = leftFront;
         this.rightFront = rightFront;
         this.leftBack = leftBack;

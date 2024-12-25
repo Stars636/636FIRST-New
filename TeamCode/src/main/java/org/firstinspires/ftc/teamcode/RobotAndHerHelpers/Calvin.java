@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -17,6 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
 
 
@@ -44,7 +48,15 @@ public class Calvin {
 
     public DcMotorImplEx verticalSlidesLeft;
 
-    private Limelight3A limelight;
+    public Limelight3A limelight;
+
+    public static double tolerance = 2;
+
+    public static double power = 0.3;
+
+    public static double idealSize = 30;
+
+    public static double sizeTolerance = 5;
 
 
     public static double clawOpenPosition;
@@ -131,7 +143,7 @@ public class Calvin {
         /*
          * Starts polling for data.
          */
-        limelight.start();
+
 
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
@@ -237,6 +249,57 @@ public class Calvin {
             telemetry.addData("ERROR", "verticalSlidesRight");
             telemetry.update();
         }
+        if (limelight == null || !limelight.isConnected()) {
+            telemetry.addData("ERROR", "Camera initialization failed");
+            telemetry.addData("ERROR", "Limelight3A");
+            telemetry.update();
+        }
+        if (elbow == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "Elbow");
+            telemetry.update();
+        }
+        if (horizontalSlidesRight == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "horizontalSlidesRight");
+            telemetry.update();
+        }
+        if (horizontalSlidesLeft == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "horizontalSlidesLeft");
+            telemetry.update();
+        }
+        if (intakeRotator == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "intakeRotator");
+            telemetry.update();
+        }
+        if (continuousIntakeRight == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "continuousIntakeRight");
+            telemetry.update();
+        }
+        if (continuousIntakeLeft == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "continuousIntakeLeft");
+            telemetry.update();
+        }
+        if (shaq == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "shaq");
+            telemetry.update();
+        }
+        if (claw == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "claw");
+            telemetry.update();
+        }
+        if (clawRotator == null) {
+            telemetry.addData("ERROR", "Servo initialization failed");
+            telemetry.addData("ERROR", "clawRotator");
+            telemetry.update();
+        }
+
     }
 
     public void extend(){
@@ -595,6 +658,102 @@ public class Calvin {
         rb.setPower(ly + joystickX - joystickR);
         lb.setPower(ly - joystickX + joystickR);
     }
+
+    public void findSpecimen(Telemetry telemetry) {
+        limelight.start();
+        LLStatus status = limelight.getStatus();
+        telemetry.addData("Name", "%s",
+                status.getName());
+        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+                status.getTemp(), status.getCpu(), (int) status.getFps());
+        telemetry.addData("Pipeline", "Index: %d, Type: %s",
+                status.getPipelineIndex(), status.getPipelineType());
+
+        LLResult result = limelight.getLatestResult();
+
+        if (result != null) {
+            // Access general information
+            Pose3D botpose = result.getBotpose();
+            if(result.isValid()) {
+                align(result);
+                approachCarefully(result);
+                if(arrival(result)){
+                    limelight.stop();
+                }
+
+
+            }
+        }
+
+    }
+
+    public void align(LLResult result) {
+        //double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        //YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
+        LLStatus status = limelight.getStatus();
+
+        if (result.isValid()) {
+            double tx = result.getTx(); // How far left or right the target is (degrees)
+            // Pose3D botpose = result.getBotpose();
+            if (!isAligned(tx)) {
+                if (Math.abs(tx) > tolerance && tx > 0) {
+                    leftFront.setPower(power);
+                    rightFront.setPower(-power);
+                    rightBack.setPower(-power);
+                    leftBack.setPower(power);
+                } else if (Math.abs(tx) > tolerance && tx < 0) {
+                    leftFront.setPower(-power);
+                    rightFront.setPower(power);
+                    rightBack.setPower(power);
+                    leftBack.setPower(-power);
+                }
+
+            }
+        }
+
+    }
+
+    public boolean isAligned(double tx) {
+        if (Math.abs(tx) <= tolerance) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean isCorrectDistance(double ta) {
+        if(Math.abs(ta - idealSize) <= tolerance) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public void approachCarefully(LLResult result) {
+        if (result.isValid()) {
+            double tx = result.getTx();
+            double ta = result.getTa();
+            if(isAligned(tx) && !isCorrectDistance(ta)) {
+                rightFront.setPower(-power);
+                leftFront.setPower(-power);
+                rightBack.setPower(-power);
+                leftBack.setPower(-power);
+            }
+        }
+
+    }
+
+    public boolean arrival(LLResult result){
+        double tx = result.getTx();
+        double ta = result.getTa();
+
+        if(isAligned(tx) && isCorrectDistance(ta)) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
 
     public void cheat1(Telemetry telemetry) {
         cheatCode1.processInputs(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);

@@ -528,10 +528,7 @@ public class Calvin {
         } else {
             scaledInput = 0;
         }
-
         //
-
-
         if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
             verticalSlidesLeft.setPower(scaledInput);
             verticalSlidesRight.setPower(scaledInput);

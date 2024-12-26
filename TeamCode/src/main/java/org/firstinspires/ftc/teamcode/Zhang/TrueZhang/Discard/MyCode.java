@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Zhang.TrueZhang;
+package org.firstinspires.ftc.teamcode.Zhang.TrueZhang.Discard;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

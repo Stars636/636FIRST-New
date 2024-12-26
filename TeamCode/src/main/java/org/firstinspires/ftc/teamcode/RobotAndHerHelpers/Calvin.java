@@ -87,6 +87,7 @@ public class Calvin {
     public static double intakePickUpRotation;
     public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
 
+    //public static int verticalSlideLowScoringPositionLimit;
     public static double horizontalSlidesInitialPosition;
 
     public static double horizontalSlidesExtendedPosition;
@@ -144,7 +145,6 @@ public class Calvin {
          * Starts polling for data.
          */
 
-
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
         leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
@@ -162,18 +162,18 @@ public class Calvin {
         verticalSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
         verticalSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
-        //verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_WITHOUT_ENCODER, pid);
-
-
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         verticalSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotorImplEx.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesRight.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
 
+        //if things don't work, consider removing this
+        verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
+        verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
+        //
 
-        verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
-        verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
+        verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
+        verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
         verticalSlidesRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -196,12 +196,12 @@ public class Calvin {
         cheatCode1 = new PromiseCheatCode(leftFront, rightFront, leftBack, rightBack);
 
     }
-    public DcMotor getVerticalSlidesRight() {
-        return verticalSlidesRight;
-    }
-    public DcMotor getVerticalSlidesLeft() {
-        return verticalSlidesLeft;
-    }
+    //public DcMotor getVerticalSlidesRight() {
+      //  return verticalSlidesRight;
+    //}
+    //public DcMotor getVerticalSlidesLeft() {
+     //   return verticalSlidesLeft;
+    //}
     public void wait(double seconds) {
         ElapsedTime calvinTimer = new ElapsedTime();
         calvinTimer.reset();
@@ -330,12 +330,7 @@ public class Calvin {
         continuousIntakeRight.setPower(0);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
-        verticalSlidesLeft.setTargetPosition(0);
-        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlidesRight.setTargetPosition(0);
-        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        moveVerticalSlidesTo(0);
     }
 
     public void retrieve(){
@@ -364,20 +359,10 @@ public class Calvin {
         verticalSlidesRight.setPower(gamepad2.left_stick_y);
     }
     public void lift(){
-        verticalSlidesLeft.setTargetPosition(verticalSlideHighScoringPositionLimit);
-        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlidesRight.setTargetPosition(verticalSlideHighScoringPositionLimit);
-        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        moveVerticalSlidesTo(verticalSlideHighScoringPositionLimit);
     }
     public void fall(){
-        verticalSlidesLeft.setTargetPosition(0);
-        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlidesRight.setTargetPosition(0);
-        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        moveVerticalSlidesTo(0);
     }
     public void hang() {
         clawRotator.setPosition(clawHangRotation);
@@ -388,16 +373,21 @@ public class Calvin {
         clawRotator.setPosition(clawScoreRotation);
     }
 
+    private void moveVerticalSlidesTo(int targetPosition) {
+        verticalSlidesLeft.setTargetPosition(targetPosition);
+        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        verticalSlidesRight.setTargetPosition(targetPosition);
+        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     public void specimenPickUp() {
         claw.setPosition(clawOpenPosition);
 
 
-        verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
-        verticalSlidesLeft.setPower(0.5);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
-        verticalSlidesRight.setPower(0.5);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        moveVerticalSlidesTo(specimenStartPickupVerticalSlides);
 
         shaq.setPosition(specimenPickupPosition);
         clawRotator.setPosition(specimenClawRotation);
@@ -412,12 +402,7 @@ public class Calvin {
 
 
         if (et.milliseconds() > 6000) {
-            verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
-            verticalSlidesLeft.setPower(0.5);
-            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
-            verticalSlidesRight.setPower(0.5);
-            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
         }
     }
 
@@ -506,7 +491,9 @@ public class Calvin {
 
     SpecimenPickupState specimenPickupState = SpecimenPickupState.IDLE;
 
-    public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
+    public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton, Telemetry telemetry) {
+        telemetry.addData("State", specimenPickupState);
+        telemetry.update();
         switch (specimenPickupState) {
             case IDLE:
                 if (buttonPressed && !changedLeftBumper) {
@@ -516,12 +503,7 @@ public class Calvin {
                     changedLeftBumper = false;
                 }
                 if (reverseButton && !changedRightBumper) {
-                    verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
-                    verticalSlidesLeft.setPower(0.5);
-                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
-                    verticalSlidesRight.setPower(0.5);
-                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
 
                     changedRightBumper = true;
                     specimenPickupState = SpecimenPickupState.MOVE_TO_DEPOSIT;
@@ -534,12 +516,7 @@ public class Calvin {
                 if (buttonPressed && !changedLeftBumper) {
                     claw.setPosition(clawOpenPosition); //open the claw
 
-                    verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
-                    verticalSlidesLeft.setPower(0.5);
-                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
-                    verticalSlidesRight.setPower(0.5);
-                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    moveVerticalSlidesTo(specimenStartPickupVerticalSlides);
                     //move the slides
 
                     shaq.setPosition(specimenPickupPosition);
@@ -572,12 +549,7 @@ public class Calvin {
                 if (reverseButton && !changedRightBumper) {
                     claw.setPosition(clawOpenPosition); //open the claw
 
-                    verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
-                    verticalSlidesLeft.setPower(0.5);
-                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
-                    verticalSlidesRight.setPower(0.5);
-                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    moveVerticalSlidesTo(specimenStartPickupVerticalSlides);
                     //move the slides
 
                     shaq.setPosition(specimenPickupPosition);
@@ -594,12 +566,7 @@ public class Calvin {
             case MOVE_TO_FINISH_PICKUP:
                 if (buttonPressed && !changedLeftBumper) {
 
-                    verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
-                    verticalSlidesLeft.setPower(0.5);
-                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
-                    verticalSlidesRight.setPower(0.5);
-                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
 
                     changedLeftBumper = true;
                     specimenPickupState = SpecimenPickupState.MOVE_TO_DEPOSIT;
@@ -620,12 +587,7 @@ public class Calvin {
                 break;
             case MOVE_TO_DEPOSIT:
                 if (buttonPressed && !changedLeftBumper) {
-                    verticalSlidesLeft.setTargetPosition(specimenFinishDepositVerticalSlides);
-                    verticalSlidesLeft.setPower(0.5);
-                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    verticalSlidesRight.setTargetPosition(specimenFinishDepositVerticalSlides);
-                    verticalSlidesRight.setPower(0.5);
-                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                   moveVerticalSlidesTo(specimenFinishDepositVerticalSlides);
 
                     changedLeftBumper = true;
                     specimenPickupState = SpecimenPickupState.IDLE;
@@ -633,12 +595,7 @@ public class Calvin {
                     changedLeftBumper = false;
                 }
                 if (reverseButton && !changedRightBumper) {
-                    verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
-                    verticalSlidesLeft.setPower(0.5);
-                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
-                    verticalSlidesRight.setPower(0.5);
-                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
 
                     changedRightBumper = true;
                     specimenPickupState = SpecimenPickupState.MOVE_TO_FINISH_PICKUP;
@@ -730,13 +687,7 @@ public class Calvin {
 
         shaq.setPosition(clawPassivePosition);
 
-        verticalSlidesLeft.setTargetPosition(0);
-        verticalSlidesLeft.setPower(0.5);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlidesRight.setTargetPosition(0);
-        verticalSlidesRight.setPower(0.5);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        moveVerticalSlidesTo(0);
     }
     enum PassiveOrInitialState {
         IDLE, BUTTON_PRESSED, TAP, HOLD
@@ -822,7 +773,7 @@ public class Calvin {
 
         //Prevent jittery Movements
         if (absInput > deadzone) {
-            scaledInput = buttonPressed * sqrInput;
+            scaledInput = Math.min(1,buttonPressed + sqrInput);
         } else {
             scaledInput = 0;
         }

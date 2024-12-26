@@ -43,7 +43,7 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
             //you have to continuously hold to dunk it
             calvin.activateClawRotator(gamepad2.left_trigger);
 
-            calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper);
+            calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper,telemetry);
 
 
             calvin.passiveOrInitial(gamepad2.dpad_up);

@@ -330,6 +330,12 @@ public class Calvin {
         continuousIntakeRight.setPower(0);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
+        verticalSlidesLeft.setTargetPosition(0);
+        verticalSlidesLeft.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlidesRight.setTargetPosition(0);
+        verticalSlidesRight.setPower(0.5); // Tells the motor that the position it should go to is desiredPosition
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void retrieve(){
@@ -494,7 +500,160 @@ public class Calvin {
         }
     }
 
+    enum SpecimenPickupState {
+        IDLE, MOVE_TO_START, CLOSE_CLAW, MOVE_TO_FINISH_PICKUP, MOVE_TO_DEPOSIT
+    }
+
+    SpecimenPickupState specimenPickupState = SpecimenPickupState.IDLE;
+
     public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
+        switch (specimenPickupState) {
+            case IDLE:
+                if (buttonPressed && !changedLeftBumper) {
+                    changedLeftBumper = true;
+                    specimenPickupState = SpecimenPickupState.MOVE_TO_START;
+                } else if(!buttonPressed){
+                    changedLeftBumper = false;
+                }
+                if (reverseButton && !changedRightBumper) {
+                    verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+                    verticalSlidesLeft.setPower(0.5);
+                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+                    verticalSlidesRight.setPower(0.5);
+                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    changedRightBumper = true;
+                    specimenPickupState = SpecimenPickupState.MOVE_TO_DEPOSIT;
+
+                } else if(!reverseButton) {
+                    changedRightBumper = false;
+                }
+                break;
+            case MOVE_TO_START:
+                if (buttonPressed && !changedLeftBumper) {
+                    claw.setPosition(clawOpenPosition); //open the claw
+
+                    verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
+                    verticalSlidesLeft.setPower(0.5);
+                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
+                    verticalSlidesRight.setPower(0.5);
+                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    //move the slides
+
+                    shaq.setPosition(specimenPickupPosition);
+                    clawRotator.setPosition(specimenClawRotation);
+
+                    changedLeftBumper = true;
+                    specimenPickupState = SpecimenPickupState.CLOSE_CLAW;
+                } else if(!buttonPressed){
+                    changedLeftBumper = false;
+                }
+                if (reverseButton && !changedRightBumper) {
+                    passive();
+                    changedRightBumper = true;
+                    specimenPickupState = SpecimenPickupState.IDLE;
+                } else if(!reverseButton) {
+                    changedRightBumper = false;
+                }
+
+                break;
+            case CLOSE_CLAW:
+                if (buttonPressed && !changedLeftBumper) {
+                    if (!verticalSlidesLeft.isBusy() && !verticalSlidesRight.isBusy()) {
+                        claw.setPosition(clawClosedPosition);
+                    }
+                    changedLeftBumper = true;
+                    specimenPickupState = SpecimenPickupState.MOVE_TO_FINISH_PICKUP;
+                } else if(!buttonPressed){
+                    changedLeftBumper = false;
+                }
+                if (reverseButton && !changedRightBumper) {
+                    claw.setPosition(clawOpenPosition); //open the claw
+
+                    verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
+                    verticalSlidesLeft.setPower(0.5);
+                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
+                    verticalSlidesRight.setPower(0.5);
+                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    //move the slides
+
+                    shaq.setPosition(specimenPickupPosition);
+                    clawRotator.setPosition(specimenClawRotation);
+
+                    changedRightBumper = true;
+                    specimenPickupState = SpecimenPickupState.MOVE_TO_START;
+
+                } else if(!reverseButton) {
+                    changedRightBumper = false;
+                }
+
+                break;
+            case MOVE_TO_FINISH_PICKUP:
+                if (buttonPressed && !changedLeftBumper) {
+
+                    verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+                    verticalSlidesLeft.setPower(0.5);
+                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+                    verticalSlidesRight.setPower(0.5);
+                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    changedLeftBumper = true;
+                    specimenPickupState = SpecimenPickupState.MOVE_TO_DEPOSIT;
+                } else if(!buttonPressed){
+                    changedLeftBumper = false;
+                }
+                if (reverseButton && !changedRightBumper) {
+
+                        claw.setPosition(clawClosedPosition);
+
+                    changedRightBumper = true;
+                    specimenPickupState = SpecimenPickupState.CLOSE_CLAW;
+
+                } else if(!reverseButton) {
+                    changedRightBumper = false;
+                }
+
+                break;
+            case MOVE_TO_DEPOSIT:
+                if (buttonPressed && !changedLeftBumper) {
+                    verticalSlidesLeft.setTargetPosition(specimenFinishDepositVerticalSlides);
+                    verticalSlidesLeft.setPower(0.5);
+                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    verticalSlidesRight.setTargetPosition(specimenFinishDepositVerticalSlides);
+                    verticalSlidesRight.setPower(0.5);
+                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    changedLeftBumper = true;
+                    specimenPickupState = SpecimenPickupState.IDLE;
+                } else if(!buttonPressed){
+                    changedLeftBumper = false;
+                }
+                if (reverseButton && !changedRightBumper) {
+                    verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+                    verticalSlidesLeft.setPower(0.5);
+                    verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+                    verticalSlidesRight.setPower(0.5);
+                    verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    changedRightBumper = true;
+                    specimenPickupState = SpecimenPickupState.MOVE_TO_FINISH_PICKUP;
+
+                } else if(!reverseButton) {
+                    changedRightBumper = false;
+                }
+
+                break;
+        }
+
+
+    }
+
+   /* public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
         //macro!!
         if (buttonPressed && !changedLeftBumper) {
             pressCount++;
@@ -561,7 +720,7 @@ public class Calvin {
             pressCount = 0;
         }
         //
-    }
+    }*/
     public void returnAfterDeposit(boolean buttonPressed) {
 
         //yayyyy

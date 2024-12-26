@@ -1,23 +1,19 @@
 package org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 import java.util.List;
 @Disabled
-public class Detector {
+public class Limelight {
     //just trying things out
     public DcMotorEx leftFront, leftBack, rightFront, rightBack;
 
@@ -43,7 +39,7 @@ public class Detector {
 
     /* https://docs.limelightvision.io/docs/docs-limelight/getting-started/FTC/pipelines */
     //First, we want the limelight to detect the specimen,
-    public Detector(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, Limelight3A limelight) {
+    public Limelight(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, Limelight3A limelight) {
         this.leftFront = leftFront;
         this.rightFront = rightFront;
         this.leftBack = leftBack;

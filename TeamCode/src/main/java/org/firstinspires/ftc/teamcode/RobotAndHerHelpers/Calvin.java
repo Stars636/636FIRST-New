@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.Detector;
 
 
 public class Calvin {
@@ -130,20 +131,21 @@ public class Calvin {
 
     int pressCount = 0; // counts button presses
 
+    Detector detector;
+
     PromiseCheatCode cheatCode1;
     public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
         vs = hardwareMap.voltageSensor.get("Control Hub");
-
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         telemetry.setMsTransmissionInterval(11);
+
         limelight.setPollRateHz(100);
 
         limelight.pipelineSwitch(0);
 
-        /*
-         * Starts polling for data.
-         */
+        Detector detector = new Detector(leftFront, rightFront, leftBack, rightBack, limelight);
+
 
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
@@ -705,7 +707,7 @@ public class Calvin {
                 break;
             case BUTTON_PRESSED:
                 if (!buttonPressed) {
-                    if (buttonTimer.milliseconds() < 800) {
+                    if (buttonTimer.milliseconds() < 1000) {
                         passiveOrInitialState = PassiveOrInitialState.TAP;
                     } else {
                         passiveOrInitialState = PassiveOrInitialState.HOLD;
@@ -803,100 +805,9 @@ public class Calvin {
         lb.setPower(ly - joystickX + joystickR);
     }
 
-    public void findSpecimen(Telemetry telemetry) {
-        limelight.start();
-        LLStatus status = limelight.getStatus();
-        telemetry.addData("Name", "%s",
-                status.getName());
-        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
-                status.getTemp(), status.getCpu(), (int) status.getFps());
-        telemetry.addData("Pipeline", "Index: %d, Type: %s",
-                status.getPipelineIndex(), status.getPipelineType());
-
-        LLResult result = limelight.getLatestResult();
-
-        if (result != null) {
-            // Access general information
-            Pose3D botpose = result.getBotpose();
-            if(result.isValid()) {
-                align(result);
-                approachCarefully(result);
-                if(arrival(result)){
-                    limelight.stop();
-                }
-
-
-            }
-        }
-
+    public void detection(Telemetry telemetry){
+        detector.findSpecimen(telemetry);
     }
-
-    public void align(LLResult result) {
-        //double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        //YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
-        LLStatus status = limelight.getStatus();
-
-        if (result.isValid()) {
-            double tx = result.getTx(); // How far left or right the target is (degrees)
-            // Pose3D botpose = result.getBotpose();
-            if (!isAligned(tx)) {
-                if (Math.abs(tx) > tolerance && tx > 0) {
-                    leftFront.setPower(power);
-                    rightFront.setPower(-power);
-                    rightBack.setPower(-power);
-                    leftBack.setPower(power);
-                } else if (Math.abs(tx) > tolerance && tx < 0) {
-                    leftFront.setPower(-power);
-                    rightFront.setPower(power);
-                    rightBack.setPower(power);
-                    leftBack.setPower(-power);
-                }
-
-            }
-        }
-
-    }
-
-    public boolean isAligned(double tx) {
-        if (Math.abs(tx) <= tolerance) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public boolean isCorrectDistance(double ta) {
-        if(Math.abs(ta - idealSize) <= tolerance) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public void approachCarefully(LLResult result) {
-        if (result.isValid()) {
-            double tx = result.getTx();
-            double ta = result.getTa();
-            if(isAligned(tx) && !isCorrectDistance(ta)) {
-                rightFront.setPower(-power);
-                leftFront.setPower(-power);
-                rightBack.setPower(-power);
-                leftBack.setPower(-power);
-            }
-        }
-
-    }
-    public boolean arrival(LLResult result){
-        double tx = result.getTx();
-        double ta = result.getTa();
-
-        if(isAligned(tx) && isCorrectDistance(ta)) {
-            return true;
-        } else {
-            return false;
-        }
-
-
-    }
-
 
     public void cheat1(Telemetry telemetry) {
         cheatCode1.processInputs(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);

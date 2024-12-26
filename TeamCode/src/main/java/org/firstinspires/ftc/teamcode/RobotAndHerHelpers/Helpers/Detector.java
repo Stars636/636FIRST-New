@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import java.util.List;
 @Disabled
-public class Limelight {
+public class Detector {
     //just trying things out
     public DcMotorEx leftFront, leftBack, rightFront, rightBack;
 
@@ -39,7 +39,7 @@ public class Limelight {
 
     /* https://docs.limelightvision.io/docs/docs-limelight/getting-started/FTC/pipelines */
     //First, we want the limelight to detect the specimen,
-    public Limelight(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, Limelight3A limelight) {
+    public Detector(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack, Limelight3A limelight) {
         this.leftFront = leftFront;
         this.rightFront = rightFront;
         this.leftBack = leftBack;
@@ -133,6 +133,34 @@ public class Limelight {
 //Suppose the limelight sees the specimen.
     //First, we either want the limelight to swing in a circle
     //or, adjust the heading to be parallel, and move to the side to align the robot
+public void findSpecimen(Telemetry telemetry) {
+    limelight.start();
+    LLStatus status = limelight.getStatus();
+    telemetry.addData("Name", "%s",
+            status.getName());
+    telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+            status.getTemp(), status.getCpu(), (int) status.getFps());
+    telemetry.addData("Pipeline", "Index: %d, Type: %s",
+            status.getPipelineIndex(), status.getPipelineType());
+
+    LLResult result = limelight.getLatestResult();
+
+    if (result != null) {
+        // Access general information
+        Pose3D botpose = result.getBotpose();
+        if(result.isValid()) {
+            align(result);
+            approachCarefully(result);
+            if(arrival(result)){
+                limelight.stop();
+            }
+
+
+        }
+    }
+
+}
+
     public void align(LLResult result) {
         //double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         //YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
@@ -184,6 +212,18 @@ public class Limelight {
                 leftBack.setPower(-power);
             }
         }
+
+    }
+    public boolean arrival(LLResult result){
+        double tx = result.getTx();
+        double ta = result.getTa();
+
+        if(isAligned(tx) && isCorrectDistance(ta)) {
+            return true;
+        } else {
+            return false;
+        }
+
 
     }
 

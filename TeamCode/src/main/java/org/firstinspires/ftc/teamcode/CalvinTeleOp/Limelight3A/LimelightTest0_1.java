@@ -116,7 +116,7 @@ public class LimelightTest0_1 extends LinearOpMode {
             double pressDuration = buttonTimer.milliseconds();
             if (pressDuration < 800) {
 
-                calvin.findSpecimen(telemetry);
+                calvin.detection(telemetry);
             } else {
 
                 calvin.limelight.stop();

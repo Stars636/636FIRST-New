@@ -100,6 +100,7 @@ public class Calvin {
     public static double specimenClawRotation;
     public static int specimenFinishPickupVerticalSlides;
 
+    public static int specimenStartDepositVerticalSlides;
     public static int specimenFinishDepositVerticalSlides;
 
     public boolean changedRightTrigger = false;
@@ -402,10 +403,27 @@ public class Calvin {
             claw.setPosition(clawClosedPosition);
         }
 
-
+        /*
         if (et.milliseconds() > 6000) {
             moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
         }
+        */
+
+        if (et.milliseconds() > 6000) {
+            moveVerticalSlidesTo(specimenStartDepositVerticalSlides);
+        }
+    }
+
+    public void specimenDeposit() {
+        moveVerticalSlidesTo(specimenFinishDepositVerticalSlides);
+
+        ElapsedTime et = new ElapsedTime();
+        et.reset();
+
+        if (et.milliseconds() > 1000) {
+            claw.setPosition(clawOpenPosition);
+        }
+
     }
 
     public void rotateElbow(boolean buttonPressed) {

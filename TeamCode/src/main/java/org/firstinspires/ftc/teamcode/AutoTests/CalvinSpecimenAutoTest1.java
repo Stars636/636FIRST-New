@@ -138,6 +138,8 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
             //park
             drive.followTrajectorySequence(bPickup);
 
+            calvin.wait(30000);
+
         }
     }
 }

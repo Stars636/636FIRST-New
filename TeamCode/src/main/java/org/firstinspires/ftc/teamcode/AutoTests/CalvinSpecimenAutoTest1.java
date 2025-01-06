@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutoTests;
 
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenStartDepositVerticalSlides;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -30,7 +32,7 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
         //if you are coming from meep meep, define your initial here
         double xStart = 0;
         double yStart = 0;
-        //am I supposed to set them to 0? or the numbers on Meep Meep?
+
 
         // Set the initial pose of the robot
         drive.setPoseEstimate(startPose);
@@ -94,9 +96,11 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
 
         while (opModeIsActive()) {
             drive.followTrajectorySequence(b1);
-            //score specimen
 
-            calvin.wait(1);
+            calvin.moveVerticalSlidesTo(specimenStartDepositVerticalSlides);
+            calvin.wait(0.5);
+            calvin.specimenDeposit();
+            calvin.wait(2);
 
             drive.followTrajectorySequence(b2);
             drive.followTrajectorySequence(b3);

@@ -376,7 +376,7 @@ public class Calvin {
         clawRotator.setPosition(clawScoreRotation);
     }
 
-    private void moveVerticalSlidesTo(int targetPosition) {
+    public void moveVerticalSlidesTo(int targetPosition) {
         verticalSlidesLeft.setTargetPosition(targetPosition);
         verticalSlidesLeft.setPower(0.5);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -415,6 +415,7 @@ public class Calvin {
     }
 
     public void specimenDeposit() {
+
         moveVerticalSlidesTo(specimenFinishDepositVerticalSlides);
 
         ElapsedTime et = new ElapsedTime();
@@ -425,6 +426,7 @@ public class Calvin {
         }
 
     }
+
 
     public void rotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {

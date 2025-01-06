@@ -112,22 +112,24 @@ public class ValueTester extends LinearOpMode {
                 case 10:
                     // Test elbowInsidePosition
                     calvin.elbowLeft.setPosition(elbowInsidePositionTest);
+                    calvin.elbowRight.setPosition(elbowInsidePositionTest);
                     break;
                 case 11:
                     // Test elbowOutsidePosition
                     calvin.elbowLeft.setPosition(elbowOutsidePositionTest);
+                    calvin.elbowRight.setPosition(elbowOutsidePositionTest);
                     break;
                 case 12:
                     // Test intakePassiveRotation
-                    calvin.elbowRight.setPosition(intakePassiveRotationTest);
+                    // calvin.elbowRight.setPosition(intakePassiveRotationTest);
                     break;
                 case 13:
                     // Test intakeActiveRotation
-                    calvin.elbowRight.setPosition(intakeActiveRotationTest);
+                   // calvin.elbowRight.setPosition(intakeActiveRotationTest);
                     break;
                 case 14:
                     // Test intakePickUpRotation
-                    calvin.elbowRight.setPosition(intakePickUpRotationTest);
+                   // calvin.elbowRight.setPosition(intakePickUpRotationTest);
                     break;
                 case 15:
                     // Test verticalSlideHighScoringPositionLimit

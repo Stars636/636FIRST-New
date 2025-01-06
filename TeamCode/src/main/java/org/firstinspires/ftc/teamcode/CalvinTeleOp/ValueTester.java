@@ -111,23 +111,23 @@ public class ValueTester extends LinearOpMode {
                     break;
                 case 10:
                     // Test elbowInsidePosition
-                    calvin.elbow.setPosition(elbowInsidePositionTest);
+                    calvin.elbowLeft.setPosition(elbowInsidePositionTest);
                     break;
                 case 11:
                     // Test elbowOutsidePosition
-                    calvin.elbow.setPosition(elbowOutsidePositionTest);
+                    calvin.elbowLeft.setPosition(elbowOutsidePositionTest);
                     break;
                 case 12:
                     // Test intakePassiveRotation
-                    calvin.intakeRotator.setPosition(intakePassiveRotationTest);
+                    calvin.elbowRight.setPosition(intakePassiveRotationTest);
                     break;
                 case 13:
                     // Test intakeActiveRotation
-                    calvin.intakeRotator.setPosition(intakeActiveRotationTest);
+                    calvin.elbowRight.setPosition(intakeActiveRotationTest);
                     break;
                 case 14:
                     // Test intakePickUpRotation
-                    calvin.intakeRotator.setPosition(intakePickUpRotationTest);
+                    calvin.elbowRight.setPosition(intakePickUpRotationTest);
                     break;
                 case 15:
                     // Test verticalSlideHighScoringPositionLimit
@@ -185,13 +185,13 @@ public class ValueTester extends LinearOpMode {
                     break;
                 case 23:
                     //test intake
-                    calvin.continuousIntakeLeft.setPower(1);
-                    calvin.continuousIntakeRight.setPower(-1);
+                    calvin.IntakeLeft.setPower(1);
+                    calvin.IntakeRight.setPower(-1);
                     break;
                 case 24:
                     //test eject
-                    calvin.continuousIntakeLeft.setPower(-1);
-                    calvin.continuousIntakeRight.setPower(1);
+                    calvin.IntakeLeft.setPower(-1);
+                    calvin.IntakeRight.setPower(1);
                 default:
                     telemetry.addData("Tester", "Invalid value");
                     telemetry.update();

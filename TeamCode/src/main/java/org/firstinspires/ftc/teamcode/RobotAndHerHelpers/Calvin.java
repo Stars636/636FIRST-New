@@ -188,6 +188,7 @@ public class Calvin {
         clawRotator = hardwareMap.get(ServoImplEx.class,"clawRotator");
         elbowLeft = hardwareMap.get(ServoImplEx.class,"elbowLeft");
         elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
+        elbowRight.setDirection(Servo.Direction.REVERSE);
 
         //we will create macros in the future, to remove room for error
 

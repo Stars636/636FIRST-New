@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -20,20 +17,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.Detector;
 
 
 public class Calvin {
-    public CRServo continuousIntakeLeft;
-    public CRServo continuousIntakeRight;
+    public CRServo IntakeLeft;
+    public CRServo IntakeRight;
     public ServoImplEx claw;
     public ServoImplEx shaq;
     public ServoImplEx clawRotator;
 
-    public ServoImplEx elbow;
-    public ServoImplEx intakeRotator;
+    public ServoImplEx elbowLeft;
+    public ServoImplEx elbowRight;
 
     public ServoImplEx horizontalSlidesLeft;
     public ServoImplEx horizontalSlidesRight;
@@ -81,11 +77,11 @@ public class Calvin {
     public static double elbowInsidePosition;
     public static double elbowOutsidePosition;
 
-    public static double intakePassiveRotation;
 
-    public static double intakeActiveRotation;
 
-    public static double intakePickUpRotation;
+
+
+
     public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
 
     //public static int verticalSlideLowScoringPositionLimit;
@@ -185,13 +181,13 @@ public class Calvin {
         //one of these must be reversed
         horizontalSlidesLeft.setDirection(Servo.Direction.FORWARD);
         horizontalSlidesRight.setDirection(Servo.Direction.REVERSE);
-        continuousIntakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
-        continuousIntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
+        IntakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
+        IntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         claw = hardwareMap.get(ServoImplEx.class,"claw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
-        intakeRotator = hardwareMap.get(ServoImplEx.class,"intakeRotator");
-        elbow = hardwareMap.get(ServoImplEx.class,"elbow");
-        intakeRotator = hardwareMap.get(ServoImplEx.class,"intakeRotator");
+        clawRotator = hardwareMap.get(ServoImplEx.class,"clawRotator");
+        elbowLeft = hardwareMap.get(ServoImplEx.class,"elbowLeft");
+        elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
 
         //we will create macros in the future, to remove room for error
 
@@ -216,8 +212,8 @@ public class Calvin {
         claw.setPosition(clawOpenPosition);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
-        elbow.setPosition(intakePassiveRotation);
-        intakeRotator.setPosition(elbowInsidePosition);
+        elbowLeft.setPosition(elbowInsidePosition);
+        elbowRight.setPosition(elbowInsidePosition);
     }
 
     public void checkHardwareInitialization(Telemetry telemetry) {
@@ -257,7 +253,7 @@ public class Calvin {
             telemetry.addData("ERROR", "Limelight3A");
             telemetry.update();
         }
-        if (elbow == null) {
+        if (elbowLeft == null) {
             telemetry.addData("ERROR", "Servo initialization failed");
             telemetry.addData("ERROR", "Elbow");
             telemetry.update();
@@ -272,17 +268,17 @@ public class Calvin {
             telemetry.addData("ERROR", "horizontalSlidesLeft");
             telemetry.update();
         }
-        if (intakeRotator == null) {
+        if (elbowRight == null) {
             telemetry.addData("ERROR", "Servo initialization failed");
             telemetry.addData("ERROR", "intakeRotator");
             telemetry.update();
         }
-        if (continuousIntakeRight == null) {
+        if (IntakeRight == null) {
             telemetry.addData("ERROR", "Servo initialization failed");
             telemetry.addData("ERROR", "continuousIntakeRight");
             telemetry.update();
         }
-        if (continuousIntakeLeft == null) {
+        if (IntakeLeft == null) {
             telemetry.addData("ERROR", "Servo initialization failed");
             telemetry.addData("ERROR", "continuousIntakeLeft");
             telemetry.update();
@@ -308,29 +304,31 @@ public class Calvin {
     public void extend(){
         horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPosition);
         horizontalSlidesRight.setPosition(horizontalSlidesExtendedPosition);
-        elbow.setPosition(elbowOutsidePosition);
-        intakeRotator.setPosition(intakeActiveRotation);
+        elbowLeft.setPosition(elbowOutsidePosition);
+        elbowRight.setPosition(elbowOutsidePosition);
     }
 
     public void intake(){
-        continuousIntakeLeft.setPower(1);
-        continuousIntakeRight.setPower(-1);
-        intakeRotator.setPosition(intakeActiveRotation);
+        IntakeLeft.setPower(1);
+        IntakeRight.setPower(-1);
+        elbowLeft.setPosition(elbowOutsidePosition);
+        elbowRight.setPosition(elbowOutsidePosition);
     }
 
     public void eject() {
-        continuousIntakeLeft.setPower(-1);
-        continuousIntakeRight.setPower(1);
-        intakeRotator.setPosition(intakeActiveRotation);
+        IntakeLeft.setPower(-1);
+        IntakeRight.setPower(1);
+        elbowLeft.setPosition(elbowOutsidePosition);
+        elbowRight.setPosition(elbowOutsidePosition);
     }
     public void intakePassive() {
-        continuousIntakeLeft.setPower(0);
-        continuousIntakeRight.setPower(0);
+        IntakeLeft.setPower(0);
+        IntakeRight.setPower(0);
     }
 
     public void passive() {
-        continuousIntakeLeft.setPower(0);
-        continuousIntakeRight.setPower(0);
+        IntakeLeft.setPower(0);
+        IntakeRight.setPower(0);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
         moveVerticalSlidesTo(0);
@@ -339,7 +337,8 @@ public class Calvin {
     public void retrieve(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
-        intakeRotator.setPosition(intakePickUpRotation);
+        elbowLeft.setPosition(elbowInsidePosition);
+        elbowRight.setPosition(elbowInsidePosition);
     }
 
     public void grabSample(){
@@ -428,10 +427,10 @@ public class Calvin {
 
     public void rotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
-            if (elbow.getPosition() == elbowInsidePosition) {
+            if (elbowLeft.getPosition() == elbowInsidePosition) {
                 extend();
                 changedB = true;
-            } else if (elbow.getPosition() == elbowOutsidePosition) {
+            } else if (elbowLeft.getPosition() == elbowOutsidePosition) {
                 retrieve();
                 changedB = true;
             }

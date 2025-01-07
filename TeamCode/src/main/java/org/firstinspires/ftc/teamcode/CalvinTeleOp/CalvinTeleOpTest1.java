@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
+
 
 @TeleOp
 public class CalvinTeleOpTest1 extends LinearOpMode {
@@ -14,12 +16,13 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
         ElapsedTime et = new ElapsedTime();
 
         Calvin calvin = new Calvin(hardwareMap, telemetry);
+        waitForStart();
 
         calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();
         //Initial!!
         //we will create macros in the future, to remove room for error
-        waitForStart();
+
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();
@@ -27,7 +30,7 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            calvin.cheat1(telemetry);
+            //calvin.cheat1(telemetry);
             //Moves the elbow. TEST these positions
             calvin.rotateElbow(gamepad2.b);
             //Activate  the intake

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.Detector;
 
-
+@Config
 public class Calvin {
     public CRServo IntakeLeft;
     public CRServo IntakeRight;
@@ -56,13 +57,13 @@ public class Calvin {
     public static double sizeTolerance = 5;
 
 
-    public static double clawOpenPosition;
+    public static double clawOpenPosition = 0.;
     public static double clawClosedPosition;
 
 
-    public static double clawPassivePosition;
+    public static double clawPassivePosition = 0.3;
 
-    public static double clawPassiveRotation;
+    public static double clawPassiveRotation = 0.05;
 
     public static double clawRetrievePosition;
 
@@ -133,15 +134,15 @@ public class Calvin {
     PromiseCheatCode cheatCode1;
     public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
         vs = hardwareMap.voltageSensor.get("Control Hub");
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        //limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         telemetry.setMsTransmissionInterval(11);
 
-        limelight.setPollRateHz(100);
+        //limelight.setPollRateHz(100);
 
-        limelight.pipelineSwitch(0);
+        //limelight.pipelineSwitch(0);
 
-        Detector detector = new Detector(leftFront, rightFront, leftBack, rightBack, limelight);
+        //Detector detector = new Detector(leftFront, rightFront, leftBack, rightBack, limelight);
 
 
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -185,6 +186,8 @@ public class Calvin {
         IntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         claw = hardwareMap.get(ServoImplEx.class,"claw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
+        //these are flipped
+        //they are.
         clawRotator = hardwareMap.get(ServoImplEx.class,"clawRotator");
         elbowLeft = hardwareMap.get(ServoImplEx.class,"elbowLeft");
         elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
@@ -208,13 +211,13 @@ public class Calvin {
         while(calvinTimer.seconds() < seconds);
     }
     public void initialPositions(){
-        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
-        horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
-        claw.setPosition(clawOpenPosition);
+        //horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+        //horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
+        //claw.setPosition(clawOpenPosition);
         shaq.setPosition(clawPassivePosition);
-        clawRotator.setPosition(clawPassiveRotation);
-        elbowLeft.setPosition(elbowInsidePosition);
-        elbowRight.setPosition(elbowInsidePosition);
+       clawRotator.setPosition(clawPassiveRotation);
+        //elbowLeft.setPosition(elbowInsidePosition);
+        //elbowRight.setPosition(elbowInsidePosition);
     }
 
     public void checkHardwareInitialization(Telemetry telemetry) {

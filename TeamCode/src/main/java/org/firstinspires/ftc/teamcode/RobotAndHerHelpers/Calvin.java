@@ -61,7 +61,7 @@ public class Calvin {
 
 
     public static double clawOpenPosition = 0;
-    public static double clawClosedPosition = 0.3;
+    public static double clawClosedPosition = 0.17;
 
 
     public static double clawPassivePosition = 0.7;
@@ -194,7 +194,7 @@ public class Calvin {
         intakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
         intakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         intakeUp = hardwareMap.get(CRServo.class, "continuousIntakeUp"); //setPower
-        intakeUp.setDirection(DcMotorSimple.Direction.REVERSE);
+
         claw = hardwareMap.get(ServoImplEx.class,"claw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
         //these are flipped

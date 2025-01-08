@@ -37,7 +37,7 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
             //calvin.IntakeRight.setPower(1);
             calvin.activateIntake(gamepad2.a);
             //Reverse. I chose this button(because the old bot had no equivalent), so if you want another one then do it
-            calvin.activateEject(gamepad2.x);
+            calvin.activateEject(gamepad2.right_stick_button);
             //Pushes the extendo. Positions need to be tested.
             //Test these positionsssss
             calvin.activateExtendo(gamepad2.right_trigger);

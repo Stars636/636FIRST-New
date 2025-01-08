@@ -187,13 +187,13 @@ public class ValueTester extends LinearOpMode {
                     break;
                 case 23:
                     //test intake
-                    calvin.IntakeLeft.setPower(1);
-                    calvin.IntakeRight.setPower(-1);
+                    calvin.intakeLeft.setPower(1);
+                    calvin.intakeRight.setPower(-1);
                     break;
                 case 24:
                     //test eject
-                    calvin.IntakeLeft.setPower(-1);
-                    calvin.IntakeRight.setPower(1);
+                    calvin.intakeLeft.setPower(-1);
+                    calvin.intakeRight.setPower(1);
                 default:
                     telemetry.addData("Tester", "Invalid value");
                     telemetry.update();

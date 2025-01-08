@@ -23,8 +23,9 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.Detector;
 
 @Config
 public class Calvin {
-    public CRServo IntakeLeft;
-    public CRServo IntakeRight;
+    public CRServo intakeLeft;
+    public CRServo intakeRight;
+    public CRServo intakeUp;
     public ServoImplEx claw;
     public ServoImplEx shaq;
     public ServoImplEx clawRotator;
@@ -55,6 +56,8 @@ public class Calvin {
     public static double idealSize = 30;
 
     public static double sizeTolerance = 5;
+
+    public static double intakeUpSpeed = 1;
 
 
     public static double clawOpenPosition = 0;
@@ -188,8 +191,10 @@ public class Calvin {
         //one of these must be reversed
         horizontalSlidesLeft.setDirection(Servo.Direction.FORWARD);
         horizontalSlidesRight.setDirection(Servo.Direction.REVERSE);
-        IntakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
-        IntakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
+        intakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
+        intakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
+        intakeUp = hardwareMap.get(CRServo.class, "continuousIntakeUp"); //setPower
+        //intakeUp.setDirection(DcMotorSimple.Direction.REVERSE);
         claw = hardwareMap.get(ServoImplEx.class,"claw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
         //these are flipped
@@ -308,12 +313,12 @@ public class Calvin {
             telemetry.addData("ERROR", "intakeRotator");
             telemetry.update();
         }
-        if (IntakeRight == null) {
+        if (intakeRight == null) {
             telemetry.addData("ERROR", "Servo initialization failed");
             telemetry.addData("ERROR", "continuousIntakeRight");
             telemetry.update();
         }
-        if (IntakeLeft == null) {
+        if (intakeLeft == null) {
             telemetry.addData("ERROR", "Servo initialization failed");
             telemetry.addData("ERROR", "continuousIntakeLeft");
             telemetry.update();
@@ -344,26 +349,30 @@ public class Calvin {
     }
 
     public void intake(){
-        IntakeLeft.setPower(-1);
-        IntakeRight.setPower(1);
+        intakeLeft.setPower(-1);
+        intakeRight.setPower(1);
+        intakeUp.setPower(intakeUpSpeed);
         //elbowLeft.setPosition(elbowOutsidePosition);
         //elbowRight.setPosition(elbowOutsidePosition);
     }
 
     public void eject() {
-        IntakeLeft.setPower(1);
-        IntakeRight.setPower(-1);
+        intakeLeft.setPower(1);
+        intakeRight.setPower(-1);
+        intakeUp.setPower(-intakeUpSpeed);
         //elbowLeft.setPosition(elbowOutsidePosition);
         //elbowRight.setPosition(elbowOutsidePosition);
     }
     public void intakePassive() {
-        IntakeLeft.setPower(0);
-        IntakeRight.setPower(0);
+        intakeLeft.setPower(0);
+        intakeRight.setPower(0);
+        intakeUp.setPower(0);
     }
 
     public void passive() {
-        IntakeLeft.setPower(0);
-        IntakeRight.setPower(0);
+        intakeLeft.setPower(0);
+        intakeRight.setPower(0);
+        intakeUp.setPower(0);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
         moveVerticalSlidesTo(0);
@@ -477,12 +486,6 @@ public class Calvin {
 
 
     }
-    boolean intakeQ = false;
-    boolean ejectQ = false;
-
-    enum IntakeState {
-        IDLE, INTAKE
-    }
 
     public void activateIntake(boolean buttonPressed) {
         if (buttonPressed) {
@@ -497,11 +500,14 @@ public class Calvin {
     public void activateEject(boolean buttonPressed) {
         if (buttonPressed) {
           eject();
-            ejectQ = true;
         } else {
             intakePassive();
 
         }
+    }
+    boolean changedShaq = false;
+    public void swingShaq(boolean buttonPressed) {
+
     }
 
     public void activateExtendo(double buttonPressed) {

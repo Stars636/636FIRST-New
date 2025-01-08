@@ -54,6 +54,10 @@ public class CalvinPositionTester extends LinearOpMode {
             functions.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
 
+            telemetry.addData("MotorPosition",functions.verticalSlidesLeft.getCurrentPosition());
+            telemetry.update();
+
+
         }
 
     }

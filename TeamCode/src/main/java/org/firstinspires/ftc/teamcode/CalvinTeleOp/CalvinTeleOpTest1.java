@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,6 +19,7 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
 
         calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();
+
         //Initial!!
         //we will create macros in the future, to remove room for error
 
@@ -29,11 +29,12 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-
+            //calvin.initialPositions();
             //calvin.cheat1(telemetry);
             //Moves the elbow. TEST these positions
             calvin.rotateElbow(gamepad2.b);
             //Activate  the intake
+            //calvin.IntakeRight.setPower(1);
             calvin.activateIntake(gamepad2.a);
             //Reverse. I chose this button(because the old bot had no equivalent), so if you want another one then do it
             calvin.activateEject(gamepad2.x);
@@ -55,7 +56,16 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
 
 
 
-            calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+           //calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            double joystickX = -gamepad1.left_stick_x;
+            double joystickY = gamepad1.left_stick_y;
+            double joystickR = -gamepad1.right_stick_x;
+
+
+            calvin.rightFrontCalvin.setPower(joystickY - joystickX - joystickR);
+            calvin.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
+            calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
+            calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
         }
 

@@ -35,13 +35,13 @@ public class Calvin {
     public ServoImplEx horizontalSlidesLeft;
     public ServoImplEx horizontalSlidesRight;
 
-    public DcMotorEx rightBack;
+    public DcMotorEx rightBackCalvin;
 
-    public DcMotorEx rightFront;
+    public DcMotorEx rightFrontCalvin;
 
-    public DcMotorEx leftBack;
+    public DcMotorEx leftBackCalvin;
 
-    public DcMotorEx leftFront;
+    public DcMotorEx leftFrontCalvin;
     public DcMotorImplEx verticalSlidesRight;
 
     public DcMotorImplEx verticalSlidesLeft;
@@ -57,48 +57,50 @@ public class Calvin {
     public static double sizeTolerance = 5;
 
 
-    public static double clawOpenPosition = 0.;
-    public static double clawClosedPosition;
+    public static double clawOpenPosition = 0;
+    public static double clawClosedPosition = 0.3;
 
 
-    public static double clawPassivePosition = 0.3;
+    public static double clawPassivePosition = 0.7;
 
-    public static double clawPassiveRotation = 0.05;
+    public static double clawPassiveRotation = 0.06;
 
-    public static double clawRetrievePosition;
+    public static double clawRetrievePosition = 0.83;
 
-    public static double clawPickUpRotation;
+    public static double clawPickUpRotation = 1;
 
-    public static double clawScorePosition;
+    public static double clawScorePosition = 0.29;
 
-    public static double clawScoreRotation;
+    public static double clawScoreRotation = 0.8;
 
-    public static double clawHangRotation;
+    public static double clawHangRotation = 1;
 
-    public static double elbowInsidePosition;
-    public static double elbowOutsidePosition;
-
-
-
+    public static double elbowInsidePosition = 0.02;
+    public static double elbowOutsidePosition = 0.75;
 
 
 
-    public static int verticalSlideHighScoringPositionLimit; //kindly note that gunner will use joystick
+
+
+
+    public static int verticalSlideHighScoringPositionLimit = 3000; //kindly note that gunner will use joystick
 
     //public static int verticalSlideLowScoringPositionLimit;
-    public static double horizontalSlidesInitialPosition;
+    public static double horizontalSlidesInitialPosition = 0.99;
 
-    public static double horizontalSlidesExtendedPosition;
+    public static double horizontalSlidesExtendedPosition = 0.68;
 
 
-    public static double specimenPickupPosition;
-    public static int specimenStartPickupVerticalSlides;
+    public static double specimenPickupPosition = 0;
 
-    public static double specimenClawRotation;
-    public static int specimenFinishPickupVerticalSlides;
+    public static int intitialVertical = 0;
+    public static int specimenStartPickupVerticalSlides = 0;
 
-    public static int specimenStartDepositVerticalSlides;
-    public static int specimenFinishDepositVerticalSlides;
+    public static double specimenClawRotation = 1;
+    public static int specimenFinishPickupVerticalSlides = 1000;
+
+    public static int specimenStartDepositVerticalSlides = 1000;
+    public static int specimenFinishDepositVerticalSlides = 0;
 
     public boolean changedRightTrigger = false;
     public boolean changedLeftTrigger = false;
@@ -111,6 +113,8 @@ public class Calvin {
     public boolean changedZhang = false;
 
     public boolean changedUchida = false;
+
+    public boolean changedPresanna = false;
     public boolean changedY = false;
 
     public boolean changedLeftBumper = false;
@@ -125,6 +129,8 @@ public class Calvin {
     private final double integral = 0.1;
 
     private final double  derivative = 0.05;
+
+    public static int testerZ = 0;
     //public PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
 
     int pressCount = 0; // counts button presses
@@ -146,17 +152,17 @@ public class Calvin {
 
 
         //Initializing all the motors. Do not change this unless we change the wiring
-        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
-        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
-        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
+        rightBackCalvin = hardwareMap.get(DcMotorEx.class,"rightBack");
+        leftBackCalvin = hardwareMap.get(DcMotorEx.class,"leftBack");
+        rightFrontCalvin = hardwareMap.get(DcMotorEx.class,"rightFront");
+        leftFrontCalvin = hardwareMap.get(DcMotorEx.class,"leftFront");
 
-        rightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        leftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontCalvin.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightBackCalvin.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftFrontCalvin.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftBackCalvin.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightFrontCalvin.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackCalvin.setDirection(DcMotorSimple.Direction.REVERSE);
 
         PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
         verticalSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
@@ -174,7 +180,7 @@ public class Calvin {
 
         verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
         verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
-        verticalSlidesRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         horizontalSlidesLeft = hardwareMap.get(ServoImplEx.class,"horizontalSlidesLeft");
@@ -196,7 +202,7 @@ public class Calvin {
         //we will create macros in the future, to remove room for error
 
         //cheat codes!!
-        cheatCode1 = new PromiseCheatCode(leftFront, rightFront, leftBack, rightBack);
+        cheatCode1 = new PromiseCheatCode(leftFrontCalvin, rightFrontCalvin, leftBackCalvin, rightBackCalvin);
 
     }
     //public DcMotor getVerticalSlidesRight() {
@@ -211,32 +217,57 @@ public class Calvin {
         while(calvinTimer.seconds() < seconds);
     }
     public void initialPositions(){
-        //horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
-        //horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
+        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
         //claw.setPosition(clawOpenPosition);
         shaq.setPosition(clawPassivePosition);
-       clawRotator.setPosition(clawPassiveRotation);
-        //elbowLeft.setPosition(elbowInsidePosition);
-        //elbowRight.setPosition(elbowInsidePosition);
+        clawRotator.setPosition(clawPassiveRotation);
+        elbowLeft.setPosition(elbowInsidePosition);
+        elbowRight.setPosition(elbowInsidePosition);
+
+        //REMOVE THIUS
+        moveVerticalSlidesTo(intitialVertical);
+    }
+
+    public void testIntital(boolean buttonPressed) {
+        if (buttonPressed && !changedPresanna) {
+            switch(testerZ) {
+                case 0:
+                    shaq.setPosition(clawPassivePosition);
+                case 1:
+                    clawRotator.setPosition(clawPassiveRotation);
+                case 2:
+                    elbowLeft.setPosition(elbowInsidePosition);
+                    elbowRight.setPosition(elbowInsidePosition);
+                case 3:
+                    claw.setPosition(clawOpenPosition);
+                case 4:
+                    horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+                    horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
+            }
+            changedPresanna = true;
+        } else if(!buttonPressed) {
+            changedPresanna = false;
+        }
     }
 
     public void checkHardwareInitialization(Telemetry telemetry) {
-        if (rightFront == null) {
+        if (rightFrontCalvin == null) {
             telemetry.addData("ERROR", "Motor initialization failed");
             telemetry.addData("ERROR", "rightFront");
             telemetry.update();
         }
-        if (leftFront == null) {
+        if (leftFrontCalvin == null) {
             telemetry.addData("ERROR", "Motor initialization failed");
             telemetry.addData("ERROR", "leftFront");
             telemetry.update();
         }
-        if (rightBack == null) {
+        if (rightBackCalvin == null) {
             telemetry.addData("ERROR", "Motor initialization failed");
             telemetry.addData("ERROR", "rightBack");
             telemetry.update();
         }
-        if (leftBack == null) {
+        if (leftBackCalvin == null) {
             telemetry.addData("ERROR", "Motor initialization failed");
             telemetry.addData("ERROR", "leftBack");
             telemetry.update();
@@ -313,17 +344,17 @@ public class Calvin {
     }
 
     public void intake(){
-        IntakeLeft.setPower(1);
-        IntakeRight.setPower(-1);
-        elbowLeft.setPosition(elbowOutsidePosition);
-        elbowRight.setPosition(elbowOutsidePosition);
+        IntakeLeft.setPower(-1);
+        IntakeRight.setPower(1);
+        //elbowLeft.setPosition(elbowOutsidePosition);
+        //elbowRight.setPosition(elbowOutsidePosition);
     }
 
     public void eject() {
-        IntakeLeft.setPower(-1);
-        IntakeRight.setPower(1);
-        elbowLeft.setPosition(elbowOutsidePosition);
-        elbowRight.setPosition(elbowOutsidePosition);
+        IntakeLeft.setPower(1);
+        IntakeRight.setPower(-1);
+        //elbowLeft.setPosition(elbowOutsidePosition);
+        //elbowRight.setPosition(elbowOutsidePosition);
     }
     public void intakePassive() {
         IntakeLeft.setPower(0);
@@ -381,11 +412,11 @@ public class Calvin {
 
     public void moveVerticalSlidesTo(int targetPosition) {
         verticalSlidesLeft.setTargetPosition(targetPosition);
-        verticalSlidesLeft.setPower(0.5);
+        verticalSlidesLeft.setPower(1);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         verticalSlidesRight.setTargetPosition(targetPosition);
-        verticalSlidesRight.setPower(0.5);
+        verticalSlidesRight.setPower(1);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
@@ -446,20 +477,30 @@ public class Calvin {
 
 
     }
+    boolean intakeQ = false;
+    boolean ejectQ = false;
+
+    enum IntakeState {
+        IDLE, INTAKE
+    }
 
     public void activateIntake(boolean buttonPressed) {
         if (buttonPressed) {
             intake();
+
         } else {
             intakePassive();
         }
+
     }
 
     public void activateEject(boolean buttonPressed) {
-        if (buttonPressed){
-            eject();
+        if (buttonPressed) {
+          eject();
+            ejectQ = true;
         } else {
             intakePassive();
+
         }
     }
 
@@ -791,27 +832,17 @@ public class Calvin {
     }
 
     public void activateVerticalSlides(double buttonPressed) {
-        double scaledInput;
-        double absInput = Math.abs(buttonPressed);
-        double sqrInput = Math.sqrt(absInput);
-        double deadzone = 0.09;
-
-        //Prevent jittery Movements
-        if (absInput > deadzone) {
-            scaledInput = Math.min(1,buttonPressed + sqrInput);
-        } else {
-            scaledInput = 0;
-        }
-        //
-        if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
-            verticalSlidesLeft.setPower(scaledInput);
-            verticalSlidesRight.setPower(scaledInput);
-        }else if (verticalSlidesLeft.getCurrentPosition() < 0) {
-            verticalSlidesLeft.setPower(Math.max(scaledInput, 0));  // Only allow positive power
-            verticalSlidesRight.setPower(Math.max(scaledInput, 0));
-        } else if (verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
-            verticalSlidesLeft.setPower(Math.min(scaledInput, 0));  // Only allow negative power
-            verticalSlidesRight.setPower(Math.min(scaledInput, 0));
+        if (buttonPressed != 0) {
+            if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
+                verticalSlidesLeft.setPower(buttonPressed);
+                verticalSlidesRight.setPower(buttonPressed);
+            } else if (verticalSlidesLeft.getCurrentPosition() < 0) {
+                verticalSlidesLeft.setPower(Math.max(buttonPressed, 0));  // Only allow positive power
+                verticalSlidesRight.setPower(Math.max(buttonPressed, 0));
+            } else if (verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+                verticalSlidesLeft.setPower(Math.min(buttonPressed, 0));  // Only allow negative power
+                verticalSlidesRight.setPower(Math.min(buttonPressed, 0));
+            }
         }
 
 

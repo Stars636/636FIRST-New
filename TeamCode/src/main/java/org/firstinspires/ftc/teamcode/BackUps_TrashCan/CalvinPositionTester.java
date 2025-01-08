@@ -48,10 +48,10 @@ public class CalvinPositionTester extends LinearOpMode {
             double joystickY = gamepad1.left_stick_y;
             double joystickR = -gamepad1.right_stick_x;
 
-            functions.rightFront.setPower(joystickY - joystickX - joystickR);
-            functions.leftFront.setPower(joystickY + joystickX + joystickR);
-            functions.rightBack.setPower(joystickY + joystickX - joystickR);
-            functions.leftBack.setPower(joystickY - joystickX + joystickR);
+            functions.rightFrontCalvin.setPower(joystickY - joystickX - joystickR);
+            functions.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
+            functions.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
+            functions.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
 
         }

@@ -6,11 +6,9 @@ import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenP
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenStartPickupVerticalSlides;
 
 import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
@@ -68,7 +66,7 @@ public class LimelightTest0_1 extends LinearOpMode {
             telemetry.addData("Pipeline", "Index: %d, Type: %s",
                     status.getPipelineIndex(), status.getPipelineType());
 
-            calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            calvin.driveMotors(calvin.leftFrontCalvin, calvin.rightFrontCalvin, calvin.leftBackCalvin, calvin.rightBackCalvin, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if(gamepad1.a && !aPress) {
                 calvin.shaq.setPosition(specimenPickupPosition);

@@ -194,7 +194,7 @@ public class Calvin {
         intakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
         intakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         intakeUp = hardwareMap.get(CRServo.class, "continuousIntakeUp"); //setPower
-        //intakeUp.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeUp.setDirection(DcMotorSimple.Direction.REVERSE);
         claw = hardwareMap.get(ServoImplEx.class,"claw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
         //these are flipped
@@ -224,7 +224,7 @@ public class Calvin {
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
-        //claw.setPosition(clawOpenPosition);
+        claw.setPosition(clawOpenPosition);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
         elbowLeft.setPosition(elbowInsidePosition);

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 
 
 @TeleOp
-public class CalvinTeleOpTest1 extends LinearOpMode {
+public class CalvinTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,10 +49,11 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
 
             calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper,telemetry);
 
-
             calvin.passiveOrInitial(gamepad2.dpad_up);
 
             calvin.activateVerticalSlides(gamepad2.left_stick_y);
+
+            calvin.switchScoring(gamepad1.x);
 
 
 
@@ -66,6 +67,11 @@ public class CalvinTeleOpTest1 extends LinearOpMode {
             calvin.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
             calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
             calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
+
+            telemetry.addData("Scoring Mode:", calvin.scoringMode);
+            telemetry.addData("Slides Height:", calvin.verticalSlidesLeft.getCurrentPosition());
+            telemetry.addData("Specimen Macro Step", calvin.specimenPickupState);
+            telemetry.update();
 
         }
 

@@ -96,7 +96,7 @@ public class Calvin {
 
     public static double specimenPickupPosition = 0;
 
-    public static int intitialVertical = 0;
+    public static int initialVertical = 0;
     public static int specimenStartPickupVerticalSlides = 0;
 
     public static double specimenClawRotation = 1;
@@ -231,10 +231,10 @@ public class Calvin {
         elbowRight.setPosition(elbowInsidePosition);
 
         //REMOVE THIUS
-        moveVerticalSlidesTo(intitialVertical);
+        moveVerticalSlidesTo(initialVertical);
     }
 
-    public void testIntital(boolean buttonPressed) {
+    public void testInitial(boolean buttonPressed) {
         if (buttonPressed && !changedPresanna) {
             switch(testerZ) {
                 case 0:
@@ -470,6 +470,49 @@ public class Calvin {
 
     }
 
+    public enum switchScoringMode {
+        BASKET, SPECIMEN
+    }
+    public switchScoringMode scoringMode = switchScoringMode.BASKET;
+
+    enum ScoringButton {
+        IDLE, BUTTON_PRESSED, TAP, HOLD
+    }
+    ScoringButton scoringSwitchButton = ScoringButton.IDLE;
+    ElapsedTime scoringTimer = new ElapsedTime();
+    public void switchScoring(boolean buttonPressed) {
+        switch (scoringSwitchButton) {
+            case IDLE:
+                if (buttonPressed) {
+                    scoringSwitchButton = ScoringButton.BUTTON_PRESSED;
+                    scoringTimer.reset();
+                }
+                break;
+            case BUTTON_PRESSED:
+                if (!buttonPressed) {
+                    if (scoringTimer.milliseconds() < 800) {
+                        scoringSwitchButton = ScoringButton.TAP;
+                    } else {
+                        scoringSwitchButton = ScoringButton.HOLD;
+                    }
+                }
+                break;
+            case TAP:
+                //...
+                scoringSwitchButton = ScoringButton.IDLE;
+                break;
+            case HOLD:
+                switch (scoringMode) {
+                    case BASKET:
+                        scoringMode = switchScoringMode.SPECIMEN;
+                    case SPECIMEN:
+                        scoringMode = switchScoringMode.BASKET;
+                }
+                scoringSwitchButton = ScoringButton.IDLE;
+                break;
+        }
+    }
+
 
     public void rotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
@@ -490,7 +533,6 @@ public class Calvin {
     public void activateIntake(boolean buttonPressed) {
         if (buttonPressed) {
             intake();
-
         } else {
             intakePassive();
         }
@@ -505,10 +547,7 @@ public class Calvin {
 
         }
     }
-    boolean changedShaq = false;
-    public void swingShaq(boolean buttonPressed) {
 
-    }
 
     public void activateExtendo(double buttonPressed) {
         if (buttonPressed != 0 && !changedRightTrigger) {
@@ -557,11 +596,11 @@ public class Calvin {
         }
     }
 
-    enum SpecimenPickupState {
+    public enum SpecimenPickupState {
         IDLE, MOVE_TO_START, CLOSE_CLAW, MOVE_TO_FINISH_PICKUP, MOVE_TO_DEPOSIT
     }
 
-    SpecimenPickupState specimenPickupState = SpecimenPickupState.IDLE;
+    public SpecimenPickupState specimenPickupState = SpecimenPickupState.IDLE;
 
     public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton, Telemetry telemetry) {
         telemetry.addData("State", specimenPickupState);

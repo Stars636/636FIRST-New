@@ -55,6 +55,7 @@ public class CalvinPositionTester extends LinearOpMode {
 
 
             telemetry.addData("MotorPosition",functions.verticalSlidesLeft.getCurrentPosition());
+
             telemetry.update();
 
 

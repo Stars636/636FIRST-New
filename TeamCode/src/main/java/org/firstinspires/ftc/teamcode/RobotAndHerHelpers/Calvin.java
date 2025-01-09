@@ -208,7 +208,7 @@ public class Calvin {
 
     }
 
-    public void kindlyRelax(){
+    /*public void kindlyRelax(){
         horizontalSlidesLeft.setPwmDisable();
         horizontalSlidesRight.setPwmDisable();
         clawRotator.setPwmDisable();
@@ -224,7 +224,7 @@ public class Calvin {
         claw.setPwmEnable();
         elbowRight.setPwmEnable();
         elbowLeft.setPwmEnable();
-    }
+    }*/
 
 
 

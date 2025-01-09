@@ -1,0 +1,20 @@
+/*public void passiveOrInitial(boolean buttonPressed) {
+        if (buttonPressed && !buttonPreviouslyPressed) {
+
+            buttonTimer.reset();
+            buttonPreviouslyPressed = true;
+        } else if (!buttonPressed && buttonPreviouslyPressed) {
+
+            buttonPreviouslyPressed = false;
+
+            // is it a tap or a hold??
+            double pressDuration = buttonTimer.milliseconds();
+            if (pressDuration < 800) {
+
+                returnToPassive(buttonPressed);
+            } else {
+
+                returnToInitial(buttonPressed);
+            }
+        }
+    }*/

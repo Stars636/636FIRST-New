@@ -10,10 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -26,6 +24,7 @@ public class Calvin {
     public CRServo intakeLeft;
     public CRServo intakeRight;
     public CRServo intakeUp;
+    
     public ServoImplEx claw;
     public ServoImplEx shaq;
     public ServoImplEx clawRotator;
@@ -49,13 +48,13 @@ public class Calvin {
 
     public Limelight3A limelight;
 
-    public static double tolerance = 2;
+    //public static double tolerance = 2;
 
-    public static double power = 0.3;
+    //public static double power = 0.3;
 
-    public static double idealSize = 30;
+    //public static double idealSize = 30;
 
-    public static double sizeTolerance = 5;
+    //public static double sizeTolerance = 5;
 
     public static double intakeUpSpeed = 1;
 
@@ -88,7 +87,7 @@ public class Calvin {
 
     public static int verticalSlideHighScoringPositionLimit = 3000; //kindly note that gunner will use joystick
 
-    //public static int verticalSlideLowScoringPositionLimit;
+    //public static int verticalSlideLowScoringPositionLimit = 1500;
     public static double horizontalSlidesInitialPosition = 0.99;
 
     public static double horizontalSlidesExtendedPosition = 0.68;
@@ -98,13 +97,13 @@ public class Calvin {
 
     public static double specimenClawPosition = 0.85;
 
-    public static int initialVertical = 0;
+
     public static int specimenStartPickupVerticalSlides = 0;
 
     public static double specimenDepositClawRotation = 0.3;
 
 
-    public static int specimenFinishPickupVerticalSlides = 1000;
+   // public static int specimenFinishPickupVerticalSlides = 1000;
 
     public static int specimenStartDepositVerticalSlides = 1000;
     public static int specimenFinishDepositVerticalSlides = 0;
@@ -116,46 +115,31 @@ public class Calvin {
     public boolean changedB = false;
 
 
-    public boolean changedRightBumper = false;
+   // public boolean changedRightBumper = false;
     public boolean changedZhang = false;
 
     public boolean changedUchida = false;
 
-    public boolean changedPresanna = false;
+   // public boolean changedPresanna = false;
     public boolean changedY = false;
 
-    public boolean changedLeftBumper = false;
+   // public boolean changedLeftBumper = false;
 
-    private VoltageSensor vs;
-
+    //
     private ElapsedTime buttonTimer = new ElapsedTime();
    // private boolean buttonPreviouslyPressed = false;
 
-    private final double proportion = 1.0;
 
-    private final double integral = 0.1;
+    //public static int testerZ = 0;
 
-    private final double  derivative = 0.05;
 
-    public static int testerZ = 0;
-    //public PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
 
-    int pressCount = 0; // counts button presses
 
     Detector detector;
 
-    PromiseCheatCode cheatCode1;
+
     public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
-        vs = hardwareMap.voltageSensor.get("Control Hub");
-        //limelight = hardwareMap.get(Limelight3A.class, "limelight");
-
-        telemetry.setMsTransmissionInterval(11);
-
-        //limelight.setPollRateHz(100);
-
-        //limelight.pipelineSwitch(0);
-
-        //Detector detector = new Detector(leftFront, rightFront, leftBack, rightBack, limelight);
+       //
 
 
         //Initializing all the motors. Do not change this unless we change the wiring
@@ -171,20 +155,16 @@ public class Calvin {
         rightFrontCalvin.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackCalvin.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
+
         verticalSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
         verticalSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
 
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         verticalSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //if things don't work, consider removing this
-       // verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
-        //verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
-        //
+
 
         verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
         verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
@@ -202,30 +182,21 @@ public class Calvin {
 
         claw = hardwareMap.get(ServoImplEx.class,"claw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
-        //these are flipped
-        //they are.
+
         clawRotator = hardwareMap.get(ServoImplEx.class,"clawRotator");
         elbowLeft = hardwareMap.get(ServoImplEx.class,"elbowLeft");
         elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
         elbowRight.setDirection(Servo.Direction.REVERSE);
 
-        //we will create macros in the future, to remove room for error
-
-        //cheat codes!!
-        cheatCode1 = new PromiseCheatCode(leftFrontCalvin, rightFrontCalvin, leftBackCalvin, rightBackCalvin);
 
     }
-    //public DcMotor getVerticalSlidesRight() {
-      //  return verticalSlidesRight;
-    //}
-    //public DcMotor getVerticalSlidesLeft() {
-     //   return verticalSlidesLeft;
-    //}
+
     public void wait(double seconds) {
         ElapsedTime calvinTimer = new ElapsedTime();
         calvinTimer.reset();
         while(calvinTimer.seconds() < seconds);
     }
+
     public void initialPositions(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
@@ -235,8 +206,6 @@ public class Calvin {
         elbowLeft.setPosition(elbowInsidePosition);
         elbowRight.setPosition(elbowInsidePosition);
 
-        //REMOVE THIUS
-        //moveVerticalSlidesTo(initialVertical);
     }
 
     public void kindlyRelax(){
@@ -257,27 +226,7 @@ public class Calvin {
         elbowLeft.setPwmEnable();
     }
 
-    public void testInitial(boolean buttonPressed) {
-        if (buttonPressed && !changedPresanna) {
-            switch(testerZ) {
-                case 0:
-                    shaq.setPosition(clawPassivePosition);
-                case 1:
-                    clawRotator.setPosition(clawPassiveRotation);
-                case 2:
-                    elbowLeft.setPosition(elbowInsidePosition);
-                    elbowRight.setPosition(elbowInsidePosition);
-                case 3:
-                    claw.setPosition(clawOpenPosition);
-                case 4:
-                    horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
-                    horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
-            }
-            changedPresanna = true;
-        } else if(!buttonPressed) {
-            changedPresanna = false;
-        }
-    }
+
 
     public void checkHardwareInitialization(Telemetry telemetry) {
         if (rightFrontCalvin == null) {
@@ -370,21 +319,36 @@ public class Calvin {
         elbowLeft.setPosition(elbowOutsidePosition);
         elbowRight.setPosition(elbowOutsidePosition);
     }
+    public void elbowIn(){
+        elbowLeft.setPosition(elbowInsidePosition);
+        elbowRight.setPosition(elbowInsidePosition);
+    }
+    public void elbowOut(){
+        elbowLeft.setPosition(elbowOutsidePosition);
+        elbowRight.setPosition(elbowOutsidePosition);
+    }
+    public void extendoIn(){
+        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
+    }
+    public void extendoOut(){
+        horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesExtendedPosition);
+
+    }
 
     public void intake(){
         intakeLeft.setPower(-1);
         intakeRight.setPower(1);
         intakeUp.setPower(intakeUpSpeed);
-        //elbowLeft.setPosition(elbowOutsidePosition);
-        //elbowRight.setPosition(elbowOutsidePosition);
+
     }
 
     public void eject() {
         intakeLeft.setPower(1);
         intakeRight.setPower(-1);
         intakeUp.setPower(-intakeUpSpeed);
-        //elbowLeft.setPosition(elbowOutsidePosition);
-        //elbowRight.setPosition(elbowOutsidePosition);
+
     }
     public void intakePassive() {
         intakeLeft.setPower(0);
@@ -421,12 +385,6 @@ public class Calvin {
         clawRotator.setPosition(clawPickUpRotation);
     }
 
-
-
-    public void rise(){
-        verticalSlidesLeft.setPower(gamepad2.left_stick_y);
-        verticalSlidesRight.setPower(gamepad2.left_stick_y);
-    }
     public void lift(){
         moveVerticalSlidesTo(verticalSlideHighScoringPositionLimit);
     }
@@ -509,7 +467,7 @@ public class Calvin {
     }
     ScoringButton scoringSwitchButton = ScoringButton.IDLE;
     ElapsedTime scoringTimer = new ElapsedTime();
-    public void switchScoring(boolean buttonPressed) {
+    public void activateSwitchScoring(boolean buttonPressed) {
         switch (scoringSwitchButton) {
             case IDLE:
                 if (buttonPressed) {
@@ -543,13 +501,13 @@ public class Calvin {
     }
 
 
-    public void rotateElbow(boolean buttonPressed) {
+    public void activateRotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
             if (elbowLeft.getPosition() == elbowInsidePosition) {
-                extend();
+                elbowOut();
                 changedB = true;
             } else if (elbowLeft.getPosition() == elbowOutsidePosition) {
-                retrieve();
+                elbowIn();
                 changedB = true;
             }
         } else if (!buttonPressed) {
@@ -580,11 +538,11 @@ public class Calvin {
 
     public void activateExtendo(double buttonPressed) {
         if (buttonPressed != 0 && !changedRightTrigger) {
-            if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition){
-                extend();
+            if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPosition){
+                extendoIn();
                 changedRightTrigger = true;
-            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPosition) {
-                retrieve();
+            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition) {
+                extendoOut();
                 changedRightTrigger = true;
             }
         } else if (buttonPressed == 0) {
@@ -596,7 +554,7 @@ public class Calvin {
 
         //code for l claw
         if (buttonPressed && !changedY) {
-            claw.setPwmEnable();
+            //claw.setPwmEnable();
             if (claw.getPosition() == clawOpenPosition) {
                 grabSample();
                 changedY = true;
@@ -606,7 +564,7 @@ public class Calvin {
             }
         } else if(!buttonPressed) {
             changedY = false;
-            claw.setPwmDisable();
+            //claw.setPwmDisable();
         }
     }
 
@@ -649,199 +607,10 @@ public class Calvin {
 
     }
 
-    public enum SpecimenPickupState {
-        IDLE, MOVE_TO_START, CLOSE_CLAW, MOVE_TO_FINISH_PICKUP, MOVE_TO_DEPOSIT
-    }
-
-    public SpecimenPickupState specimenPickupState = SpecimenPickupState.IDLE;
-
-    public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton, Telemetry telemetry) {
-        telemetry.addData("State", specimenPickupState);
-        telemetry.update();
-        switch (specimenPickupState) {
-            case IDLE:
-                if (buttonPressed && !changedLeftBumper) {
-                    changedLeftBumper = true;
-                    specimenPickupState = SpecimenPickupState.MOVE_TO_START;
-                } else if(!buttonPressed){
-                    changedLeftBumper = false;
-                }
-                if (reverseButton && !changedRightBumper) {
-                    moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
-
-                    changedRightBumper = true;
-                    specimenPickupState = SpecimenPickupState.MOVE_TO_DEPOSIT;
-
-                } else if(!reverseButton) {
-                    changedRightBumper = false;
-                }
-                break;
-            case MOVE_TO_START:
-                if (buttonPressed && !changedLeftBumper) {
-                    claw.setPosition(clawOpenPosition); //open the claw
-
-                    moveVerticalSlidesTo(specimenStartPickupVerticalSlides);
-                    //move the slides
-
-                    shaq.setPosition(specimenPickupPosition);
-                    clawRotator.setPosition(specimenDepositClawRotation);
-
-                    changedLeftBumper = true;
-                    specimenPickupState = SpecimenPickupState.CLOSE_CLAW;
-                } else if(!buttonPressed){
-                    changedLeftBumper = false;
-                }
-                if (reverseButton && !changedRightBumper) {
-                    passive();
-                    changedRightBumper = true;
-                    specimenPickupState = SpecimenPickupState.IDLE;
-                } else if(!reverseButton) {
-                    changedRightBumper = false;
-                }
-
-                break;
-            case CLOSE_CLAW:
-                if (buttonPressed && !changedLeftBumper) {
-                    if (!verticalSlidesLeft.isBusy() && !verticalSlidesRight.isBusy()) {
-                        claw.setPosition(clawClosedPosition);
-                    }
-                    changedLeftBumper = true;
-                    specimenPickupState = SpecimenPickupState.MOVE_TO_FINISH_PICKUP;
-                } else if(!buttonPressed){
-                    changedLeftBumper = false;
-                }
-                if (reverseButton && !changedRightBumper) {
-                    claw.setPosition(clawOpenPosition); //open the claw
-
-                    moveVerticalSlidesTo(specimenStartPickupVerticalSlides);
-                    //move the slides
-
-                    shaq.setPosition(specimenPickupPosition);
-                    clawRotator.setPosition(specimenDepositClawRotation);
-
-                    changedRightBumper = true;
-                    specimenPickupState = SpecimenPickupState.MOVE_TO_START;
-
-                } else if(!reverseButton) {
-                    changedRightBumper = false;
-                }
-
-                break;
-            case MOVE_TO_FINISH_PICKUP:
-                if (buttonPressed && !changedLeftBumper) {
-
-                    moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
-
-                    changedLeftBumper = true;
-                    specimenPickupState = SpecimenPickupState.MOVE_TO_DEPOSIT;
-                } else if(!buttonPressed){
-                    changedLeftBumper = false;
-                }
-                if (reverseButton && !changedRightBumper) {
-
-                        claw.setPosition(clawClosedPosition);
-
-                    changedRightBumper = true;
-                    specimenPickupState = SpecimenPickupState.CLOSE_CLAW;
-
-                } else if(!reverseButton) {
-                    changedRightBumper = false;
-                }
-
-                break;
-            case MOVE_TO_DEPOSIT:
-                if (buttonPressed && !changedLeftBumper) {
-                   moveVerticalSlidesTo(specimenFinishDepositVerticalSlides);
-
-                    changedLeftBumper = true;
-                    specimenPickupState = SpecimenPickupState.IDLE;
-                } else if(!buttonPressed){
-                    changedLeftBumper = false;
-                }
-                if (reverseButton && !changedRightBumper) {
-                    moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
-
-                    changedRightBumper = true;
-                    specimenPickupState = SpecimenPickupState.MOVE_TO_FINISH_PICKUP;
-
-                } else if(!reverseButton) {
-                    changedRightBumper = false;
-                }
-
-                break;
-        }
 
 
-    }
-
-   /* public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
-        //macro!!
-        if (buttonPressed && !changedLeftBumper) {
-            pressCount++;
-            changedLeftBumper = true;
-        } else if (!buttonPressed) {
-            changedLeftBumper = false;
-        }
-
-        if (reverseButton && !changedRightBumper) {
-            if (pressCount == 0) {
-                pressCount = 4;
-                changedRightBumper = true;
-            }
-            else {
-                pressCount--;
-                changedRightBumper = true;
-            }
-        } else if (!reverseButton) {
-            changedRightBumper = false;
-        }
-
-        if (pressCount == 1) {
-
-            claw.setPosition(clawOpenPosition); //open the claw
-
-            verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
-            verticalSlidesLeft.setPower(0.5);
-            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
-            verticalSlidesRight.setPower(0.5);
-            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //move the slides
-
-            shaq.setPosition(specimenPickupPosition);
-            clawRotator.setPosition(specimenClawRotation);
-
-        } else if (pressCount == 2) {
-
-            if (!verticalSlidesLeft.isBusy() && !verticalSlidesRight.isBusy()) {
-                claw.setPosition(clawClosedPosition);
-
-            }
-        } else if (pressCount == 3) {
-            // picks up the specimen from the wall
-            verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
-            verticalSlidesLeft.setPower(0.5);
-            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
-            verticalSlidesRight.setPower(0.5);
-            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        } else if (pressCount == 4) {
-            verticalSlidesLeft.setTargetPosition(specimenFinishDepositVerticalSlides);
-            verticalSlidesLeft.setPower(0.5);
-            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            verticalSlidesRight.setTargetPosition(specimenFinishDepositVerticalSlides);
-            verticalSlidesRight.setPower(0.5);
-            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            pressCount = 0; // Reset the press count
-        } else if (pressCount > 4) {
-            // just in case some nonsense happens
-            pressCount = 0;
-        }
-        //
-    }*/
     public void returnAfterDeposit(boolean buttonPressed) {
 
         //yayyyy
@@ -853,13 +622,13 @@ public class Calvin {
 
         moveVerticalSlidesTo(0);
     }
-    enum PassiveOrInitialState {
+   public enum PassiveOrInitialState {
         IDLE, BUTTON_PRESSED, TAP, HOLD
     }
 
-    PassiveOrInitialState passiveOrInitialState = PassiveOrInitialState.IDLE;
+    public PassiveOrInitialState passiveOrInitialState = PassiveOrInitialState.IDLE;
 
-    public void passiveOrInitial(boolean buttonPressed) {
+    public void activatePassiveOrInitial(boolean buttonPressed) {
         switch (passiveOrInitialState) {
             case IDLE:
                 if (buttonPressed) {
@@ -887,26 +656,6 @@ public class Calvin {
         }
     }
 
-    /*public void passiveOrInitial(boolean buttonPressed) {
-        if (buttonPressed && !buttonPreviouslyPressed) {
-
-            buttonTimer.reset();
-            buttonPreviouslyPressed = true;
-        } else if (!buttonPressed && buttonPreviouslyPressed) {
-
-            buttonPreviouslyPressed = false;
-
-            // is it a tap or a hold??
-            double pressDuration = buttonTimer.milliseconds();
-            if (pressDuration < 800) {
-
-                returnToPassive(buttonPressed);
-            } else {
-
-                returnToInitial(buttonPressed);
-            }
-        }
-    }*/
 
     public void returnToPassive(boolean buttonPressed) {
         if (buttonPressed && !changedZhang) {
@@ -918,7 +667,6 @@ public class Calvin {
         }
 
     }
-
     public void returnToInitial(boolean buttonPressed) {
         if (buttonPressed && !changedUchida) {
             initialPositions();
@@ -928,7 +676,6 @@ public class Calvin {
         }
 
     }
-
     public void activateVerticalSlides(double buttonPressed) {
         if (buttonPressed != 0) {
             if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
@@ -945,7 +692,6 @@ public class Calvin {
 
 
     }
-
     public void driveMotors(DcMotor lf, DcMotor rf, DcMotor lb, DcMotor rb, double lx, double ly, double rx) {
         double joystickX = -lx;
         double joystickR = -rx;
@@ -957,13 +703,9 @@ public class Calvin {
         lb.setPower(ly - joystickX + joystickR);
     }
 
-    public void detection(Telemetry telemetry){
-        detector.findSpecimen(telemetry);
-    }
 
-    public void cheat1(Telemetry telemetry) {
-        cheatCode1.processInputs(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
-    }
+
+
 }
 
 

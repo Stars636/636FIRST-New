@@ -30,7 +30,6 @@ public class TeleOp_COPYFROMHERE extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            calvin.testInitial(gamepad1.a);
 
         }
 

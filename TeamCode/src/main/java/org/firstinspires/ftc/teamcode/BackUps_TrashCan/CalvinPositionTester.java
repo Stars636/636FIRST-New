@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
-@Disabled
+
 @TeleOp
 public class CalvinPositionTester extends LinearOpMode {
 
@@ -16,17 +15,18 @@ public class CalvinPositionTester extends LinearOpMode {
 
         Calvin functions = new Calvin(hardwareMap, telemetry);
 
-        functions.initialPositions();
+
         //Initial!!
         //we will create macros in the future, to remove room for error
         waitForStart();
+        //functions.initialPositions();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();
 
         while (opModeIsActive()) {
             //Moves the elbow. TEST these positions
-            functions.rotateElbow(gamepad2.b);
+            //functions.rotateElbow(gamepad2.b);
 
             //Activate  the intake
 
@@ -36,11 +36,15 @@ public class CalvinPositionTester extends LinearOpMode {
             //Pushes the extendo. Positions need to be tested.
             //Test these positionsssss
             functions.activateExtendo(gamepad2.right_trigger);
+            //functions.switchScoring(gamepad1.x);
+            //functions.passiveOrInitial(gamepad2.dpad_up);
             //code for moving claw
             functions.activateClaw(gamepad2.y);
             //rotates the claw. there is much better way to do this, but this works for now
             //you have to continuously hold to dunk it
             functions.activateClawRotator(gamepad2.left_trigger);
+
+            functions.activatePassiveOrInitial(gamepad2.dpad_up);
 
             functions.activateVerticalSlides(gamepad2.left_stick_y);
 
@@ -50,7 +54,7 @@ public class CalvinPositionTester extends LinearOpMode {
 
             functions.rightFrontCalvin.setPower(joystickY - joystickX - joystickR);
             functions.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
-            functions.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
+           functions.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
             functions.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
 

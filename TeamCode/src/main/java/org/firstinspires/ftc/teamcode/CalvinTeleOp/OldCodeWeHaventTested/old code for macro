@@ -1,0 +1,68 @@
+ /* public void specimenPickupMacro(boolean buttonPressed, boolean reverseButton) {
+        //macro!!
+        if (buttonPressed && !changedLeftBumper) {
+            pressCount++;
+            changedLeftBumper = true;
+        } else if (!buttonPressed) {
+            changedLeftBumper = false;
+        }
+
+        if (reverseButton && !changedRightBumper) {
+            if (pressCount == 0) {
+                pressCount = 4;
+                changedRightBumper = true;
+            }
+            else {
+                pressCount--;
+                changedRightBumper = true;
+            }
+        } else if (!reverseButton) {
+            changedRightBumper = false;
+        }
+
+        if (pressCount == 1) {
+
+            claw.setPosition(clawOpenPosition); //open the claw
+
+            verticalSlidesLeft.setTargetPosition(specimenStartPickupVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenStartPickupVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //move the slides
+
+            shaq.setPosition(specimenPickupPosition);
+            clawRotator.setPosition(specimenClawRotation);
+
+        } else if (pressCount == 2) {
+
+            if (!verticalSlidesLeft.isBusy() && !verticalSlidesRight.isBusy()) {
+                claw.setPosition(clawClosedPosition);
+
+            }
+        } else if (pressCount == 3) {
+            // picks up the specimen from the wall
+            verticalSlidesLeft.setTargetPosition(specimenFinishPickupVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenFinishPickupVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        } else if (pressCount == 4) {
+            verticalSlidesLeft.setTargetPosition(specimenFinishDepositVerticalSlides);
+            verticalSlidesLeft.setPower(0.5);
+            verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            verticalSlidesRight.setTargetPosition(specimenFinishDepositVerticalSlides);
+            verticalSlidesRight.setPower(0.5);
+            verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            pressCount = 0; // Reset the press count
+        } else if (pressCount > 4) {
+            // just in case some nonsense happens
+            pressCount = 0;
+        }
+        //
+    }*/

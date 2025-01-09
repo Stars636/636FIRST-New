@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.verticalS
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
@@ -13,18 +15,26 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 @TeleOp
 public class CalvinTeleOp extends LinearOpMode {
 
+    DcMotorImplEx SlidesLeft;
+    DcMotorImplEx SlidesRight;
+
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
         Calvin calvin = new Calvin(hardwareMap, telemetry);
+        SlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
+        SlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
         waitForStart();
 
-        calvin.checkHardwareInitialization(telemetry);
+        //calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();
-        calvin.kindlyRelax();
-        calvin.verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        calvin.verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //calvin.kindlyRelax();
+        SlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        SlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        SlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SlidesRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Initial!!
         //we will create macros in the future, to remove room for error
@@ -35,13 +45,16 @@ public class CalvinTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //calvin.initialPositions();
-            //calvin.cheat1(telemetry);
-            //Moves the elbow. TEST these positions
-            calvin.rotateElbow(gamepad2.b);
-            //Activate  the intake
-            //calvin.IntakeRight.setPower(1);
+
+            calvin.activateRotateElbow(gamepad2.b);
+
+
             calvin.activateIntake(gamepad2.a);
+
+            calvin.activateSwitchScoring(gamepad1.x); //Hold for one second, the telemetry should agree
+
+            calvin.activateClaw(gamepad2.y);
+
             //Reverse. I chose this button(because the old bot had no equivalent), so if you want another one then do it
             calvin.activateEject(gamepad2.right_stick_button);
             //Pushes the extendo. Positions need to be tested.
@@ -53,27 +66,24 @@ public class CalvinTeleOp extends LinearOpMode {
             //you have to continuously hold to dunk it
             calvin.activateClawRotator(gamepad2.left_trigger);
 
-            //calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper,telemetry);
-
-            calvin.passiveOrInitial(gamepad2.dpad_up);
+            calvin.activatePassiveOrInitial(gamepad2.dpad_up);
 
             //calvin.activateVerticalSlides(gamepad2.left_stick_y);
-            /*if (gamepad2.left_stick_y != 0) {
-                if (calvin.verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && calvin.verticalSlidesLeft.getCurrentPosition() >= 0) {
-                    calvin.verticalSlidesLeft.setPower(gamepad2.left_stick_y);
-                    calvin.verticalSlidesRight.setPower(gamepad2.left_stick_y);
-                } else if ( calvin.verticalSlidesLeft.getCurrentPosition() < 0) {
-                    calvin.verticalSlidesLeft.setPower(Math.max(gamepad2.left_stick_y, 0));  // Only allow positive power
-                    calvin.verticalSlidesRight.setPower(Math.max(gamepad2.left_stick_y, 0));
-                } else if ( calvin.verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
-                    calvin.verticalSlidesLeft.setPower(Math.min(gamepad2.left_stick_y, 0));  // Only allow negative power
-                    calvin.verticalSlidesRight.setPower(Math.min(gamepad2.left_stick_y, 0));
+            if (gamepad2.left_stick_y != 0) {
+                if (SlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && SlidesLeft.getCurrentPosition() >= 0) {
+                    SlidesLeft.setPower(gamepad2.left_stick_y);
+                    SlidesRight.setPower(gamepad2.left_stick_y);
+                } else if ( SlidesLeft.getCurrentPosition() < 0) {
+                    SlidesLeft.setPower(Math.max(gamepad2.left_stick_y, 0));  // Only allow positive power
+                    SlidesRight.setPower(Math.max(gamepad2.left_stick_y, 0));
+                } else if (SlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+                    SlidesLeft.setPower(Math.min(gamepad2.left_stick_y, 0));  // Only allow negative power
+                    SlidesRight.setPower(Math.min(gamepad2.left_stick_y, 0));
                 }
-            }*/
-            calvin.verticalSlidesLeft.setPower(gamepad2.left_stick_y);
-            calvin.verticalSlidesRight.setPower(-gamepad2.left_stick_y);
+            }
 
-            calvin.switchScoring(gamepad1.x);
+
+
 
 
 
@@ -89,8 +99,16 @@ public class CalvinTeleOp extends LinearOpMode {
             calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
             telemetry.addData("Scoring Mode:", calvin.scoringMode);
+            telemetry.addData("Scoring Mode:", calvin.passiveOrInitialState);
             telemetry.addData("Slides Height:", calvin.verticalSlidesLeft.getCurrentPosition());
-            telemetry.addData("Specimen Macro Step", calvin.specimenPickupState);
+
+            telemetry.addData("calvin MotorPower Left", calvin.verticalSlidesLeft.getPower());
+            telemetry.addData("calvin MotorPower Right", calvin.verticalSlidesRight.getPower());
+
+
+            telemetry.addData("MotorPower Left", SlidesLeft.getPower());
+            telemetry.addData("MotorPower Right", SlidesRight.getPower());
+
             telemetry.update();
 
         }

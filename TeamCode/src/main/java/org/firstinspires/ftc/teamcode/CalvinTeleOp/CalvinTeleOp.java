@@ -51,7 +51,7 @@ public class CalvinTeleOp extends LinearOpMode {
 
             calvin.activateIntake(gamepad2.a);
 
-            calvin.activateSwitchScoring(gamepad1.x); //Hold for one second, the telemetry should agree
+            calvin.activateSwitchScoring(gamepad2.x); //Hold for one second, the telemetry should agree
 
             calvin.activateClaw(gamepad2.y);
 

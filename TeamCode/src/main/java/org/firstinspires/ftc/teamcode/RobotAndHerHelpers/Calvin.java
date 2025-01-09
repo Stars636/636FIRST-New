@@ -96,10 +96,14 @@ public class Calvin {
 
     public static double specimenPickupPosition = 0;
 
+    public static double specimenClawPosition = 0.85;
+
     public static int initialVertical = 0;
     public static int specimenStartPickupVerticalSlides = 0;
 
-    public static double specimenClawRotation = 1;
+    public static double specimenDepositClawRotation = 0.3;
+
+
     public static int specimenFinishPickupVerticalSlides = 1000;
 
     public static int specimenStartDepositVerticalSlides = 1000;
@@ -170,6 +174,7 @@ public class Calvin {
         PIDCoefficients pid = new PIDCoefficients(proportion, integral, derivative);
         verticalSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
         verticalSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
+
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -177,12 +182,12 @@ public class Calvin {
         verticalSlidesRight.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
 
         //if things don't work, consider removing this
-        verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
-        verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
+       // verticalSlidesLeft.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
+        //verticalSlidesRight.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pid);
         //
 
-        verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
-        verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
+        verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
+        verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
         verticalSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -231,7 +236,25 @@ public class Calvin {
         elbowRight.setPosition(elbowInsidePosition);
 
         //REMOVE THIUS
-        moveVerticalSlidesTo(initialVertical);
+        //moveVerticalSlidesTo(initialVertical);
+    }
+
+    public void kindlyRelax(){
+        horizontalSlidesLeft.setPwmDisable();
+        horizontalSlidesRight.setPwmDisable();
+        clawRotator.setPwmDisable();
+        claw.setPwmDisable();
+        elbowRight.setPwmDisable();
+        elbowLeft.setPwmDisable();
+    }
+
+    public void wakeUp() {
+        horizontalSlidesLeft.setPwmEnable();
+        horizontalSlidesRight.setPwmEnable();
+        clawRotator.setPwmEnable();
+        claw.setPwmEnable();
+        elbowRight.setPwmEnable();
+        elbowLeft.setPwmEnable();
     }
 
     public void testInitial(boolean buttonPressed) {
@@ -418,6 +441,12 @@ public class Calvin {
         shaq.setPosition(clawScorePosition);
         clawRotator.setPosition(clawScoreRotation);
     }
+    public void specimenScore(){
+        clawRotator.setPosition(specimenDepositClawRotation);
+        shaq.setPosition(specimenClawPosition);
+    }
+
+
 
     public void moveVerticalSlidesTo(int targetPosition) {
         verticalSlidesLeft.setTargetPosition(targetPosition);
@@ -436,7 +465,7 @@ public class Calvin {
         moveVerticalSlidesTo(specimenStartPickupVerticalSlides);
 
         shaq.setPosition(specimenPickupPosition);
-        clawRotator.setPosition(specimenClawRotation);
+        clawRotator.setPosition(specimenDepositClawRotation);
 
         ElapsedTime et = new ElapsedTime();
         et.reset();
@@ -564,8 +593,10 @@ public class Calvin {
     }
 
     public void activateClaw(boolean buttonPressed) {
+
         //code for l claw
         if (buttonPressed && !changedY) {
+            claw.setPwmEnable();
             if (claw.getPosition() == clawOpenPosition) {
                 grabSample();
                 changedY = true;
@@ -575,6 +606,7 @@ public class Calvin {
             }
         } else if(!buttonPressed) {
             changedY = false;
+            claw.setPwmDisable();
         }
     }
 
@@ -582,18 +614,39 @@ public class Calvin {
 
     public void activateClawRotator(double buttonPressed) {
         //this could be so much better
-        if (buttonPressed != 0 && !changedLeftTrigger) {
-            if(claw.getPosition() == clawClosedPosition) {
-                dunk();
-            } else if(claw.getPosition() == clawOpenPosition) {
-                grab();
-            } else {
-                passive();
-            }
-        } else if (buttonPressed == 0) {
-            passive();
-            changedLeftTrigger = true;
+        switch(scoringMode) {
+            case BASKET:
+                if (buttonPressed != 0 && !changedLeftTrigger) {
+                    if(claw.getPosition() == clawClosedPosition) {
+                        dunk();
+                    } else if(claw.getPosition() == clawOpenPosition) {
+                        grab();
+                    } else {
+                        passive();
+                    }
+                } else if (buttonPressed == 0) {
+                    passive();
+                    changedLeftTrigger = true;
+                }
+            case SPECIMEN:
+                if (buttonPressed != 0 && !changedLeftTrigger) {
+                    if(claw.getPosition() == clawClosedPosition) {
+                        passive();
+                    } else if(claw.getPosition() == clawOpenPosition) {
+                        specimenScore();
+                    } else {
+                        passive();
+                    }
+                } else if (buttonPressed == 0) {
+                    passive();
+                    changedLeftTrigger = true;
+                }
+
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + scoringMode);
         }
+
     }
 
     public enum SpecimenPickupState {
@@ -631,7 +684,7 @@ public class Calvin {
                     //move the slides
 
                     shaq.setPosition(specimenPickupPosition);
-                    clawRotator.setPosition(specimenClawRotation);
+                    clawRotator.setPosition(specimenDepositClawRotation);
 
                     changedLeftBumper = true;
                     specimenPickupState = SpecimenPickupState.CLOSE_CLAW;
@@ -664,7 +717,7 @@ public class Calvin {
                     //move the slides
 
                     shaq.setPosition(specimenPickupPosition);
-                    clawRotator.setPosition(specimenClawRotation);
+                    clawRotator.setPosition(specimenDepositClawRotation);
 
                     changedRightBumper = true;
                     specimenPickupState = SpecimenPickupState.MOVE_TO_START;

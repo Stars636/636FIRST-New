@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.verticalSlideHighScoringPositionLimit;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
@@ -19,6 +22,9 @@ public class CalvinTeleOp extends LinearOpMode {
 
         calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();
+        calvin.kindlyRelax();
+        calvin.verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        calvin.verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Initial!!
         //we will create macros in the future, to remove room for error
@@ -47,11 +53,25 @@ public class CalvinTeleOp extends LinearOpMode {
             //you have to continuously hold to dunk it
             calvin.activateClawRotator(gamepad2.left_trigger);
 
-            calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper,telemetry);
+            //calvin.specimenPickupMacro(gamepad2.left_bumper, gamepad2.right_bumper,telemetry);
 
             calvin.passiveOrInitial(gamepad2.dpad_up);
 
-            calvin.activateVerticalSlides(gamepad2.left_stick_y);
+            //calvin.activateVerticalSlides(gamepad2.left_stick_y);
+            /*if (gamepad2.left_stick_y != 0) {
+                if (calvin.verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && calvin.verticalSlidesLeft.getCurrentPosition() >= 0) {
+                    calvin.verticalSlidesLeft.setPower(gamepad2.left_stick_y);
+                    calvin.verticalSlidesRight.setPower(gamepad2.left_stick_y);
+                } else if ( calvin.verticalSlidesLeft.getCurrentPosition() < 0) {
+                    calvin.verticalSlidesLeft.setPower(Math.max(gamepad2.left_stick_y, 0));  // Only allow positive power
+                    calvin.verticalSlidesRight.setPower(Math.max(gamepad2.left_stick_y, 0));
+                } else if ( calvin.verticalSlidesLeft.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+                    calvin.verticalSlidesLeft.setPower(Math.min(gamepad2.left_stick_y, 0));  // Only allow negative power
+                    calvin.verticalSlidesRight.setPower(Math.min(gamepad2.left_stick_y, 0));
+                }
+            }*/
+            calvin.verticalSlidesLeft.setPower(gamepad2.left_stick_y);
+            calvin.verticalSlidesRight.setPower(-gamepad2.left_stick_y);
 
             calvin.switchScoring(gamepad1.x);
 

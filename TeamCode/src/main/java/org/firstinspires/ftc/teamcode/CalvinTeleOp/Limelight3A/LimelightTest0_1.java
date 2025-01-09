@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp.Limelight3A;
 
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.clawOpenPosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenClawRotation;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenDepositClawRotation;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenPickupPosition;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenStartPickupVerticalSlides;
 
@@ -70,7 +70,7 @@ public class LimelightTest0_1 extends LinearOpMode {
 
             if(gamepad1.a && !aPress) {
                 calvin.shaq.setPosition(specimenPickupPosition);
-                calvin.clawRotator.setPosition(specimenClawRotation);
+                calvin.clawRotator.setPosition(specimenDepositClawRotation);
                 calvin.claw.setPosition(clawOpenPosition);
                 aPress = true;
             } else if(!gamepad1.a) {

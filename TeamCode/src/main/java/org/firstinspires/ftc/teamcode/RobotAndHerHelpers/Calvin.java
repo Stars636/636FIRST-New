@@ -62,9 +62,9 @@ public class Calvin {
 
     public static double clawPassivePosition = 0.45;
 
-    public static double clawPassiveRotation = 0.1;
+    public static double clawPassiveRotation = 0.05;
 
-    public static double clawRetrievePosition = 0.83;
+    public static double clawRetrievePosition = 0.9;
 
     public static double clawPickUpRotation = 0.06;
 
@@ -82,7 +82,7 @@ public class Calvin {
 
 
 
-    public static int verticalSlideHighScoringPositionLimit = 3000; //kindly note that gunner will use joystick
+    public static int verticalSlideHighScoringPositionLimit = 3050; //kindly note that gunner will use joystick
 
     //public static int verticalSlideLowScoringPositionLimit = 1500;
     public static double horizontalSlidesInitialPosition = 0.99;

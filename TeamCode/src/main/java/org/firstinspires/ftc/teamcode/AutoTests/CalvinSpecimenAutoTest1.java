@@ -23,7 +23,7 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
 
         Calvin calvin = new Calvin(hardwareMap, telemetry);
 
-        calvin.initialPositions();
+
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -89,6 +89,7 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
 
         //we will create macros in the future, to remove room for error
         waitForStart();
+        calvin.initialPositions();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();

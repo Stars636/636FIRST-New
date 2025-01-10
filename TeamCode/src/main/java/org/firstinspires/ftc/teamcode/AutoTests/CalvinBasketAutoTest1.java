@@ -24,7 +24,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
         Calvin calvin = new Calvin(hardwareMap, telemetry);
 
-        calvin.initialPositions();
+        //calvin.initialPositions();
         SlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
         SlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
         SlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -72,6 +72,8 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
         //we will create macros in the future, to remove room for error
         waitForStart();
+
+        calvin.initialPositions();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();

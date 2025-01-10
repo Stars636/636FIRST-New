@@ -17,7 +17,7 @@ public class CalvinTeleOpTest2 extends LinearOpMode {
         Calvin calvin = new Calvin(hardwareMap, telemetry);
         waitForStart();
 
-        calvin.checkHardwareInitialization(telemetry);
+        //calvin.checkHardwareInitialization(telemetry);
         calvin.initialPositions();
 
         //Initial!!

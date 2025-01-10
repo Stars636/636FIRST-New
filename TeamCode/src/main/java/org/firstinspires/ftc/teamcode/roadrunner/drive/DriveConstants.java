@@ -26,7 +26,7 @@ public class DriveConstants {
      * These are motor constants that should be listed online for your motors.
      */
     public static final double TICKS_PER_REV = 300;
-    public static final double MAX_RPM = 312;
+    public static final double MAX_RPM = 435;
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -92,8 +92,8 @@ public class DriveConstants {
 
      */
     // just messed with these feb 1, idk if they will mess stuff up, but try retuning fosho
-    public static double MAX_VEL = 30; // 70;//47.91064797707293; //72.38830997134116; turned down for some wiggle room
-    public static double MAX_ACCEL = 30; //50;//57.91064797707293;
+    public static double MAX_VEL = 20; // 70;//47.91064797707293; //72.38830997134116; turned down for some wiggle room
+    public static double MAX_ACCEL = 20; //50;//57.91064797707293;
     public static double MAX_ANG_VEL = Math.toRadians(180); // sugg max: 215.7045259853722//real max: 269.6306574817152
     public static double MAX_ANG_ACCEL = Math.toRadians(50); //real max:
 

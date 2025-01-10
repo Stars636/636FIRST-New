@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,9 +43,9 @@ public class Calvin {
     public DcMotorEx leftBackCalvin;
 
     public DcMotorEx leftFrontCalvin;
-    public DcMotorImplEx verticalSlidesRight;
+   // public DcMotorImplEx verticalSlidesRight;
 
-    public DcMotorImplEx verticalSlidesLeft;
+    //public DcMotorImplEx verticalSlidesLeft;
 
     public Limelight3A limelight;
 
@@ -59,8 +60,8 @@ public class Calvin {
     public static double intakeUpSpeed = 1;
 
 
-    public static double clawOpenPosition = 0;
-    public static double clawClosedPosition = 0.17;
+    public static double clawOpenPosition = 0.09;
+    public static double clawClosedPosition = 0.18;
 
 
     public static double clawPassivePosition = 0.7;
@@ -71,13 +72,13 @@ public class Calvin {
 
     public static double clawPickUpRotation = 1;
 
-    public static double clawScorePosition = 0.29;
+    public static double clawScorePosition = 0.27;
 
-    public static double clawScoreRotation = 0.8;
+    public static double clawScoreRotation = 0.91;
 
     public static double clawHangRotation = 1;
 
-    public static double elbowInsidePosition = 0.02;
+    public static double elbowInsidePosition = 0.07;
     public static double elbowOutsidePosition = 0.75;
 
 
@@ -95,12 +96,12 @@ public class Calvin {
 
     public static double specimenPickupPosition = 0;
 
-    public static double specimenClawPosition = 0.85;
+    public static double specimenClawPosition = 1;
 
 
     public static int specimenStartPickupVerticalSlides = 0;
 
-    public static double specimenDepositClawRotation = 0.3;
+    public static double specimenDepositClawRotation = 0;
 
 
    // public static int specimenFinishPickupVerticalSlides = 1000;
@@ -115,27 +116,21 @@ public class Calvin {
     public boolean changedB = false;
 
 
-   // public boolean changedRightBumper = false;
+
     public boolean changedZhang = false;
 
     public boolean changedUchida = false;
 
-   // public boolean changedPresanna = false;
+
     public boolean changedY = false;
 
-   // public boolean changedLeftBumper = false;
 
-    //
     private ElapsedTime buttonTimer = new ElapsedTime();
-   // private boolean buttonPreviouslyPressed = false;
-
-
-    //public static int testerZ = 0;
 
 
 
 
-    Detector detector;
+
 
 
     public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -156,19 +151,6 @@ public class Calvin {
         rightBackCalvin.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        verticalSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
-        verticalSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
-
-        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
-
-        verticalSlidesLeft.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
-        verticalSlidesRight.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.FLOAT);
-        verticalSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         horizontalSlidesLeft = hardwareMap.get(ServoImplEx.class,"horizontalSlidesLeft");
@@ -184,6 +166,8 @@ public class Calvin {
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
 
         clawRotator = hardwareMap.get(ServoImplEx.class,"clawRotator");
+        clawRotator.setPwmRange(new PwmControl.PwmRange(500,2500));
+        shaq.setPwmRange(new PwmControl.PwmRange(500,2500));
         elbowLeft = hardwareMap.get(ServoImplEx.class,"elbowLeft");
         elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
         elbowRight.setDirection(Servo.Direction.REVERSE);
@@ -207,6 +191,16 @@ public class Calvin {
         elbowRight.setPosition(elbowInsidePosition);
 
     }
+    public void initialPositions2(){
+        horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
+        horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
+        claw.setPosition(clawOpenPosition);
+        //shaq.setPosition(clawPassivePosition);
+        clawRotator.setPosition(clawPassiveRotation);
+        elbowLeft.setPosition(elbowInsidePosition);
+        elbowRight.setPosition(elbowInsidePosition);
+
+    }
 
     /*public void kindlyRelax(){
         horizontalSlidesLeft.setPwmDisable();
@@ -225,93 +219,6 @@ public class Calvin {
         elbowRight.setPwmEnable();
         elbowLeft.setPwmEnable();
     }*/
-
-
-
-    public void checkHardwareInitialization(Telemetry telemetry) {
-        if (rightFrontCalvin == null) {
-            telemetry.addData("ERROR", "Motor initialization failed");
-            telemetry.addData("ERROR", "rightFront");
-            telemetry.update();
-        }
-        if (leftFrontCalvin == null) {
-            telemetry.addData("ERROR", "Motor initialization failed");
-            telemetry.addData("ERROR", "leftFront");
-            telemetry.update();
-        }
-        if (rightBackCalvin == null) {
-            telemetry.addData("ERROR", "Motor initialization failed");
-            telemetry.addData("ERROR", "rightBack");
-            telemetry.update();
-        }
-        if (leftBackCalvin == null) {
-            telemetry.addData("ERROR", "Motor initialization failed");
-            telemetry.addData("ERROR", "leftBack");
-            telemetry.update();
-        }
-
-        if (verticalSlidesLeft == null) {
-            telemetry.addData("ERROR", "Motor initialization failed");
-            telemetry.addData("ERROR", "verticalSlidesLeft");
-            telemetry.update();
-        }
-        if (verticalSlidesRight == null) {
-            telemetry.addData("ERROR", "Motor initialization failed");
-            telemetry.addData("ERROR", "verticalSlidesRight");
-            telemetry.update();
-        }
-        if (limelight == null || !limelight.isConnected()) {
-            telemetry.addData("ERROR", "Camera initialization failed");
-            telemetry.addData("ERROR", "Limelight3A");
-            telemetry.update();
-        }
-        if (elbowLeft == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "Elbow");
-            telemetry.update();
-        }
-        if (horizontalSlidesRight == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "horizontalSlidesRight");
-            telemetry.update();
-        }
-        if (horizontalSlidesLeft == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "horizontalSlidesLeft");
-            telemetry.update();
-        }
-        if (elbowRight == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "intakeRotator");
-            telemetry.update();
-        }
-        if (intakeRight == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "continuousIntakeRight");
-            telemetry.update();
-        }
-        if (intakeLeft == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "continuousIntakeLeft");
-            telemetry.update();
-        }
-        if (shaq == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "shaq");
-            telemetry.update();
-        }
-        if (claw == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "claw");
-            telemetry.update();
-        }
-        if (clawRotator == null) {
-            telemetry.addData("ERROR", "Servo initialization failed");
-            telemetry.addData("ERROR", "clawRotator");
-            telemetry.update();
-        }
-
-    }
 
     public void extend(){
         horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPosition);
@@ -357,12 +264,12 @@ public class Calvin {
     }
 
     public void passive() {
-        intakeLeft.setPower(0);
-        intakeRight.setPower(0);
-        intakeUp.setPower(0);
+        //intakeLeft.setPower(0);
+        //intakeRight.setPower(0);
+        //intakeUp.setPower(0);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
-        moveVerticalSlidesTo(0);
+        //moveVerticalSlidesTo(0);
     }
 
     public void retrieve(){
@@ -384,13 +291,6 @@ public class Calvin {
         shaq.setPosition(clawRetrievePosition);
         clawRotator.setPosition(clawPickUpRotation);
     }
-
-    public void lift(){
-        moveVerticalSlidesTo(verticalSlideHighScoringPositionLimit);
-    }
-    public void fall(){
-        moveVerticalSlidesTo(0);
-    }
     public void hang() {
         clawRotator.setPosition(clawHangRotation);
     }
@@ -406,7 +306,7 @@ public class Calvin {
 
 
 
-    public void moveVerticalSlidesTo(int targetPosition) {
+  /*  public void moveVerticalSlidesTo(int targetPosition) {
         verticalSlidesLeft.setTargetPosition(targetPosition);
         verticalSlidesLeft.setPower(1);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -414,9 +314,9 @@ public class Calvin {
         verticalSlidesRight.setTargetPosition(targetPosition);
         verticalSlidesRight.setPower(1);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+    }*/
 
-    public void specimenPickUp() {
+    /*public void specimenPickUp() {
         claw.setPosition(clawOpenPosition);
 
 
@@ -437,14 +337,14 @@ public class Calvin {
         if (et.milliseconds() > 6000) {
             moveVerticalSlidesTo(specimenFinishPickupVerticalSlides);
         }
-        */
+
 
         if (et.milliseconds() > 6000) {
             moveVerticalSlidesTo(specimenStartDepositVerticalSlides);
         }
-    }
+    }*/
 
-    public void specimenDeposit() {
+    /*public void specimenDeposit() {
 
         moveVerticalSlidesTo(specimenFinishDepositVerticalSlides);
 
@@ -455,7 +355,7 @@ public class Calvin {
             claw.setPosition(clawOpenPosition);
         }
 
-    }
+    }*/
 
     public enum switchScoringMode {
         BASKET, SPECIMEN
@@ -509,6 +409,9 @@ public class Calvin {
             } else if (elbowLeft.getPosition() == elbowOutsidePosition) {
                 elbowIn();
                 changedB = true;
+            } else {
+                elbowIn();
+                changedB = true;
             }
         } else if (!buttonPressed) {
             changedB = false;
@@ -531,6 +434,7 @@ public class Calvin {
           eject();
         } else {
             intakePassive();
+
 
         }
     }
@@ -556,11 +460,13 @@ public class Calvin {
         if (buttonPressed && !changedY) {
             //claw.setPwmEnable();
             if (claw.getPosition() == clawOpenPosition) {
-                grabSample();
+                claw.setPosition(clawClosedPosition);
                 changedY = true;
             } else if (claw.getPosition() == clawClosedPosition) {
-                dropSample();
+                claw.setPosition(clawOpenPosition);
                 changedY = true;
+            } else {
+                claw.setPosition(clawOpenPosition);
             }
         } else if(!buttonPressed) {
             changedY = false;
@@ -620,7 +526,7 @@ public class Calvin {
 
         shaq.setPosition(clawPassivePosition);
 
-        moveVerticalSlidesTo(0);
+        //moveVerticalSlidesTo(0);
     }
    public enum PassiveOrInitialState {
         IDLE, BUTTON_PRESSED, TAP, HOLD
@@ -676,7 +582,7 @@ public class Calvin {
         }
 
     }
-    public void activateVerticalSlides(double buttonPressed) {
+    /*public void activateVerticalSlides(double buttonPressed) {
         if (buttonPressed != 0) {
             if (verticalSlidesLeft.getCurrentPosition() < verticalSlideHighScoringPositionLimit && verticalSlidesLeft.getCurrentPosition() >= 0) {
                 verticalSlidesLeft.setPower(buttonPressed);
@@ -688,10 +594,10 @@ public class Calvin {
                 verticalSlidesLeft.setPower(Math.min(buttonPressed, 0));  // Only allow negative power
                 verticalSlidesRight.setPower(Math.min(buttonPressed, 0));
             }
-        }
 
 
-    }
+
+    }*/
     public void driveMotors(DcMotor lf, DcMotor rf, DcMotor lb, DcMotor rb, double lx, double ly, double rx) {
         double joystickX = -lx;
         double joystickR = -rx;

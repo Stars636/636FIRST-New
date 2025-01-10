@@ -13,12 +13,10 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 
 
 @TeleOp
-public class CalvinTeleOp extends LinearOpMode {
+public class Left extends LinearOpMode {
 
     DcMotorImplEx SlidesLeft;
     DcMotorImplEx SlidesRight;
-
-    public boolean changedBB = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,10 +39,6 @@ public class CalvinTeleOp extends LinearOpMode {
 
         SlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        SlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        SlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
         //Initial!!
         //we will create macros in the future, to remove room for error
         boolean buttonNew = false;
@@ -56,26 +50,12 @@ public class CalvinTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            //calvin.activateRotateElbow(gamepad2.b);
-            if (gamepad2.b && !changedBB) {
-                if (calvin.elbowLeft.getPosition() == calvin.elbowInsidePosition) {
-                    calvin.elbowOut();
-                    changedBB = true;
-                } else if (calvin.elbowLeft.getPosition() == calvin.elbowOutsidePosition) {
-                    calvin.elbowIn();
-                    changedBB = true;
-                } else {
-                    calvin.elbowIn();
-                    changedBB = true;
-                }
-            } else if (!gamepad2.b) {
-                changedBB = false;
-            }
+            calvin.activateRotateElbow(gamepad2.b);
 
 
             calvin.activateIntake(gamepad2.a);
 
-            calvin.activateSwitchScoring(gamepad2.x); //Hold for one second, the telemetry should agree
+            //calvin.activateSwitchScoring(gamepad2.x); //Hold for one second, the telemetry should agree
 
 
             if(gamepad2.right_bumper && !buttonNew) {
@@ -109,14 +89,14 @@ public class CalvinTeleOp extends LinearOpMode {
             //calvin.activateVerticalSlides(gamepad2.left_stick_y);
 
                 if (SlidesRight.getCurrentPosition() < verticalSlideHighScoringPositionLimit && SlidesRight.getCurrentPosition() >= 0) {
-                    SlidesLeft.setPower(-gamepad2.left_stick_y);
-                    SlidesRight.setPower(-gamepad2.left_stick_y);
+                    SlidesLeft.setPower(gamepad2.left_stick_y);
+                    //SlidesRight.setPower(gamepad2.left_stick_y);
                 } else if ( SlidesRight.getCurrentPosition() > 0) {
-                    SlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow positive power
-                    SlidesRight.setPower(Math.min(-gamepad2.left_stick_y, 0));
+                    SlidesLeft.setPower(Math.max(gamepad2.left_stick_y, 0));  // Only allow positive power
+                    //SlidesRight.setPower(Math.max(gamepad2.left_stick_y, 0));
                 } else if (SlidesRight.getCurrentPosition() < verticalSlideHighScoringPositionLimit) {
-                    SlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow negative power
-                    SlidesRight.setPower(Math.max(-gamepad2.left_stick_y, 0));
+                    SlidesLeft.setPower(Math.min(gamepad2.left_stick_y, 0));  // Only allow negative power
+                    //SlidesRight.setPower(Math.min(gamepad2.left_stick_y, 0));
                 }
 
             //SlidesLeft.setPower(gamepad2.left_stick_y);
@@ -149,15 +129,6 @@ public class CalvinTeleOp extends LinearOpMode {
 
             telemetry.addData("MotorPower Left", SlidesLeft.getPower());
             telemetry.addData("MotorPower Right", SlidesRight.getPower());
-            telemetry.addData("Claw",calvin.claw.getPosition());
-            telemetry.addData("ElbowLeft",calvin.elbowLeft.getPosition());
-            telemetry.addData("ElbowRight",calvin.elbowRight.getPosition());
-            telemetry.addData("horizontalSlides",calvin.horizontalSlidesRight.getPosition());
-            telemetry.addData("horizontalSlides",calvin.horizontalSlidesLeft.getPosition());
-            telemetry.addData("shaq",calvin.shaq.getPosition());
-            telemetry.addData("rotator",calvin.clawRotator.getPosition());
-            telemetry.addData("B",changedBB);
-
 
             telemetry.update();
 

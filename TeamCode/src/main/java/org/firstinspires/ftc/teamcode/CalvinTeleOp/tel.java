@@ -25,7 +25,7 @@ public class tel extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
-
+        Calvin calvin = new Calvin(hardwareMap, telemetry);
 
 
 
@@ -47,6 +47,8 @@ public class tel extends LinearOpMode {
 
             SlidesLeft.setPower(gamepad2.left_stick_y);
             SlidesRight.setPower(-gamepad2.left_stick_y);
+
+            calvin.extend();
 
             servoLeft.setPower(-1);
             servoRight.setPower(1);

@@ -95,6 +95,7 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+            /*
             drive.followTrajectorySequence(b1);
 
             calvin.moveVerticalSlidesTo(specimenStartDepositVerticalSlides);
@@ -142,7 +143,7 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
             //park
             drive.followTrajectorySequence(bPickup);
 
-            calvin.wait(30000);
+            calvin.wait(30000);*/
 
         }
     }

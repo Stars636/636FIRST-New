@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.AutoTests;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
@@ -13,7 +16,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 @Autonomous
 
 public class CalvinBasketAutoTest1 extends LinearOpMode {
-
+    DcMotorImplEx SlidesLeft;
+    DcMotorImplEx SlidesRight;
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
@@ -21,6 +25,13 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
         Calvin calvin = new Calvin(hardwareMap, telemetry);
 
         calvin.initialPositions();
+        SlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
+        SlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
+        SlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        SlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        SlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -72,7 +83,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             calvin.wait(0.5);
 
-            calvin.lift();
+            moveVerticalSlidesTo(3000);
             calvin.dunk();
 
             calvin.wait(2);
@@ -82,7 +93,8 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             calvin.wait(0.5);
 
-            calvin.fall();
+            //calvin.fall();
+            moveVerticalSlidesTo(0);
 
             calvin.wait(2);
             drive.followTrajectorySequence(a2);
@@ -108,7 +120,8 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             drive.followTrajectorySequence(a3);
 
-            calvin.lift();
+            //calvin.lift();
+            moveVerticalSlidesTo(3000);
             calvin.dunk();
 
 
@@ -119,7 +132,8 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             calvin.wait(0.5);
 
-            calvin.fall();
+            //calvin.fall();
+            moveVerticalSlidesTo(0);
 
             calvin.wait(0.5);
             drive.followTrajectorySequence(a4);
@@ -144,7 +158,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             drive.followTrajectorySequence(a5);
 
-            calvin.lift();
+            //calvin.lift();
             calvin.dunk();
 
             calvin.wait(2);
@@ -154,7 +168,8 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             calvin.wait(0.5);
 
-            calvin.fall();
+            //calvin.fall();
+            moveVerticalSlidesTo(0);
 
             et.reset();
             calvin.wait(0.5);
@@ -182,7 +197,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             drive.followTrajectorySequence(a7);
 
-            calvin.lift();
+            moveVerticalSlidesTo(3000);
             calvin.dunk();
 
             calvin.wait(2);
@@ -192,7 +207,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             calvin.wait(0.5);
 
-            calvin.fall();
+            moveVerticalSlidesTo(0);
 
             drive.followTrajectorySequence(a8);
 
@@ -205,5 +220,14 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
 
         }
+    }
+    public void moveVerticalSlidesTo(int targetPosition) {
+        SlidesLeft.setTargetPosition(targetPosition);
+        SlidesLeft.setPower(0.8);
+        SlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        SlidesRight.setTargetPosition(targetPosition);
+        SlidesRight.setPower(0.8);
+        SlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

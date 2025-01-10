@@ -46,7 +46,7 @@ public class CalvinPositionTester extends LinearOpMode {
 
             functions.activatePassiveOrInitial(gamepad2.dpad_up);
 
-            functions.activateVerticalSlides(gamepad2.left_stick_y);
+            //functions.activateVerticalSlides(gamepad2.left_stick_y);
 
             double joystickX = -gamepad1.left_stick_x;
             double joystickY = gamepad1.left_stick_y;
@@ -58,7 +58,7 @@ public class CalvinPositionTester extends LinearOpMode {
             functions.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
 
-            telemetry.addData("MotorPosition",functions.verticalSlidesLeft.getCurrentPosition());
+           // telemetry.addData("MotorPosition",functions.verticalSlidesLeft.getCurrentPosition());
 
             telemetry.update();
 

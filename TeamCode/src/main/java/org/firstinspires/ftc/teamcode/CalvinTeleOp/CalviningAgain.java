@@ -401,5 +401,5 @@ public class CalviningAgain {
         verticalSlidesRight.setPower(1);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-    r
+
 }

@@ -64,7 +64,7 @@ public class Calvin {
     public static double clawClosedPosition = 0.18;
 
 
-    public static double clawPassivePosition = 0.7;
+    public static double clawPassivePosition = 0.6;
 
     public static double clawPassiveRotation = 0.06;
 

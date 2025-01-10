@@ -47,7 +47,7 @@ public class Calvin {
 
     //public DcMotorImplEx verticalSlidesLeft;
 
-    public Limelight3A limelight;
+    //public Limelight3A limelight;
 
     //public static double tolerance = 2;
 
@@ -134,9 +134,6 @@ public class Calvin {
 
 
     public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
-       //
-
-
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBackCalvin = hardwareMap.get(DcMotorEx.class,"rightBack");
         leftBackCalvin = hardwareMap.get(DcMotorEx.class,"leftBack");
@@ -155,7 +152,7 @@ public class Calvin {
 
         horizontalSlidesLeft = hardwareMap.get(ServoImplEx.class,"horizontalSlidesLeft");
         horizontalSlidesRight = hardwareMap.get(ServoImplEx.class,"horizontalSlidesRight");
-        //one of these must be reversed
+
         horizontalSlidesLeft.setDirection(Servo.Direction.FORWARD);
         horizontalSlidesRight.setDirection(Servo.Direction.REVERSE);
         intakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
@@ -202,23 +199,6 @@ public class Calvin {
 
     }
 
-    /*public void kindlyRelax(){
-        horizontalSlidesLeft.setPwmDisable();
-        horizontalSlidesRight.setPwmDisable();
-        clawRotator.setPwmDisable();
-        claw.setPwmDisable();
-        elbowRight.setPwmDisable();
-        elbowLeft.setPwmDisable();
-    }
-
-    public void wakeUp() {
-        horizontalSlidesLeft.setPwmEnable();
-        horizontalSlidesRight.setPwmEnable();
-        clawRotator.setPwmEnable();
-        claw.setPwmEnable();
-        elbowRight.setPwmEnable();
-        elbowLeft.setPwmEnable();
-    }*/
 
     public void extend(){
         horizontalSlidesLeft.setPosition(horizontalSlidesExtendedPosition);
@@ -264,12 +244,8 @@ public class Calvin {
     }
 
     public void passive() {
-        //intakeLeft.setPower(0);
-        //intakeRight.setPower(0);
-        //intakeUp.setPower(0);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
-        //moveVerticalSlidesTo(0);
     }
 
     public void retrieve(){

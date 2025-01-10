@@ -27,13 +27,6 @@ public class CalvinTeleOp extends LinearOpMode {
         Calvin calvin = new Calvin(hardwareMap, telemetry);
         SlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
         SlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
-        waitForStart();
-
-        //calvin.checkHardwareInitialization(telemetry);
-        calvin.initialPositions();
-        //calvin.kindlyRelax();
-        SlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
-        SlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
         SlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -43,6 +36,14 @@ public class CalvinTeleOp extends LinearOpMode {
 
         SlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         SlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        waitForStart();
+
+        //calvin.checkHardwareInitialization(telemetry);
+        calvin.initialPositions();
+        //calvin.kindlyRelax();
+
+
 
 
         //Initial!!
@@ -58,10 +59,10 @@ public class CalvinTeleOp extends LinearOpMode {
 
             //calvin.activateRotateElbow(gamepad2.b);
             if (gamepad2.b && !changedBB) {
-                if (calvin.elbowLeft.getPosition() == calvin.elbowInsidePosition) {
+                if (calvin.elbowLeft.getPosition() == Calvin.elbowInsidePosition) {
                     calvin.elbowOut();
                     changedBB = true;
-                } else if (calvin.elbowLeft.getPosition() == calvin.elbowOutsidePosition) {
+                } else if (calvin.elbowLeft.getPosition() == Calvin.elbowOutsidePosition) {
                     calvin.elbowIn();
                     changedBB = true;
                 } else {
@@ -120,7 +121,7 @@ public class CalvinTeleOp extends LinearOpMode {
                 }
 
             //SlidesLeft.setPower(gamepad2.left_stick_y);
-           // SlidesRight.setPower(gamepad2.left_stick_y);
+            // SlidesRight.setPower(gamepad2.left_stick_y);
 
 
 

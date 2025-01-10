@@ -42,7 +42,7 @@ public class CalvinPositionTester extends LinearOpMode {
             calvin.activateClaw(gamepad2.y);
             //rotates the claw. there is much better way to do this, but this works for now
             //you have to continuously hold to dunk it
-            calvin.activateClawRotator(gamepad2.left_trigger);
+            calvin.activateScore(gamepad2.left_bumper);
 
             calvin.activatePassiveOrInitial(gamepad2.dpad_up);
 

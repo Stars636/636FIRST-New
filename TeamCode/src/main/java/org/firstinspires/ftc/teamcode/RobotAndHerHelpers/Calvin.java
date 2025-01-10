@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,8 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.Detector;
 
 @Config
 public class Calvin {
@@ -94,14 +87,14 @@ public class Calvin {
     public static double horizontalSlidesExtendedPosition = 0.68;
 
 
-    public static double specimenPickupPosition = 0;
+    //public static double specimenPickupPosition = 0;
 
     public static double specimenClawPosition = 1;
 
-
-    public static int specimenStartPickupVerticalSlides = 0;
-
     public static double specimenDepositClawRotation = 0;
+
+    //public static int specimenStartPickupVerticalSlides = 0;
+
 
 
    // public static int specimenFinishPickupVerticalSlides = 1000;
@@ -452,41 +445,36 @@ public class Calvin {
 
 
 
-    public void activateClawRotator(double buttonPressed) {
+    public void activateScore(boolean buttonPressed) {
         //this could be so much better
         switch(scoringMode) {
             case BASKET:
-                if (buttonPressed != 0 && !changedLeftTrigger) {
-                    if(claw.getPosition() == clawClosedPosition) {
-                        dunk();
-                    } else if(claw.getPosition() == clawOpenPosition) {
-                        grab();
-                    } else {
-                        passive();
-                    }
-                } else if (buttonPressed == 0) {
-                    passive();
+                if (buttonPressed && !changedLeftTrigger) {
+                    dunk();
+                    changedLeftTrigger = false;
+                } else if (!buttonPressed) {
                     changedLeftTrigger = true;
                 }
             case SPECIMEN:
-                if (buttonPressed != 0 && !changedLeftTrigger) {
-                    if(claw.getPosition() == clawClosedPosition) {
-                        passive();
-                    } else if(claw.getPosition() == clawOpenPosition) {
-                        specimenScore();
-                    } else {
-                        passive();
-                    }
-                } else if (buttonPressed == 0) {
-                    passive();
+                if (buttonPressed && !changedLeftTrigger) {
+                    specimenScore();
+                } else if (!buttonPressed) {
                     changedLeftTrigger = true;
                 }
-
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + scoringMode);
         }
 
+    }
+
+    public void activateCollectIntake(boolean buttonPressed) {
+        if (buttonPressed && !changedLeftTrigger) {
+            grab();
+            changedLeftTrigger = false;
+        } else if (!buttonPressed) {
+            changedLeftTrigger = true;
+        }
     }
 
 
@@ -520,7 +508,7 @@ public class Calvin {
                 break;
             case BUTTON_PRESSED:
                 if (!buttonPressed) {
-                    if (buttonTimer.milliseconds() < 1000) {
+                    if (buttonTimer.milliseconds() < 1200) {
                         passiveOrInitialState = PassiveOrInitialState.TAP;
                     } else {
                         passiveOrInitialState = PassiveOrInitialState.HOLD;

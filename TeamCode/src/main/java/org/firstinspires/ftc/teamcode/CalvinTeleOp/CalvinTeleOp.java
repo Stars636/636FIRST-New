@@ -76,19 +76,19 @@ public class CalvinTeleOp extends LinearOpMode {
                 changedBB = false;
             }*/
 
-            calvin.activateIntake(gamepad2.a);
+            calvin.activateIntake(gamepad1.a);
 
-            if(!gamepad2.a) {calvin.activateEject(gamepad1.right_stick_button);}
+            if(!gamepad2.a) {calvin.activateEject(gamepad2.right_stick_button);}
 
-            calvin.activateSwitchScoring(gamepad2.x); //Hold for one second, the telemetry should agree
+           calvin.activateSpecimen(gamepad2.x); //Hold for one second, the telemetry should agree
 
-            calvin.activateFullExtension(gamepad2.right_trigger);
+            calvin.activateFullExtension(gamepad2.left_trigger);
 
             calvin.activateClaw(gamepad2.y);
 
             calvin.activateExtendo(gamepad2.right_trigger);
 
-            calvin.activateClaw(gamepad2.y);
+            //calvin.activateClaw(gamepad2.y);
 
             calvin.activateScore(gamepad2.right_bumper);
 

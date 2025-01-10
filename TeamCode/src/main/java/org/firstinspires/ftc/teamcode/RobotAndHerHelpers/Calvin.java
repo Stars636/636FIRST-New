@@ -53,6 +53,8 @@ public class Calvin {
 
     //public static double sizeTolerance = 5;
 
+    public boolean switchMode = false;
+
     public static double intakeUpSpeed = 0.7;
 
 
@@ -60,17 +62,17 @@ public class Calvin {
     public static double clawClosedPosition = 0.18;
 
 
-    public static double clawPassivePosition = 0.45;
+    public static double clawPassivePosition = 0.65;
 
-    public static double clawPassiveRotation = 0.05;
+    public static double clawPassiveRotation = 0.43;
 
     public static double clawRetrievePosition = 0.9;
 
     public static double clawPickUpRotation = 0.06;
 
-    public static double clawScorePosition = 0.27;
+    public static double clawScorePosition = 0.4;
 
-    public static double clawScoreRotation = 0.91;
+    public static double clawScoreRotation = 1;
 
     public static double clawHangRotation = 1;
 
@@ -82,7 +84,7 @@ public class Calvin {
 
 
 
-    public static int verticalSlideHighScoringPositionLimit = 3050; //kindly note that gunner will use joystick
+    public static int verticalSlideHighScoringPositionLimit = 3150; //kindly note that gunner will use joystick
 
     //public static int verticalSlideLowScoringPositionLimit = 1500;
     public static double horizontalSlidesInitialPosition = 0.99;
@@ -92,9 +94,9 @@ public class Calvin {
 
     //public static double specimenPickupPosition = 0;
 
-    public static double specimenClawPosition = 1;
+    public static double specimenClawPosition = 0.01;
 
-    public static double specimenDepositClawRotation = 0;
+    public static double specimenDepositClawRotation = 1;
 
     //public static int specimenStartPickupVerticalSlides = 0;
 
@@ -351,7 +353,7 @@ public class Calvin {
     }
     ScoringButton scoringSwitchButton = ScoringButton.IDLE;
     ElapsedTime scoringTimer = new ElapsedTime();
-    public void activateSwitchScoring(boolean buttonPressed) {
+    /*public void activateSwitchScoring(boolean buttonPressed) {
         switch (scoringSwitchButton) {
             case IDLE:
                 if (buttonPressed) {
@@ -415,7 +417,39 @@ public class Calvin {
                 scoringSwitchButton = ScoringButton.IDLE;
                 break;
         }
-    }
+    }*/
+
+    /*public void activateSwitchScoring(double buttonPressed) {
+        if (buttonPressed != 0 && !switchMode) {
+            switch (scoringMode) {
+                case SPECIMEN:
+                    scoringMode = switchScoringMode.BASKET;
+                    switchMode = true;
+                case BASKET:
+                    scoringMode = switchScoringMode.SPECIMEN;
+                    switchMode = true;
+
+            }
+        } else if (buttonPressed == 0) {
+            switchMode = false;
+        }
+    }*/
+
+   /* public void activateSwitchScoring(boolean buttonPressed) {
+        if (buttonPressed && !switchMode) {
+            switch (scoringMode) {
+                case SPECIMEN:
+                    scoringMode = switchScoringMode.BASKET;
+                    switchMode = true;
+                case BASKET:
+                    scoringMode = switchScoringMode.SPECIMEN;
+                    switchMode = true;
+
+            }
+        } else if (!buttonPressed ) {
+            switchMode = false;
+        }
+    }*/
 
     public void activateRotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
@@ -601,49 +635,49 @@ public class Calvin {
 
     public void activateScore(boolean buttonPressed) {
         //this could be so much better
-        switch(scoringMode) {
-            case BASKET:
+
                 if (buttonPressed && !changedLeftTrigger) {
                     dunk();
                     changedLeftTrigger = true;
                 } else if (!buttonPressed) {
                     changedLeftTrigger = false;
                 }
-            case SPECIMEN:
-                if (buttonPressed && !changedLeftTrigger) {
-                    specimenScore();
-                    changedLeftTrigger = true;
-                } else if (!buttonPressed) {
-                    changedLeftTrigger = false;
-                }
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + scoringMode);
-        }
+
+
 
     }
 
+
     public void activateScore(double buttonPressed) {
         //this could be so much better
-        switch(scoringMode) {
-            case BASKET:
+
                 if (buttonPressed != 0 && !changedLeftTrigger) {
                     dunk();
                     changedLeftTrigger = true;
                 } else if (buttonPressed == 0) {
                     changedLeftTrigger = false;
                 }
-            case SPECIMEN:
-                if (buttonPressed != 0 && !changedLeftTrigger) {
-                    specimenScore();
-                    changedLeftTrigger = true;
-                } else if (buttonPressed == 0) {
-                    changedLeftTrigger = false;
-                }
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + scoringMode);
+
+
+
+    }
+    public boolean changedTrigger = false;
+    public void activateSpecimen(boolean buttonPressed) {
+        if (buttonPressed && !changedLeftTrigger) {
+            specimenScore();
+            changedTrigger = true;
+        } else if (!buttonPressed) {
+            changedTrigger = false;
         }
+    }
+    public void activateSpecimen(double buttonPressed) {
+        if (buttonPressed != 0 && !changedLeftTrigger) {
+            specimenScore();
+            changedTrigger = true;
+        } else if (buttonPressed == 0) {
+            changedTrigger = false;
+        }
+
 
     }
 
@@ -673,31 +707,14 @@ public class Calvin {
 
     public PassiveOrInitialState passiveOrInitialState = PassiveOrInitialState.IDLE;
 
+    public boolean passiveQuestion = false;
+
     public void activatePassiveOrInitial(boolean buttonPressed) {
-        switch (passiveOrInitialState) {
-            case IDLE:
-                if (buttonPressed) {
-                    passiveOrInitialState = PassiveOrInitialState.BUTTON_PRESSED;
-                    buttonTimer.reset();
-                }
-                break;
-            case BUTTON_PRESSED:
-                if (!buttonPressed) {
-                    if (buttonTimer.milliseconds() < 1200) {
-                        passiveOrInitialState = PassiveOrInitialState.TAP;
-                    } else {
-                        passiveOrInitialState = PassiveOrInitialState.HOLD;
-                    }
-                }
-                break;
-            case TAP:
-                returnToPassive(buttonPressed);
-                passiveOrInitialState = PassiveOrInitialState.IDLE;
-                break;
-            case HOLD:
-                returnToInitial(buttonPressed);
-                passiveOrInitialState = PassiveOrInitialState.IDLE;
-                break;
+        if (buttonPressed && !passiveQuestion) {
+            passive();
+            passiveQuestion = true;
+        } else if (!buttonPressed) {
+            passiveQuestion = false;
         }
     }
 

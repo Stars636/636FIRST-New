@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 
+//import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
 
 @Config
 public class Calvin {
@@ -108,7 +111,7 @@ public class Calvin {
 
     public boolean changedB = false;
 
-
+    public boolean changedExtend = false;
 
     public boolean changedZhang = false;
 
@@ -120,7 +123,7 @@ public class Calvin {
 
     private ElapsedTime buttonTimer = new ElapsedTime();
 
-
+    public PromiseCheatCode cheatCode1 = new PromiseCheatCode(leftFrontCalvin, rightFrontCalvin, leftBackCalvin, rightBackCalvin, claw, shaq, clawRotator);
 
 
 
@@ -162,7 +165,7 @@ public class Calvin {
         elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
         elbowRight.setDirection(Servo.Direction.REVERSE);
 
-
+        //PromiseCheatCode cheatCode1 = new PromiseCheatCode(leftFrontCalvin, rightFrontCalvin, leftBackCalvin, rightBackCalvin, claw, shaq, clawRotator);
     }
 
     public void wait(double seconds) {
@@ -246,6 +249,18 @@ public class Calvin {
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
         elbowLeft.setPosition(elbowInsidePosition);
         elbowRight.setPosition(elbowInsidePosition);
+    }
+
+    public void returnAfterDeposit() {
+
+        //yayyyy
+        claw.setPosition(clawOpenPosition);
+
+        clawRotator.setPosition(clawPassiveRotation);
+
+        shaq.setPosition(clawPassivePosition);
+
+        //moveVerticalSlidesTo(0);
     }
 
     public void grabSample(){
@@ -369,6 +384,38 @@ public class Calvin {
         }
     }
 
+    public void activateSwitchScoring(double buttonPressed) {
+        switch (scoringSwitchButton) {
+            case IDLE:
+                if (buttonPressed != 0) {
+                    scoringSwitchButton = ScoringButton.BUTTON_PRESSED;
+                    scoringTimer.reset();
+                }
+                break;
+            case BUTTON_PRESSED:
+                if (buttonPressed == 0) {
+                    if (scoringTimer.milliseconds() < 800) {
+                        scoringSwitchButton = ScoringButton.TAP;
+                    } else {
+                        scoringSwitchButton = ScoringButton.HOLD;
+                    }
+                }
+                break;
+            case TAP:
+                //...
+                scoringSwitchButton = ScoringButton.IDLE;
+                break;
+            case HOLD:
+                switch (scoringMode) {
+                    case BASKET:
+                        scoringMode = switchScoringMode.SPECIMEN;
+                    case SPECIMEN:
+                        scoringMode = switchScoringMode.BASKET;
+                }
+                scoringSwitchButton = ScoringButton.IDLE;
+                break;
+        }
+    }
 
     public void activateRotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
@@ -388,9 +435,36 @@ public class Calvin {
 
 
     }
+    public void activateRotateElbow(double buttonPressed) {
+        if (buttonPressed != 0 && !changedB) {
+            if (elbowLeft.getPosition() == elbowInsidePosition) {
+                elbowOut();
+                changedB = true;
+            } else if (elbowLeft.getPosition() == elbowOutsidePosition) {
+                elbowIn();
+                changedB = true;
+            } else {
+                elbowIn();
+                changedB = true;
+            }
+        } else if (buttonPressed == 0) {
+            changedB = false;
+        }
+
+
+    }
+
 
     public void activateIntake(boolean buttonPressed) {
         if (buttonPressed) {
+            intake();
+        } else {
+            intakePassive();
+        }
+
+    }
+    public void activateIntake(double buttonPressed) {
+        if (buttonPressed != 0) {
             intake();
         } else {
             intakePassive();
@@ -407,7 +481,15 @@ public class Calvin {
 
         }
     }
+    public void activateEject(double buttonPressed) {
+        if (buttonPressed != 0) {
+            eject();
+        } else {
+            intakePassive();
 
+
+        }
+    }
 
     public void activateExtendo(double buttonPressed) {
         if (buttonPressed != 0 && !changedRightTrigger) {
@@ -417,11 +499,64 @@ public class Calvin {
             } else if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition) {
                 extendoOut();
                 changedRightTrigger = true;
+            } else {
+                extendoIn();
             }
         } else if (buttonPressed == 0) {
             changedRightTrigger = false;
         }
     }
+
+    public void activateExtendo(boolean buttonPressed) {
+        if (!buttonPressed  && !changedRightTrigger) {
+            if (horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPosition){
+                extendoIn();
+                changedRightTrigger = true;
+            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition) {
+                extendoOut();
+                changedRightTrigger = true;
+            } else {
+                extendoIn();
+            }
+        } else if (!buttonPressed ) {
+            changedRightTrigger = false;
+        }
+    }
+
+    public void activateFullExtension(double buttonPressed) {
+        if (buttonPressed != 0 && !changedExtend) {
+            if(horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPosition) {
+                retrieve();
+                changedExtend = true;
+            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition) {
+                extend();
+                changedExtend = true;
+            } else {
+                retrieve();
+                changedExtend = true;
+            }
+        } else if (buttonPressed == 0) {
+            changedExtend = false;
+        }
+    }
+
+    public void activateFullExtension(boolean buttonPressed) {
+        if (!buttonPressed && !changedExtend) {
+            if(horizontalSlidesRight.getPosition() == horizontalSlidesExtendedPosition) {
+                retrieve();
+                changedExtend = true;
+            } else if (horizontalSlidesRight.getPosition() == horizontalSlidesInitialPosition) {
+                extend();
+                changedExtend = true;
+            } else {
+                retrieve();
+                changedExtend = true;
+            }
+        } else if (!buttonPressed) {
+            changedExtend = false;
+        }
+    }
+
 
     public void activateClaw(boolean buttonPressed) {
 
@@ -442,6 +577,25 @@ public class Calvin {
             //claw.setPwmDisable();
         }
     }
+    public void activateClaw(double buttonPressed) {
+
+        //code for l claw
+        if (buttonPressed != 0 && !changedY) {
+            //claw.setPwmEnable();
+            if (claw.getPosition() == clawOpenPosition) {
+                claw.setPosition(clawClosedPosition);
+                changedY = true;
+            } else if (claw.getPosition() == clawClosedPosition) {
+                claw.setPosition(clawOpenPosition);
+                changedY = true;
+            } else {
+                claw.setPosition(clawOpenPosition);
+            }
+        } else if(buttonPressed == 0) {
+            changedY = false;
+            //claw.setPwmDisable();
+        }
+    }
 
 
 
@@ -451,15 +605,40 @@ public class Calvin {
             case BASKET:
                 if (buttonPressed && !changedLeftTrigger) {
                     dunk();
-                    changedLeftTrigger = false;
-                } else if (!buttonPressed) {
                     changedLeftTrigger = true;
+                } else if (!buttonPressed) {
+                    changedLeftTrigger = false;
                 }
             case SPECIMEN:
                 if (buttonPressed && !changedLeftTrigger) {
                     specimenScore();
-                } else if (!buttonPressed) {
                     changedLeftTrigger = true;
+                } else if (!buttonPressed) {
+                    changedLeftTrigger = false;
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + scoringMode);
+        }
+
+    }
+
+    public void activateScore(double buttonPressed) {
+        //this could be so much better
+        switch(scoringMode) {
+            case BASKET:
+                if (buttonPressed != 0 && !changedLeftTrigger) {
+                    dunk();
+                    changedLeftTrigger = true;
+                } else if (buttonPressed == 0) {
+                    changedLeftTrigger = false;
+                }
+            case SPECIMEN:
+                if (buttonPressed != 0 && !changedLeftTrigger) {
+                    specimenScore();
+                    changedLeftTrigger = true;
+                } else if (buttonPressed == 0) {
+                    changedLeftTrigger = false;
                 }
                 break;
             default:
@@ -471,27 +650,23 @@ public class Calvin {
     public void activateCollectIntake(boolean buttonPressed) {
         if (buttonPressed && !changedLeftTrigger) {
             grab();
-            changedLeftTrigger = false;
-        } else if (!buttonPressed) {
             changedLeftTrigger = true;
+        } else if (!buttonPressed) {
+            changedLeftTrigger = false;
+        }
+    }
+
+    public void activateCollectIntake(double buttonPressed) {
+        if (buttonPressed != 0 && !changedLeftTrigger) {
+            grab();
+            changedLeftTrigger = true;
+        } else if (buttonPressed == 0) {
+            changedLeftTrigger = false;
         }
     }
 
 
 
-
-
-    public void returnAfterDeposit(boolean buttonPressed) {
-
-        //yayyyy
-        claw.setPosition(clawOpenPosition);
-
-        clawRotator.setPosition(clawPassiveRotation);
-
-        shaq.setPosition(clawPassivePosition);
-
-        //moveVerticalSlidesTo(0);
-    }
    public enum PassiveOrInitialState {
         IDLE, BUTTON_PRESSED, TAP, HOLD
     }
@@ -526,13 +701,50 @@ public class Calvin {
         }
     }
 
+    public void activatePassiveOrInitial(double buttonPressed) {
+        switch (passiveOrInitialState) {
+            case IDLE:
+                if (buttonPressed != 0) {
+                    passiveOrInitialState = PassiveOrInitialState.BUTTON_PRESSED;
+                    buttonTimer.reset();
+                }
+                break;
+            case BUTTON_PRESSED:
+                if (buttonPressed == 0) {
+                    if (buttonTimer.milliseconds() < 1200) {
+                        passiveOrInitialState = PassiveOrInitialState.TAP;
+                    } else {
+                        passiveOrInitialState = PassiveOrInitialState.HOLD;
+                    }
+                }
+                break;
+            case TAP:
+                returnToPassive(buttonPressed);
+                passiveOrInitialState = PassiveOrInitialState.IDLE;
+                break;
+            case HOLD:
+                returnToInitial(buttonPressed);
+                passiveOrInitialState = PassiveOrInitialState.IDLE;
+                break;
+        }
+    }
 
     public void returnToPassive(boolean buttonPressed) {
         if (buttonPressed && !changedZhang) {
             passive();
-            returnAfterDeposit(buttonPressed);
+            returnAfterDeposit();
             changedZhang = true;
         } else if(!buttonPressed){
+            changedZhang = false;
+        }
+
+    }
+    public void returnToPassive(double buttonPressed) {
+        if (buttonPressed != 0 && !changedZhang) {
+            passive();
+            returnAfterDeposit();
+            changedZhang = true;
+        } else if(buttonPressed == 0){
             changedZhang = false;
         }
 
@@ -542,6 +754,15 @@ public class Calvin {
             initialPositions();
             changedUchida = true;
         } else if(!buttonPressed){
+            changedUchida = false;
+        }
+
+    }
+    public void returnToInitial(double buttonPressed) {
+        if (buttonPressed != 0 && !changedUchida) {
+            initialPositions();
+            changedUchida = true;
+        } else if(buttonPressed == 0){
             changedUchida = false;
         }
 
@@ -573,7 +794,11 @@ public class Calvin {
         lb.setPower(ly - joystickX + joystickR);
     }
 
-
+    public void cheat1(boolean dL, boolean dR, boolean dU, boolean dD, boolean a, boolean b, boolean x, boolean y, boolean rB, boolean lB, boolean r3, boolean l3, boolean o, boolean s, double rT, double lT, Telemetry telemetry) {
+        cheatCode1.processInputs(dL, dR, dU, dD, a, b, x, y, rB, lB, r3, l3, o, s, rT, lT, telemetry);
+        telemetry.addData("inputs",cheatCode1.inputTracker);
+        telemetry.update();
+    }
 
 
 }

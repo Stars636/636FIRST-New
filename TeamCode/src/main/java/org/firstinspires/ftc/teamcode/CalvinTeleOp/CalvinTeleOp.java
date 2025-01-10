@@ -55,10 +55,13 @@ public class CalvinTeleOp extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
+            //We need to fix the controls.
+            // For your ease, all of the functions can take either a boolean or a double
+            // so you don’t need to re code anything for the left and right triggers
 
-
-            //calvin.activateRotateElbow(gamepad2.b);
-            if (gamepad2.b && !changedBB) {
+            calvin.activateRotateElbow(gamepad2.b);
+            //if rotateElbow still doesn't work use this
+            /*if (gamepad2.b && !changedBB) {
                 if (calvin.elbowLeft.getPosition() == Calvin.elbowInsidePosition) {
                     calvin.elbowOut();
                     changedBB = true;
@@ -71,8 +74,7 @@ public class CalvinTeleOp extends LinearOpMode {
                 }
             } else if (!gamepad2.b) {
                 changedBB = false;
-            }
-
+            }*/
 
             calvin.activateIntake(gamepad2.a);
 
@@ -80,31 +82,14 @@ public class CalvinTeleOp extends LinearOpMode {
 
             calvin.activateSwitchScoring(gamepad2.x); //Hold for one second, the telemetry should agree
 
-
-            if(gamepad2.right_bumper && !buttonNew) {
-                calvin.extend();
-                buttonNew = true;
-            } else if (!gamepad2.right_bumper) {
-                buttonNew = false;
-            }
-            if(gamepad2.left_bumper && !buttonNewer) {
-                calvin.retrieve();
-                buttonNewer = true;
-            } else if  (!gamepad2.left_bumper) {
-                buttonNewer = false;
-            }
+            calvin.activateFullExtension(gamepad2.right_trigger);
 
             calvin.activateClaw(gamepad2.y);
 
-            //Reverse. I chose this button(because the old bot had no equivalent), so if you want another one then do it
-            //if (!gamepad2.a) calvin.activateEject(gamepad2.right_stick_button);
-            //Pushes the extendo. Positions need to be tested.
-            //Test these positionsssss
             calvin.activateExtendo(gamepad2.right_trigger);
-            //code for moving claw
+
             calvin.activateClaw(gamepad2.y);
-            //rotates the claw. there is much better way to do this, but this works for now
-            //you have to continuously hold to dunk it
+
             calvin.activateScore(gamepad2.right_bumper);
 
             calvin.activateCollectIntake(gamepad1.left_bumper);
@@ -112,7 +97,6 @@ public class CalvinTeleOp extends LinearOpMode {
             calvin.activatePassiveOrInitial(gamepad2.dpad_up);
 
             //calvin.activateVerticalSlides(gamepad2.left_stick_y);
-
                 if (SlidesRight.getCurrentPosition() < verticalSlideHighScoringPositionLimit && SlidesRight.getCurrentPosition() >= 0) {
                     SlidesLeft.setPower(-gamepad2.left_stick_y);
                     SlidesRight.setPower(-gamepad2.left_stick_y);
@@ -123,13 +107,6 @@ public class CalvinTeleOp extends LinearOpMode {
                     SlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow negative power
                     SlidesRight.setPower(Math.max(-gamepad2.left_stick_y, 0));
                 }
-
-            //SlidesLeft.setPower(gamepad2.left_stick_y);
-            // SlidesRight.setPower(gamepad2.left_stick_y);
-
-
-
-
 
 
            //calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -143,17 +120,15 @@ public class CalvinTeleOp extends LinearOpMode {
             calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
             calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
+            calvin.cheat1(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
+
             telemetry.addData("Scoring Mode:", calvin.scoringMode);
             telemetry.addData("Scoring Mode:", calvin.passiveOrInitialState);
             telemetry.addData("Slides Height:", SlidesLeft.getCurrentPosition());
             telemetry.addData("Slides Height:", SlidesRight.getCurrentPosition());
-
             telemetry.addData("calvin MotorPower Left", SlidesLeft.getPower());
             telemetry.addData("calvin MotorPower Right", SlidesRight.getPower());
 
-
-            telemetry.addData("MotorPower Left", SlidesLeft.getPower());
-            telemetry.addData("MotorPower Right", SlidesRight.getPower());
             telemetry.addData("Claw",calvin.claw.getPosition());
             telemetry.addData("ElbowLeft",calvin.elbowLeft.getPosition());
             telemetry.addData("ElbowRight",calvin.elbowRight.getPosition());
@@ -161,7 +136,10 @@ public class CalvinTeleOp extends LinearOpMode {
             telemetry.addData("horizontalSlides",calvin.horizontalSlidesLeft.getPosition());
             telemetry.addData("shaq",calvin.shaq.getPosition());
             telemetry.addData("rotator",calvin.clawRotator.getPosition());
-            telemetry.addData("B",changedBB);
+            telemetry.addData("BB",changedBB);
+            telemetry.addData("BB", calvin.changedB);
+            telemetry.addData("Inputs?", calvin.cheatCode1.inputTracker);
+
 
 
             telemetry.update();

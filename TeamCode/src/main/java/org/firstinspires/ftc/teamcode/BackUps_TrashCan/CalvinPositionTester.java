@@ -54,7 +54,7 @@ public class CalvinPositionTester extends LinearOpMode {
 
             calvin.rightFrontCalvin.setPower(joystickY - joystickX - joystickR);
             calvin.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
-           calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
+            calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
             calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
 

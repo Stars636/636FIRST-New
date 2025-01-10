@@ -34,7 +34,7 @@ public class CalvinPositionTester extends LinearOpMode {
         SlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //calvin.checkHardwareInitialization(telemetry);
-        calvin.initialPositions();
+        //calvin.initialPositions();
 
         //Initial!!
         //we will create macros in the future, to remove room for error

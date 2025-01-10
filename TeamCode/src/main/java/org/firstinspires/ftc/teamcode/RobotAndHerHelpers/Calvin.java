@@ -53,20 +53,20 @@ public class Calvin {
 
     //public static double sizeTolerance = 5;
 
-    public static double intakeUpSpeed = 1;
+    public static double intakeUpSpeed = 0.7;
 
 
     public static double clawOpenPosition = 0.09;
     public static double clawClosedPosition = 0.18;
 
 
-    public static double clawPassivePosition = 0.6;
+    public static double clawPassivePosition = 0.45;
 
-    public static double clawPassiveRotation = 0.06;
+    public static double clawPassiveRotation = 0.1;
 
     public static double clawRetrievePosition = 0.83;
 
-    public static double clawPickUpRotation = 1;
+    public static double clawPickUpRotation = 0.06;
 
     public static double clawScorePosition = 0.27;
 

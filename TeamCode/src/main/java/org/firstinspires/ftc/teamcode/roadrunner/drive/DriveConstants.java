@@ -49,7 +49,9 @@ public class DriveConstants {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 1.8898; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
+    public static double GEAR_RATIO = 0.4608; // output (wheel) speed / input (motor) speed
+    //it should be 1 i just changed it because if it works it worked
+
     public static double TRACK_WIDTH = 13.5; // in
 
     /*
@@ -92,9 +94,9 @@ public class DriveConstants {
 
      */
     // just messed with these feb 1, idk if they will mess stuff up, but try retuning fosho
-    public static double MAX_VEL = 20; // 70;//47.91064797707293; //72.38830997134116; turned down for some wiggle room
-    public static double MAX_ACCEL = 20; //50;//57.91064797707293;
-    public static double MAX_ANG_VEL = Math.toRadians(180); // sugg max: 215.7045259853722//real max: 269.6306574817152
+    public static double MAX_VEL = 25; // 70;//47.91064797707293; //72.38830997134116; turned down for some wiggle room
+    public static double MAX_ACCEL = 25; //50;//57.91064797707293;
+    public static double MAX_ANG_VEL = Math.toRadians(200); // sugg max: 215.7045259853722//real max: 269.6306574817152
     public static double MAX_ANG_ACCEL = Math.toRadians(50); //real max:
 
 

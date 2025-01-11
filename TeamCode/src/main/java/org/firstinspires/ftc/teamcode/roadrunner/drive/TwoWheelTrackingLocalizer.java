@@ -37,15 +37,15 @@ import java.util.List;
  */
 @Config
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 8192;
-    public static double WHEEL_RADIUS = 0.5905; // in
+    public static double TICKS_PER_REV = 2000;
+    public static double WHEEL_RADIUS = 0.62992; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = 0; // X is the up and down direction
-    public static double PARALLEL_Y = 4; // Y is the strafe direction
+    public static double PARALLEL_X = -4; // X is the up and down direction
+    public static double PARALLEL_Y = 4.5; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = 3.75;
-    public static double PERPENDICULAR_Y = 0;
+    public static double PERPENDICULAR_X = -3.75;
+    public static double PERPENDICULAR_Y = 6;
 
     public static double X_MULTIPLIER = 121/-52.10374632660827;//72/59.69282809327389; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 123/-52.8298828479961;//72/-59.769150456876794; // Multiplier in the Y direction
@@ -64,9 +64,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftBack"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
-        //perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftBack"));
+
+        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
+        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
 

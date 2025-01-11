@@ -25,11 +25,11 @@ public class BasketQualsAuto extends LinearOpMode {
     DcMotorImplEx SlidesLeft;
     DcMotorImplEx SlidesRight;
 
-    public static double forwardTime = 1050;
+    public static double forwardTime = 800;
 
-    public static double turnTime = 50;
+    public static double turnTime = 750;
 
-    public static double backTime = 1050;
+    public static double backTime = 850;
 
     public static double farForwardTime = 100;
 
@@ -200,7 +200,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 20) {
+            while (et.milliseconds() < 50) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = 0.1;
@@ -216,7 +216,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 20) {
+            while (et.milliseconds() < 50) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = -0.1;
@@ -232,7 +232,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 20) {
+            while (et.milliseconds() < 50) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = 0.1;
@@ -248,7 +248,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 20) {
+            while (et.milliseconds() < 50) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = -0.1;

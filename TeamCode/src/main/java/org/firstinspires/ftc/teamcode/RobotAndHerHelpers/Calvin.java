@@ -186,11 +186,11 @@ public class Calvin {
         elbowRight.setPosition(elbowInsidePosition);
 
     }
-    public void initialPositions2(){
+    public void initialPositionsTwo(){
         horizontalSlidesLeft.setPosition(horizontalSlidesInitialPosition);
         horizontalSlidesRight.setPosition(horizontalSlidesInitialPosition);
-        claw.setPosition(clawOpenPosition);
-        //shaq.setPosition(clawPassivePosition);
+        claw.setPosition(clawClosedPosition);
+        shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
         elbowLeft.setPosition(elbowInsidePosition);
         elbowRight.setPosition(elbowInsidePosition);

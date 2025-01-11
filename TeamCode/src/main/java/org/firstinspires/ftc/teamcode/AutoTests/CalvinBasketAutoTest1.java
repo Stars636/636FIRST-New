@@ -80,12 +80,14 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+
+            calvin.wait(5);
             calvin.grabSample();
             drive.followTrajectorySequence(a1);
 
             calvin.wait(0.5);
 
-            moveVerticalSlidesTo(3000);
+            moveVerticalSlidesTo(1500);
             calvin.dunk();
 
             calvin.wait(2);
@@ -123,7 +125,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
             drive.followTrajectorySequence(a3);
 
             //calvin.lift();
-            moveVerticalSlidesTo(3000);
+            moveVerticalSlidesTo(1500);
             calvin.dunk();
 
 
@@ -161,6 +163,8 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
             drive.followTrajectorySequence(a5);
 
             //calvin.lift();
+            moveVerticalSlidesTo(1500);
+
             calvin.dunk();
 
             calvin.wait(2);
@@ -199,7 +203,7 @@ public class CalvinBasketAutoTest1 extends LinearOpMode {
 
             drive.followTrajectorySequence(a7);
 
-            moveVerticalSlidesTo(3000);
+            moveVerticalSlidesTo(1500);
             calvin.dunk();
 
             calvin.wait(2);

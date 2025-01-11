@@ -149,3 +149,6 @@ public class CalvinTeleOp extends LinearOpMode {
     }
 
 }
+/// horizontal slides easily blocked by clawrotator and shaq servos especially their wires
+//screw them in more?
+

@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.AutoTests;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
+@Config
+@Autonomous
 
-@Autonomous(name = "Qualifier Auto Park", group = "A+ Qualifier")
-
-public class BasicQualsAuto extends LinearOpMode {
+public class Auto_COPYFROMHER extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,14 +48,21 @@ public class BasicQualsAuto extends LinearOpMode {
         //we will create macros in the future, to remove room for error
         waitForStart();
 
-        calvin.initialPositions();
+
         telemetry.addLine("Best Wishes.");
         telemetry.update();
 
 
         while (opModeIsActive()) {
-            calvin.extend();
-            calvin.wait(30000);
+
+            telemetry.addData("leftfront encoder", calvin.leftFrontCalvin.getCurrentPosition());
+            telemetry.addData("leftBack enconder", calvin.leftBackCalvin.getCurrentPosition());
+            telemetry.addData("rightfront encoder ???", calvin.rightFrontCalvin.getCurrentPosition());
+            telemetry.addData("rightBack enconder ???" , calvin.rightBackCalvin.getCurrentPosition());
+            telemetry.addData("have fun", 0);
+            telemetry.update();
+
+
         }
     }
 }

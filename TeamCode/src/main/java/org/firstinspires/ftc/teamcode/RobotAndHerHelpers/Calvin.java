@@ -58,8 +58,8 @@ public class Calvin {
     public static double intakeUpSpeed = 0.7;
 
 
-    public static double clawOpenPosition = 0.09;
-    public static double clawClosedPosition = 0.18;
+    public static double clawOpenPosition = 0.17;
+    public static double clawClosedPosition = 0.30;
 
 
     public static double clawPassivePosition = 0.65;

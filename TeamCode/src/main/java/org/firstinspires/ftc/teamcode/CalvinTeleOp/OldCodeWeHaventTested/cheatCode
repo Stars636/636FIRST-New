@@ -1,3 +1,9 @@
 /*public void cheat1(Telemetry telemetry) {
         cheatCode1.processInputs(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
     }*/
+
+    public void cheat1(boolean dL, boolean dR, boolean dU, boolean dD, boolean a, boolean b, boolean x, boolean y, boolean rB, boolean lB, boolean r3, boolean l3, boolean o, boolean s, double rT, double lT, Telemetry telemetry) {
+            cheatCode1.processInputs(dL, dR, dU, dD, a, b, x, y, rB, lB, r3, l3, o, s, rT, lT, telemetry);
+            telemetry.addData("inputs",cheatCode1.inputTracker);
+            telemetry.update();
+        }

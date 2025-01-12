@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.Detector;
 
 @Config
 public class CalviningAgain {
@@ -123,7 +122,7 @@ public class CalviningAgain {
     //public static int testerZ = 0;
 
 
-    Detector detector;
+
 
 
     public CalviningAgain(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -195,23 +194,6 @@ public class CalviningAgain {
 
     }
 
-    public void kindlyRelax(){
-        horizontalSlidesLeft.setPwmDisable();
-        horizontalSlidesRight.setPwmDisable();
-        clawRotator.setPwmDisable();
-        claw.setPwmDisable();
-        elbowRight.setPwmDisable();
-        elbowLeft.setPwmDisable();
-    }
-
-    public void wakeUp() {
-        horizontalSlidesLeft.setPwmEnable();
-        horizontalSlidesRight.setPwmEnable();
-        clawRotator.setPwmEnable();
-        claw.setPwmEnable();
-        elbowRight.setPwmEnable();
-        elbowLeft.setPwmEnable();
-    }
 
 
     public void checkHardwareInitialization(Telemetry telemetry) {

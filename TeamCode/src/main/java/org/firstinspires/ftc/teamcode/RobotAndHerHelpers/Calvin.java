@@ -14,9 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.HelperFunctions.PromiseCheatCode;
 
-@Config
+
 public class Calvin {
     public CRServo intakeLeft;
     public CRServo intakeRight;
@@ -53,7 +52,7 @@ public class Calvin {
 
     //public static double sizeTolerance = 5;
 
-    public boolean switchMode = false;
+   // public boolean switchMode = false;
 
     public static double intakeUpSpeed = 0.7;
 
@@ -74,10 +73,8 @@ public class Calvin {
 
     public static double clawScoreRotation = 1;
 
-    public static double clawHangRotation = 1;
-
     public static double elbowInsidePosition = 0.07;
-    public static double elbowOutsidePosition = 0.75;
+    public static double elbowOutsidePosition = 0.85;
 
 
 
@@ -85,49 +82,22 @@ public class Calvin {
 
 
     public static int verticalSlideHighScoringPositionLimit = 3150; //kindly note that gunner will use joystick
-
-    //public static int verticalSlideLowScoringPositionLimit = 1500;
     public static double horizontalSlidesInitialPosition = 0.99;
-
     public static double horizontalSlidesExtendedPosition = 0.68;
 
-
-    //public static double specimenPickupPosition = 0;
-
     public static double specimenClawPosition = 0.01;
-
     public static double specimenDepositClawRotation = 1;
 
-    //public static int specimenStartPickupVerticalSlides = 0;
 
-
-
-   // public static int specimenFinishPickupVerticalSlides = 1000;
-
-    public static int specimenStartDepositVerticalSlides = 1000;
-    public static int specimenFinishDepositVerticalSlides = 0;
 
     public boolean changedRightTrigger = false;
     public boolean changedLeftTrigger = false;
-
-
     public boolean changedB = false;
-
     public boolean changedExtend = false;
-
     public boolean changedZhang = false;
-
     public boolean changedUchida = false;
-
-
     public boolean changedY = false;
-
-
     private ElapsedTime buttonTimer = new ElapsedTime();
-
-    public PromiseCheatCode cheatCode1 = new PromiseCheatCode(leftFrontCalvin, rightFrontCalvin, leftBackCalvin, rightBackCalvin, claw, shaq, clawRotator);
-
-
 
 
 
@@ -154,6 +124,7 @@ public class Calvin {
         horizontalSlidesLeft.setDirection(Servo.Direction.FORWARD);
         horizontalSlidesRight.setDirection(Servo.Direction.REVERSE);
         intakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
+        intakeLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
         intakeUp = hardwareMap.get(CRServo.class, "continuousIntakeUp"); //setPower
 
@@ -223,14 +194,14 @@ public class Calvin {
     }
 
     public void intake(){
-        intakeLeft.setPower(-1);
+        intakeLeft.setPower(1);
         intakeRight.setPower(1);
         intakeUp.setPower(intakeUpSpeed);
 
     }
 
     public void eject() {
-        intakeLeft.setPower(1);
+        intakeLeft.setPower(-1);
         intakeRight.setPower(-1);
         intakeUp.setPower(-intakeUpSpeed);
 
@@ -277,9 +248,7 @@ public class Calvin {
         shaq.setPosition(clawRetrievePosition);
         clawRotator.setPosition(clawPickUpRotation);
     }
-    public void hang() {
-        clawRotator.setPosition(clawHangRotation);
-    }
+
 
     public void dunk() {
         shaq.setPosition(clawScorePosition);
@@ -811,11 +780,6 @@ public class Calvin {
         lb.setPower(ly - joystickX + joystickR);
     }
 
-    public void cheat1(boolean dL, boolean dR, boolean dU, boolean dD, boolean a, boolean b, boolean x, boolean y, boolean rB, boolean lB, boolean r3, boolean l3, boolean o, boolean s, double rT, double lT, Telemetry telemetry) {
-        cheatCode1.processInputs(dL, dR, dU, dD, a, b, x, y, rB, lB, r3, l3, o, s, rT, lT, telemetry);
-        telemetry.addData("inputs",cheatCode1.inputTracker);
-        telemetry.update();
-    }
 
 
 }

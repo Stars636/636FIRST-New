@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 
 @TeleOp
-public class TeleOp_COPYFROMHERE extends LinearOpMode {
+public class TeleOpOld extends LinearOpMode {
 
     DcMotorImplEx SlidesLeft, SlidesRight;
 

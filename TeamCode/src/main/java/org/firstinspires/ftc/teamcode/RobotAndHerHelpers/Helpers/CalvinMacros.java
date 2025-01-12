@@ -12,10 +12,21 @@ import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinCo
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeMedium;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeOff;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeSlow;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorIntakePickup;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorPassive;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorScore;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorSpecimenDeposit;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorSpecimenPickup;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqPassivePosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqSpecimenPosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqRetrievePosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqScorePosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqSpecimenDeposit;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqSpecimenPickup;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.ZERO;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.verticalSlidesHighScore;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.verticalSlidesLowScore;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.verticalSlidesSpecimenDeposit;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.verticalSlidesSpecimenStart;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -33,10 +44,10 @@ public class CalvinMacros {
 
     //Start Positions
 
-    public static CalvinState BasketAutoStartPosition = new CalvinState(null, null, horizontalSlidesIn, elbowInside,
-            clawClosed, shaqPassivePosition, rotatorPassive, null);
+    public static CalvinState BucketAutoStartPosition = new CalvinState(null, null, horizontalSlidesIn, elbowInside,
+            clawClosed, shaqPassivePosition, rotatorPassive, ZERO);
     public static CalvinState SpecimenAutoStartPosition = new CalvinState(null, null, horizontalSlidesIn, elbowInside,
-            clawClosed, shaqSpecimenPosition, rotatorSpecimenPickup, null);
+            clawClosed, shaqSpecimenPickup, rotatorSpecimenPickup, ZERO);
     public static CalvinState TeleopStartPosition = new CalvinState(null, null, horizontalSlidesIn, elbowInside,
             clawClosed, shaqPassivePosition, rotatorPassive, null);
 
@@ -62,26 +73,56 @@ public class CalvinMacros {
             null, null, null, null);
     public static CalvinState ElbowExtension = new CalvinState(null, null, null, elbowFullOutside,
             null, null, null, null);
-    public static CalvinState HslidesExtension = new CalvinState(null, null, horizontalSlidesOut, null,
+    public static CalvinState HSlidesExtension = new CalvinState(null, null, horizontalSlidesOut, null,
             null, null, null, null);
 
     public static CalvinState FullRetraction = new CalvinState(null, null, horizontalSlidesIn, elbowInside,
             null, null, null, null);
     public static CalvinState ElbowRetraction = new CalvinState(null, null, null, elbowInside,
             null, null, null, null);
-    public static CalvinState HslidesRetraction = new CalvinState(null, null, horizontalSlidesIn, null,
+    public static CalvinState HSlidesRetraction = new CalvinState(null, null, horizontalSlidesIn, null,
             null, null, null, null);
 
     //Claw
     public static CalvinState ClawOpen = new CalvinState(null, null, null, null,
-            null, null, null, null);
+            clawOpen, null, null, null);
+    public static CalvinState ClawClosed = new CalvinState(null, null, null, null,
+            clawClosed, null, null, null);
 
 
-    //Claw Mechanism in its entirety (i.e rotator + shaq)
-    public static CalvinState ClawPassive = new CalvinState(null, null, null, null,
+    //Claw Mechanism in its entirety (i.e rotator + shaq) we shall name them "Arm
+    //if there's an issue, make clawOpen null
+    public static CalvinState ArmPassive = new CalvinState(null, null, null, null,
             clawOpen, shaqPassivePosition, rotatorPassive, null);
-    public static CalvinState ClawGrab = new CalvinState(null, null, null, null,
-            null, shaqPassivePosition, rotatorPassive, null);
+    public static CalvinState ArmIntakeGrab = new CalvinState(null, null, null, null,
+            clawOpen, shaqRetrievePosition, rotatorIntakePickup, null);
+
+    public static CalvinState ArmBucketScore = new CalvinState(null, null, null, null,
+            null, shaqScorePosition, rotatorScore, null);
+    public static CalvinState ArmSpecimenPickup = new CalvinState(null, null, null, null,
+            null, shaqSpecimenPickup, rotatorSpecimenPickup, null);
+    public static CalvinState ArmSpecimenDeposit = new CalvinState(null, null, null, null,
+            null, shaqSpecimenDeposit, rotatorSpecimenDeposit, null);
+
+
+    //Vertical Slides
+
+    public static CalvinState ReturnToZero = new CalvinState(null, null, null, null,
+            null, null, null, ZERO);
+    public static CalvinState LowBucket = new CalvinState(null, null, null, null,
+            null, null, null, verticalSlidesLowScore );
+
+    public static CalvinState HighBucket = new CalvinState(null, null, null, null,
+            null, null, null, verticalSlidesHighScore);
+
+    public static CalvinState VSlidesSpecimenStart = new CalvinState(null, null, null, null,
+            null, null, null, verticalSlidesSpecimenStart);
+
+    public static CalvinState VSlidesSpecimenDeposit = new CalvinState(null, null, null, null,
+            null, null, null, verticalSlidesSpecimenDeposit);
+
+    //Specimen Macro Step
+
 
 
 

@@ -78,7 +78,7 @@ public class CalvinTeleOp extends LinearOpMode {
 
             calvin.activateIntake(gamepad1.a);
 
-            if(!gamepad1.a) {calvin.activateEject(gamepad2.right_stick_button);}
+            if(!gamepad1.a) {calvin.activateEject(gamepad1.right_stick_button);}
 
            calvin.activateSpecimen(gamepad2.x); //Hold for one second, the telemetry should agree
 
@@ -110,15 +110,7 @@ public class CalvinTeleOp extends LinearOpMode {
 
 
            //calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-            double joystickX = -gamepad1.left_stick_x;
-            double joystickY = gamepad1.left_stick_y;
-            double joystickR = -gamepad1.right_stick_x;
 
-
-            calvin.rightFrontCalvin.setPower(joystickY - joystickX - joystickR);
-            calvin.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
-            calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
-            calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
 
             //calvin.cheat1(gamepad1.dpad_left, gamepad1.dpad_right, gamepad1.dpad_up, gamepad1.dpad_down, gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y, gamepad1.right_bumper, gamepad1.left_bumper, gamepad1.right_stick_button, gamepad1.left_stick_button, gamepad1.options, gamepad1.start, gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
 

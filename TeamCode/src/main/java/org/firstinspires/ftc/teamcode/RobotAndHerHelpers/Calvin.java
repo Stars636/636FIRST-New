@@ -138,7 +138,7 @@ public class Calvin {
         elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
         elbowRight.setDirection(Servo.Direction.REVERSE);
 
-        //PromiseCheatCode cheatCode1 = new PromiseCheatCode(leftFrontCalvin, rightFrontCalvin, leftBackCalvin, rightBackCalvin, claw, shaq, clawRotator);
+
     }
 
     public void wait(double seconds) {

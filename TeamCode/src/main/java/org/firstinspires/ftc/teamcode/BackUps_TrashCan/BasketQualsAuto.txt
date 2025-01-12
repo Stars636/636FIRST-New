@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoTests;
+package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.clawClosedPosition;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.clawPassivePosition;

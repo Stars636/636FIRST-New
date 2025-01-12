@@ -1,16 +1,40 @@
 package com.example.meepmeeptesting;
 
-import static java.lang.Math.PI;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-
-import org.rowlandhall.meepmeep.MeepMeep;
-import org.rowlandhall.meepmeep.roadrunner.DefaultBotBuilder;
-import org.rowlandhall.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.noahbres.meepmeep.MeepMeep;
+import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
+import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(600);
+        MeepMeep meepMeep = new MeepMeep(800);
+
+        RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
+                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .build();
+
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 0, 0))
+                .lineToX(30)
+                .turn(Math.toRadians(90))
+                .lineToY(30)
+                .turn(Math.toRadians(90))
+                .lineToX(0)
+                .turn(Math.toRadians(90))
+                .lineToY(0)
+                .turn(Math.toRadians(90))
+                .build());
+
+        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
+                .setDarkMode(true)
+                .setBackgroundAlpha(0.95f)
+                .addEntity(myBot)
+                .start();
+    }
+}
+//OLD CODE
+
+ /*MeepMeep meepMeep = new MeepMeep(600);
         double xInitial = -44; //i have Initial variables because in real life i think the robot will start from zero
         double yInitial = -64;// so use Initial variables haha
 
@@ -105,6 +129,4 @@ public class MeepMeepTesting {
                 .addEntity(basketCalvin)
                 //.addEntity(speciCalvin) //you can comment out addentity lines if you dont wanna see them simultaneuosly
                 .addEntity(specimenCalvin)
-                .start();
-    }
-}
+                .start();*/

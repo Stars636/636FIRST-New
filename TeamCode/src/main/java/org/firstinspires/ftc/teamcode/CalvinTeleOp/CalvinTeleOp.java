@@ -80,7 +80,7 @@ public class CalvinTeleOp extends LinearOpMode {
 
             if(!gamepad1.a) {calvin.activateEject(gamepad1.right_stick_button);}
 
-           calvin.activateSpecimen(gamepad2.x); //Hold for one second, the telemetry should agree
+            calvin.activateSpecimen(gamepad2.x); //Hold for one second, the telemetry should agree
 
             calvin.activateFullExtension(gamepad2.left_trigger);
 

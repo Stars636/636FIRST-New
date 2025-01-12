@@ -111,6 +111,8 @@ public class MecanumDrive {
 
     public LazyImu lazyImu;
 
+    public Pose2d pose;
+
     public final Localizer localizer;
     public final LinkedList<Pose2d> poseHistory = new LinkedList<>();
 

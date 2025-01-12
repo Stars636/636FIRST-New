@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.slowingAllowed;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.EjectFullPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.EjectPartialPower;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeFullPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeNoPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakePartialPower;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.TeleopStartPosition;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -39,16 +44,45 @@ public class TeleOpNew extends LinearOpMode {
         while (opModeIsActive()) {
             //if something doesn't work start here
 
-            //so pressing start b doesn't make b do something
-            if (gamepad2.start || gamepad1.start) return;
+            //so pressing start b doesn't make b do something etc
+            if (gamepad1.start || gamepad2.start) return;
 
-            if (gamepad1.a && !lastGamepad1.a) {
-                calvin.runMacro(IntakeFullPower);
+            // DRIVER CONTROLS
+            //Currently driving and intake
+
+            //if slowing is allowed, right trigger will slow down for more precise turning for specimen pickup
+            //if it should be a specific amount rather than measure how hard you press right trigger, then change this
+            // to like double rTrigger = (slowingAllowed) ? "slowedAmount" : 1;
+            //and make an if statement for the drive controller
+            double rTrigger = (slowingAllowed) ? 1 - gamepad1.right_trigger : 1;
+            calvin.driveController.motorDriveXY(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+            //Intake and Eject Controls
+            //Currently the triggers are the slowing buttons haha
+            if (gamepad1.a) {
+                if (gamepad1.left_trigger != 0){
+                    calvin.runMacro(IntakePartialPower);
+                } else {
+                    calvin.runMacro(IntakeFullPower);
+                }
+            } else if (gamepad1.b) {
+                if (gamepad1.left_trigger != 0){
+                    calvin.runMacro(EjectPartialPower);
+                } else {
+                    calvin.runMacro(EjectFullPower);
+                }
+            } else {
+                calvin.runMacro(IntakeNoPower);
             }
 
+            //Gunner Controls
 
 
 
+
+
+
+            calvin.tick();
 
             gamepad1History.add(gamepad1);
             gamepad2History.add(gamepad2);

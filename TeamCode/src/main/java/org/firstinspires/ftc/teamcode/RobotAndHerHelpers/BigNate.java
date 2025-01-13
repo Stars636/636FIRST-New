@@ -16,12 +16,18 @@ import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinCo
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesScaler;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesMax;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesMin;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.TeleopStartPosition;
 
 import static java.lang.Math.E;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -37,6 +43,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinState;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.PID;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 public class BigNate {
 
     //Initializing
@@ -122,6 +133,99 @@ public class BigNate {
         shaq.setPwmRange(new PwmControl.PwmRange(500,2500));
 
         vs = hardwareMap.voltageSensor.get("Control Hub");
+    }
+    public class TickingAction implements Action {
+        BigNate bot = null;
+
+        public TickingAction(BigNate h) {
+            bot = h;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bot.tick();
+            if (bot.done) {
+                bot.runMacro(TeleopStartPosition);
+                bot.tick();
+                return false;
+            }
+            return true;
+        }
+    }
+    public class MacroAction implements Action {
+        BigNate bot = null;
+        CalvinState macro = null;
+
+        public MacroAction(BigNate h, CalvinState s) {
+            bot = h;
+            macro = s;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bot.runMacro(macro);
+            return false;
+        }
+    }
+    public class MacroActionTimeout implements Action {
+        BigNate bot = null;
+        CalvinState macro = null;
+        ElapsedTime et = null;
+        int timeout;
+        boolean TIMER_RUNNING = false;
+
+        public MacroActionTimeout(BigNate h, CalvinState s, int millis) {
+            bot = h;
+            macro = s;
+            et = new ElapsedTime();
+            timeout = millis;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if (!TIMER_RUNNING) {
+                et.reset();
+                TIMER_RUNNING = true;
+            }
+            if (et.milliseconds() < timeout) {
+                return true;
+            } else {
+                bot.runMacro(macro);
+                return false;
+            }
+        }
+    }
+    public class WaitAction implements Action {
+        ElapsedTime et = null;
+        int timeout;
+        boolean TIMER_RUNNING = false;
+
+        public WaitAction(int millis) {
+            et = new ElapsedTime();
+            timeout = millis;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if (!TIMER_RUNNING) {
+                et.reset();
+                TIMER_RUNNING = true;
+            }
+            return et.milliseconds() < timeout;
+        }
+    }
+    public Action actionTick() {
+        return new TickingAction(this);
+    }
+    public Action actionMacro(CalvinState macro) {
+        Logger.getLogger("FUCK").log(new LogRecord(Level.INFO, "action macro :)"));
+        return new SequentialAction(new MacroAction(this, macro));
+    }
+    public Action actionMacroTimeout(CalvinState macro, int millis) {
+        return new SequentialAction(new MacroActionTimeout(this, macro, millis));
+    }
+    public Action actionWait(int millis) {
+        return new SequentialAction(new WaitAction(millis));
     }
     //As a practice, intake controller here
     public class ServoController {
@@ -414,10 +518,17 @@ public class BigNate {
         }
     }
 
-    public void tick(double x, double power) {
+    public void tickTele(double x, double power) {
         //drive.updatePoseEstimate(); // update localizer
         tickMacros(); // check macros
         slidesController.slidesTickJoyStickVersion(x, power); // update slides
+        servoController.servosTick(); // update servos
+        telemetry.addData("voltage", vs.getVoltage());
+        telemetry.update();
+    }
+    public void tick(){
+        tickMacros(); // check macros
+        slidesController.slidesTickButtonVersion(); // update slides
         servoController.servosTick(); // update servos
         telemetry.addData("voltage", vs.getVoltage());
         telemetry.update();

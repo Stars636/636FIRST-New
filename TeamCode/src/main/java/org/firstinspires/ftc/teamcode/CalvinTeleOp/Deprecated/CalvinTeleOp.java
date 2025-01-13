@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CalvinTeleOp;
+package org.firstinspires.ftc.teamcode.CalvinTeleOp.Deprecated;
 
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.verticalSlideHighScoringPositionLimit;
 

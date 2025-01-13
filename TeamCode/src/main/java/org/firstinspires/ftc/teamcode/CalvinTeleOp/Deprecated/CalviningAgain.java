@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CalvinTeleOp;
+package org.firstinspires.ftc.teamcode.CalvinTeleOp.Deprecated;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.limelightvision.Limelight3A;

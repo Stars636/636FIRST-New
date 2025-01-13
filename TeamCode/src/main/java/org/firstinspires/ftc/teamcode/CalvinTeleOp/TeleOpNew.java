@@ -1,30 +1,20 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawOpen;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowFullOutside;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowInside;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowOutside;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesIn;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesOut;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqScorePosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqSpecimenDeposit;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqSpecimenPickup;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.slowingAllowed;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmBucketScore;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmIntakeGrab;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmPassive;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmSpecimenPickup;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ClawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ClawOpen;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.EjectFullPower;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.EjectPartialPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ElbowExtension;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ElbowRetraction;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.FullExtension;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.FullRetraction;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.HSlidesExtension;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.HSlidesRetraction;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeFullPower;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeNoPower;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakePartialPower;
@@ -154,7 +144,7 @@ public class TeleOpNew extends LinearOpMode {
 
             //this is a really bad fix for the vertical slides
             //if we want to make buttons, that might be better
-            calvin.tick(calvin.vSlidesLeft.getCurrentPosition(), gamepad2.left_stick_y);
+            calvin.tickTele(calvin.vSlidesLeft.getCurrentPosition(), gamepad2.left_stick_y);
 
             gamepad1History.add(gamepad1);
             gamepad2History.add(gamepad2);

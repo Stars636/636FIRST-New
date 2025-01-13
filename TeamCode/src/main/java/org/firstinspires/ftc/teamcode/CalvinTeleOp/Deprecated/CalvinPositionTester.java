@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.CalvinTeleOp;
+package org.firstinspires.ftc.teamcode.CalvinTeleOp.Deprecated;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,21 +10,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 
+@Config
 @TeleOp
-public class TeleOpOld extends LinearOpMode {
-
+public class CalvinPositionTester extends LinearOpMode {
     DcMotorImplEx SlidesLeft, SlidesRight;
 
 
-
+    
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
         Calvin calvin = new Calvin(hardwareMap, telemetry);
-        SlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
-        SlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
-
+        waitForStart();
         SlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -34,9 +33,11 @@ public class TeleOpOld extends LinearOpMode {
         SlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         SlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        waitForStart();
-
         //calvin.checkHardwareInitialization(telemetry);
+        //calvin.initialPositions();
+
+        //Initial!!
+        //we will create macros in the future, to remove room for error
 
 
         telemetry.addLine("Best Wishes.");
@@ -44,11 +45,11 @@ public class TeleOpOld extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            calvin.initialPositions();
+            
 
         }
 
     }
-
-
 
 }

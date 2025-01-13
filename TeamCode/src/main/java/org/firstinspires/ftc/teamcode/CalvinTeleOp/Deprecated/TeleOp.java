@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CalvinTeleOp;
+package org.firstinspires.ftc.teamcode.CalvinTeleOp.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;

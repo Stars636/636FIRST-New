@@ -264,17 +264,22 @@ public class BigNate {
             tele = FtcDashboard.getInstance().getTelemetry();
         }
 
-        public void slidesTick() {
+        public void slidesTickButtonVersion() {
             if (disabled == 0) {
                 vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 vSlidesLeft.setPower(0);
+                vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                vSlidesRight.setPower(0);
                 return;
             } else if (disabled == 1) {
                 vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 vSlidesLeft.setPower(0.2);
+                vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                vSlidesRight.setPower(0.2);
                 return;
             } else if (vSlidesLeft.getZeroPowerBehavior() != DcMotor.ZeroPowerBehavior.BRAKE) {
                 vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
             if (!SLIDE_TARGETING)
                 slidePID.setConsts(SLIDES_KP, 0, 0);
@@ -302,10 +307,29 @@ public class BigNate {
             tele.addData("drivingPower", !runToBottom ? minMaxScaler(pos, power) : 0.4);
             tele.update();
 
-            if (!runToBottom)
+            if (!runToBottom) {
                 vSlidesLeft.setPower(minMaxScaler(pos, power));
-            else
+                vSlidesRight.setPower(minMaxScaler(pos, power));
+            } else {
                 vSlidesLeft.setPower(0.3);
+                vSlidesRight.setPower(0.3);
+            }
+        }
+
+        public void slidesTickJoyStickVersion(double x, double power) {
+            if (vSlidesLeft.getCurrentPosition() > vSlidesMax) {
+                //If its above the max, only allow negative power
+                vSlidesLeft.setPower(Math.min(minMaxScaler(x, power), 0));
+                vSlidesRight.setPower(Math.min(minMaxScaler(x, power), 0));
+            } else if (vSlidesRight.getCurrentPosition() < vSlidesMin) {
+                //If its below the min, only allow positive power
+                vSlidesLeft.setPower(Math.max(minMaxScaler(x, power), 0));
+                vSlidesRight.setPower(Math.max(minMaxScaler(x, power), 0));
+            } else {
+                vSlidesLeft.setPower(minMaxScaler(x, power));
+                vSlidesRight.setPower(minMaxScaler(x, power));
+            }
+
         }
 
         // REWRITE EVENTUALLY AND CLEAN UP PLEASE
@@ -390,10 +414,10 @@ public class BigNate {
         }
     }
 
-    public void tick() {
+    public void tick(double x, double power) {
         //drive.updatePoseEstimate(); // update localizer
         tickMacros(); // check macros
-        slidesController.slidesTick(); // update slides
+        slidesController.slidesTickJoyStickVersion(x, power); // update slides
         servoController.servosTick(); // update servos
         telemetry.addData("voltage", vs.getVoltage());
         telemetry.update();

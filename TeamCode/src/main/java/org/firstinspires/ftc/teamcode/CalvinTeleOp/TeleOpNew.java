@@ -152,8 +152,9 @@ public class TeleOpNew extends LinearOpMode {
                 calvin.servoController.setClaw(calvin.servoController.clawPos == clawClosed);
             }
 
-
-            calvin.tick();
+            //this is a really bad fix for the vertical slides
+            //if we want to make buttons, that might be better
+            calvin.tick(calvin.vSlidesLeft.getCurrentPosition(), gamepad2.left_stick_y);
 
             gamepad1History.add(gamepad1);
             gamepad2History.add(gamepad2);
@@ -166,6 +167,8 @@ public class TeleOpNew extends LinearOpMode {
             telemetry.addData("Gamepad 1 Last", lastGamepad1.toString());
             telemetry.addData("Gamepad 2",  gamepad2History.getFirst());
             telemetry.addData("Gamepad 1",  lastGamepad2.toString());
+
+            telemetry.addData("V Slides: Gamepad Left Stick Y", gamepad2.left_stick_y);
             telemetry.update();
 
             // keep last gamepad in because its useful for simple button presses

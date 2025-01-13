@@ -45,6 +45,10 @@ public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
                 gamepad1History.removeLast();
                 gamepad2History.removeLast();
             }
+            telemetry.addData("Gamepad 1",  gamepad1History.getFirst());
+            telemetry.addData("Gamepad 2",  gamepad2History.getFirst());
+            telemetry.update();
+
             // keep last gamepad in because its useful for simple button presses
             lastGamepad1.copy(gamepad1);
             lastGamepad2.copy(gamepad2);

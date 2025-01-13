@@ -88,7 +88,6 @@ public class CalvinTeleOp extends LinearOpMode {
 
             calvin.activateExtendo(gamepad2.right_trigger);
 
-            //calvin.activateClaw(gamepad2.y);
 
             calvin.activateScore(gamepad2.right_bumper);
 

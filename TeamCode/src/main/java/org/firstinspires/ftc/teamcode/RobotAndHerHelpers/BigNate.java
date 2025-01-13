@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.END;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.SLIDES_KP;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.despacito;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawOpen;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowFullOutside;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowInside;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesIn;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeIntake;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesOut;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeMax;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeOff;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorPassive;
@@ -15,7 +16,7 @@ import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinCo
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesScaler;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesMax;
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesMin;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesScaler;
+
 import static java.lang.Math.E;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -134,8 +135,14 @@ public class BigNate {
         public double rotatorPos = rotatorPassive;
         public double shaqPos = shaqPassivePosition;
 
+        public void setClaw(boolean open) {
+            clawPos = open ? clawOpen : clawClosed;
+        }
+        public void setElbowPos(boolean inside) {elbowPos = inside ? elbowInside : elbowFullOutside;}
+        public void setHSlidesPos(boolean inside) {HSlidesPos = inside ? horizontalSlidesIn : horizontalSlidesOut;}
 
         public void servosTick() {
+
             telemetry.addData("Intake Speed", intakeSpeed);
             telemetry.addData("Intake Multiplier", intakeMulti);
             telemetry.addData("Elbow Position", elbowPos);
@@ -143,6 +150,7 @@ public class BigNate {
             telemetry.addData("clawPos", clawPos);
             telemetry.addData("rotatorPos", rotatorPassive);
             telemetry.addData("shaqPos", shaqPassivePosition);
+
 
             intakeLeft.setPower(intakeSpeed * intakeMulti);
             intakeRight.setPower(intakeSpeed * intakeMulti);

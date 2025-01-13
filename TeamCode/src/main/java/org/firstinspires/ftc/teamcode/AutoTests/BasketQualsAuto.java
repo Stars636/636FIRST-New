@@ -27,13 +27,15 @@ public class BasketQualsAuto extends LinearOpMode {
 
     public static double forwardTime = 800;
 
-    public static double turnTime = 750;
+    public static double turnTime = 325;
 
-    public static double backTime = 850;
+    public static double backTime = 550;
 
-    public static double farForwardTime = 100;
+    public static double farForwardTime = 500;
 
     public static double strafeTime = 50;
+
+    public static double fraud = 150;
 
 
     @Override
@@ -151,6 +153,12 @@ public class BasketQualsAuto extends LinearOpMode {
 
             moveVerticalSlidesTo(0);
 
+            calvin.wait(0.5);
+
+            moveVerticalSlidesTo(0);
+
+
+
             et.reset();
             telemetry.update();
             while (et.milliseconds() < farForwardTime) {
@@ -192,7 +200,7 @@ public class BasketQualsAuto extends LinearOpMode {
                 calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
             }
 
-            calvin.extend();
+            //calvin.extend();
             intake.reset();
             telemetry.update();
             while (et.seconds() < 2.5) {
@@ -200,7 +208,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 50) {
+            while (et.milliseconds() < 100) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = 0.1;
@@ -228,11 +236,11 @@ public class BasketQualsAuto extends LinearOpMode {
             intake.reset();
             telemetry.update();
             while (et.seconds() < 2.5) {
-                calvin.intake();
+                //calvin.intake();
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 50) {
+            while (et.milliseconds() < 150) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = 0.1;
@@ -248,7 +256,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
             et.reset();
             telemetry.update();
-            while (et.milliseconds() < 50) {
+            while (et.milliseconds() < 150) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = -0.1;
@@ -302,7 +310,7 @@ public class BasketQualsAuto extends LinearOpMode {
             }
 
             calvin.wait(0.5);
-            calvin.grabSample();
+            //calvin.grabSample();
 
             calvin.wait(0.5);
 
@@ -310,21 +318,21 @@ public class BasketQualsAuto extends LinearOpMode {
 
             calvin.wait(0.5);
 
-            moveVerticalSlidesTo(1500);
+           // moveVerticalSlidesTo(1500);
 
             calvin.wait(1.3);
 
 
 
-            calvin.dunk();
+           //calvin.dunk();
 
             calvin.wait(0.5);
 
-            calvin.dropSample();
+           // calvin.dropSample();
 
             calvin.wait(0.5);
 
-            calvin.passive();
+            //calvin.passive();
 
             moveVerticalSlidesTo(0);
 
@@ -351,9 +359,11 @@ public class BasketQualsAuto extends LinearOpMode {
 
 
 
+            calvin.wait(30000);
 
         }
-            calvin.wait(30000);
+
+
         }
 
 

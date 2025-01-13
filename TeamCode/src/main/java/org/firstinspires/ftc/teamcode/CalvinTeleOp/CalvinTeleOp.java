@@ -59,9 +59,9 @@ public class CalvinTeleOp extends LinearOpMode {
             // For your ease, all of the functions can take either a boolean or a double
             // so you don’t need to re code anything for the left and right triggers
 
-            calvin.activateRotateElbow(gamepad2.b);
+            //calvin.activateRotateElbow(gamepad2.b);
             //if rotateElbow still doesn't work use this
-            /*if (gamepad2.b && !changedBB) {
+            if (gamepad2.b && !changedBB) {
                 if (calvin.elbowLeft.getPosition() == Calvin.elbowInsidePosition) {
                     calvin.elbowOut();
                     changedBB = true;
@@ -74,13 +74,13 @@ public class CalvinTeleOp extends LinearOpMode {
                 }
             } else if (!gamepad2.b) {
                 changedBB = false;
-            }*/
+            }
 
-            calvin.activateIntake(gamepad1.a);
+            calvin.activateIntake(gamepad2.a);
 
-            if(!gamepad1.a) {calvin.activateEject(gamepad2.right_stick_button);}
+            if(!gamepad2.a) {calvin.activateEject(gamepad2.right_stick_button);}
 
-           calvin.activateSpecimen(gamepad2.x); //Hold for one second, the telemetry should agree
+            calvin.activateSpecimen(gamepad2.x); //Hold for 4one second, the telemetry should agree
 
             calvin.activateFullExtension(gamepad2.left_trigger);
 
@@ -97,16 +97,18 @@ public class CalvinTeleOp extends LinearOpMode {
             calvin.activatePassiveOrInitial(gamepad2.dpad_up);
 
             //calvin.activateVerticalSlides(gamepad2.left_stick_y);
-                if (SlidesRight.getCurrentPosition() < verticalSlideHighScoringPositionLimit && SlidesRight.getCurrentPosition() >= 0) {
+                /*if (SlidesRight.getCurrentPosition() < verticalSlideHighScoringPositionLimit && SlidesRight.getCurrentPosition() >= 0) {
                     SlidesLeft.setPower(-gamepad2.left_stick_y);
-                    SlidesRight.setPower(-gamepad2.left_stick_y);
-                } else if ( SlidesRight.getCurrentPosition() > 0) {
-                    SlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow positive power
-                    SlidesRight.setPower(Math.min(-gamepad2.left_stick_y, 0));
-                } else if (SlidesRight.getCurrentPosition() < verticalSlideHighScoringPositionLimit) {
-                    SlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow negative power
+                    SlidesRight.setPower(-gamepad2.left_stick_y);*/
+               /* }/* else if ( SlidesRight.getCurrentPosition() > verticalSlideHighScoringPositionLimit) {
+                    SlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow positive power
                     SlidesRight.setPower(Math.max(-gamepad2.left_stick_y, 0));
-                }
+                } else if (SlidesRight.getCurrentPosition() < 0) {
+                    SlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow negative power
+                    SlidesRight.setPower(Math.min(-gamepad2.left_stick_y, 0));
+                }*/
+            SlidesLeft.setPower(-gamepad2.left_stick_y);
+            SlidesRight.setPower(-gamepad2.left_stick_y);
 
 
            //calvin.driveMotors(calvin.leftFront, calvin.rightFront, calvin.leftBack, calvin.rightBack, gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -132,6 +134,9 @@ public class CalvinTeleOp extends LinearOpMode {
             telemetry.addData("Claw",calvin.claw.getPosition());
             telemetry.addData("ElbowLeft",calvin.elbowLeft.getPosition());
             telemetry.addData("ElbowRight",calvin.elbowRight.getPosition());
+            telemetry.addData("gamepad b press",gamepad2.b);
+            telemetry.addData("changed b",calvin.changedB);
+            telemetry.addData("BB",changedBB);
             telemetry.addData("horizontalSlides",calvin.horizontalSlidesRight.getPosition());
             telemetry.addData("horizontalSlides",calvin.horizontalSlidesLeft.getPosition());
             telemetry.addData("shaq",calvin.shaq.getPosition());

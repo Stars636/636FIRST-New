@@ -7,18 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "RightScrimmageAuto", group = "Scrimmage")
+@Autonomous(name = "RightScrimmageAuto", group = "Quals")
 public class ParkingAuto extends LinearOpMode {
-    Servo rotatorJamal;
-    Servo clawEthan;
-    Servo pushRight;
-    Servo pushLeft;
 
-    Servo clawLeft;
-
-    Servo clawRight;
-
-    Servo clawMiddle;
     @Override
     public void runOpMode() {
         ElapsedTime et = new ElapsedTime();
@@ -27,39 +18,23 @@ public class ParkingAuto extends LinearOpMode {
         DcMotor leftBack = hardwareMap.get(DcMotor.class,"leftBack");
         DcMotor rightFront = hardwareMap.get(DcMotor.class,"rightFront");
         DcMotor leftFront = hardwareMap.get(DcMotor.class,"leftFront");
-        DcMotor verticalSlide = hardwareMap.get(DcMotor.class,"verticalSlide");
+
         // Reset the motor encoder for the slides.
-        verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
         //correcting the motors
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Initializing all of the servos
-        rotatorJamal = hardwareMap.get(Servo.class,"Servo1");
-        clawEthan = hardwareMap.get(Servo.class,"Servo2");
-        pushRight = hardwareMap.get(Servo.class,"pushRight");
-        pushLeft = hardwareMap.get(Servo.class,"pushLeft");
-        clawLeft = hardwareMap.get(Servo.class,"clawLeft");
-        clawRight = hardwareMap.get(Servo.class,"clawRight");
 
-        clawMiddle = hardwareMap.get(Servo.class,"clawMiddle");
 
-        //Initial position of all the servos. When the wiring is perfected, RETEST all initial positions
-        //There is definitely a better position for all of these
-        double rotatorPosition = 0.1; //should start facing the claw
-        double intakeClawPosition = 0.45; //should start open
-        double pushPositionRight = 0.5; //1 is moving forward
-        double pushPositionLeft = 0.5; // 0 is moving forward
-        double verticalClawRight = 0;
-        double verticalClawLeft = 1;// there is an ideal starting position. Let's test for that.
-        double clawMiddlePosition = 0.48;
+
 
         waitForStart();
 
@@ -74,7 +49,7 @@ public class ParkingAuto extends LinearOpMode {
                 leftBack.setPower(joystickY - joystickX + joystickR);
             }
             sleep(1000);
-            while (et.milliseconds() < 2800) {
+            while (et.milliseconds() < 28000) {
                 double joystickX = 0;
                 double joystickY = 0;
                 double joystickR = 0;

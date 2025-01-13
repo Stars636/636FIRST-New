@@ -77,7 +77,8 @@ public class Calvin {
     public static double clawHangRotation = 1;
 
     public static double elbowInsidePosition = 0.07;
-    public static double elbowOutsidePosition = 0.75;
+
+    public static double elbowOutsidePosition = 0.85;
 
 
 
@@ -94,7 +95,7 @@ public class Calvin {
 
     //public static double specimenPickupPosition = 0;
 
-    public static double specimenClawPosition = 0.01;
+    public static double specimenClawPosition = 0;
 
     public static double specimenDepositClawRotation = 1;
 
@@ -192,8 +193,8 @@ public class Calvin {
         claw.setPosition(clawClosedPosition);
         shaq.setPosition(clawPassivePosition);
         clawRotator.setPosition(clawPassiveRotation);
-        elbowLeft.setPosition(elbowInsidePosition);
-        elbowRight.setPosition(elbowInsidePosition);
+        elbowLeft.setPosition(elbowOutsidePosition);
+        elbowRight.setPosition(elbowOutsidePosition);
 
     }
 
@@ -453,10 +454,10 @@ public class Calvin {
 
     public void activateRotateElbow(boolean buttonPressed) {
         if (buttonPressed && !changedB) {
-            if (elbowLeft.getPosition() == elbowInsidePosition) {
+            if (elbowRight.getPosition() == elbowInsidePosition) {
                 elbowOut();
                 changedB = true;
-            } else if (elbowLeft.getPosition() == elbowOutsidePosition) {
+            } else if (elbowRight.getPosition() == elbowOutsidePosition) {
                 elbowIn();
                 changedB = true;
             } else {

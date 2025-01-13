@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 
-@Autonomous(name = "Qualifier Auto Park", group = "A+ Qualifier")
+@Autonomous(name = "Auto Park", group = "A+ Qualifier")
 
-public class BasicQualsAuto extends LinearOpMode {
+public class BasicParkAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,8 +26,22 @@ public class BasicQualsAuto extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            calvin.extend();
-            calvin.wait(30);
+            et.reset();
+            telemetry.update();
+            while (et.milliseconds() < 1000) {
+                double joystickX = 0;
+                double joystickY = -0.3;
+                double joystickR = 0;
+                calvin.rightFrontCalvin.setPower(joystickY - joystickX - joystickR);
+                calvin.leftFrontCalvin.setPower(joystickY + joystickX + joystickR);
+                calvin.rightBackCalvin.setPower(joystickY + joystickX - joystickR);
+                calvin.leftBackCalvin.setPower(joystickY - joystickX + joystickR);
+            }
+
+            et.reset();
+            telemetry.update();
+
+            calvin.wait(30000);
 
         }
     }

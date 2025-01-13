@@ -29,7 +29,7 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            calvin.initialPositions();
+            calvin.initialPositionsTwo();
 
         }
 

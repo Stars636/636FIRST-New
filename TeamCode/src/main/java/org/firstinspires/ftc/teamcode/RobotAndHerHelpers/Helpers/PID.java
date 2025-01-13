@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//instead of setting pid coefficients they do the math themselves
 @Config
 public class PID {
     public double dThresh = 0.01;

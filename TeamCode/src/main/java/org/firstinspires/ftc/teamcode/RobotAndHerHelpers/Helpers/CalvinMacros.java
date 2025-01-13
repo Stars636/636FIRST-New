@@ -30,6 +30,11 @@ import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinCo
 
 import com.acmerobotics.dashboard.config.Config;
 
+//holds every calvin macro
+//motors don't run to position, so this is daniel meant by only having one method
+//that changes servo locations
+//ours are kindy funky because we don't do stuff that complicated
+//but macros will be rlly useful for specimen scoring
 @Config
 public class CalvinMacros {
     //order is intakeSpeed, intakeMultiplier, extendoPosition,

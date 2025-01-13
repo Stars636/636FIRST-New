@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.CalvinAutonomous;
 
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Autonomous(name = "Bucket Auto")
-public class Auto_COPYFROMHERE extends LinearOpMode {
+public class SpecimenAutoZhangAttempt extends LinearOpMode {
     PinpointDrive drive;
     BigNate calvin = new BigNate(hardwareMap);
     // runs on init press
@@ -21,9 +20,8 @@ public class Auto_COPYFROMHERE extends LinearOpMode {
     public void runOpMode() {
         //initial stuff
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
-        //declare your variable from meep meep
-        double xInitial;
-        double yInitial;
+        double xStart;
+        double yStart;
 
         //Make your splines here
         //

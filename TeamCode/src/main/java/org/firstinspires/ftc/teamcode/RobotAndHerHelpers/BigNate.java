@@ -25,8 +25,10 @@ import static java.lang.Math.pow;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -43,11 +45,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinState;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.PID;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+@Config
 public class BigNate {
 
     //Initializing
@@ -59,18 +63,24 @@ public class BigNate {
     public ServoImplEx shaq, horizontalSlidesLeft, horizontalSlidesRight,
             elbowLeft, elbowRight, claw, clawRotator;
 
-    //Organize later
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-    public static double ASCENT_KP = 0.01;
-
+    //These controllers allow us to group our servos drive motors and slide motors
     public MotorSlideController slidesController = new MotorSlideController();
 
     public ServoController servoController = new ServoController();
 
     public DriveController driveController = new DriveController();
 
+    //I assume this telemetry is for dashboard??
+    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+
+
+    //pinpointt
+    public PinpointDrive drive;
+
     private VoltageSensor vs;
     public CalvinState macroState = null;
+
+    //The macro code i lowkey still don't understand
     public boolean MACROING = false;
     public ElapsedTime macroTimer = new ElapsedTime();
     public int macroTimeout = END;
@@ -78,6 +88,7 @@ public class BigNate {
     public int slidesTriggerThreshold = 10;
     public boolean done = false;
 
+    //The normal constuctor you're used to. 252 does it differently, so I hope this still works
     public BigNate(HardwareMap hardwareMap) {
         //Initializing Vertical Slides
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
@@ -132,8 +143,14 @@ public class BigNate {
         clawRotator.setPwmRange(new PwmControl.PwmRange(500,2500));
         shaq.setPwmRange(new PwmControl.PwmRange(500,2500));
 
+        //Voltage Sensor
         vs = hardwareMap.voltageSensor.get("Control Hub");
+
+        //Initialize the pinpoint
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
     }
+
+    //Yeah, I don't really get it rn
     public class TickingAction implements Action {
         BigNate bot = null;
 
@@ -227,7 +244,9 @@ public class BigNate {
     public Action actionWait(int millis) {
         return new SequentialAction(new WaitAction(millis));
     }
-    //As a practice, intake controller here
+
+
+    //Servo controller
     public class ServoController {
 
         public double intakeSpeed = intakeOff;
@@ -275,7 +294,7 @@ public class BigNate {
     }
 
 
-
+//Drive Controller
     public class DriveController {
 
         public void driveSafely(double lx, double ly, double rx, double rt) {
@@ -334,7 +353,10 @@ public class BigNate {
 
     }
 
-
+//We shall see. This class for controlling the slides works the same as your normal run to position
+    //while still running without an encoder
+    //This means we can use button presses for specific heights
+    //I don't know why it works, and their comments they said they don't know either LOL
     public class MotorSlideController {
         public double slideTar = 0;
         public boolean runToBottom = false;
@@ -518,6 +540,7 @@ public class BigNate {
         }
     }
 
+    //updates the bot
     public void tickTele(double x, double power) {
         //drive.updatePoseEstimate(); // update localizer
         tickMacros(); // check macros
@@ -526,6 +549,7 @@ public class BigNate {
         telemetry.addData("voltage", vs.getVoltage());
         telemetry.update();
     }
+    //updates the bot
     public void tick(){
         tickMacros(); // check macros
         slidesController.slidesTickButtonVersion(); // update slides

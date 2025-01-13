@@ -77,7 +77,7 @@ public class TeleOpNew extends LinearOpMode {
             // to like double rTrigger = (slowingAllowed) ? "slowedAmount" : 1;
             //and make an if statement for the drive controller
             double rTrigger = (slowingAllowed) ? 1 - gamepad1.right_trigger : 1;
-            calvin.driveController.motorDriveXY(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            calvin.driveController.motorDriveXY(rTrigger * gamepad1.left_stick_x,rTrigger * -gamepad1.left_stick_y, rTrigger * gamepad1.right_stick_x);
 
             //Intake and Eject Controls
             //Currently the triggers are the slowing buttons haha

@@ -303,8 +303,8 @@ public class BucketAutoAttempt1 extends LinearOpMode {
                                 calvin.actionMacro(ArmPassive),
                                 calvin.actionWait(300),
                                 calvin.actionMacro(ReturnToZero),
-                                calvin.actionWait(1000)
-
+                                calvin.actionWait(1000),
+                                calvin.finishAction()
                         ),
                         calvin.actionTick()
                 )

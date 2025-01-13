@@ -151,6 +151,22 @@ public class BigNate {
     }
 
     //Yeah, I don't really get it rn
+    public Action finishAction() {
+        return new FinishAction(this);
+    }
+    public class FinishAction implements Action {
+        BigNate bot = null;
+
+        public FinishAction(BigNate h) {
+            bot = h;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bot.done = true;
+            return false;
+        }
+    }
     public class TickingAction implements Action {
         BigNate bot = null;
 

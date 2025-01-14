@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
 
 @Config
 @TeleOp
@@ -21,7 +21,7 @@ public class CalvinPositionTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
-        Calvin calvin = new Calvin(hardwareMap, telemetry);
+        OGCalvin calvin = new OGCalvin(hardwareMap, telemetry);
         waitForStart();
         SlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

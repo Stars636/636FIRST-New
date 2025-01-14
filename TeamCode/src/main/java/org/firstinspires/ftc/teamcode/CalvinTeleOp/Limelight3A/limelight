@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp.Limelight3A;
 
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.clawOpenPosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenDepositClawRotation;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenPickupPosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin.specimenStartPickupVerticalSlides;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin.clawOpenPosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin.specimenDepositClawRotation;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin.specimenPickupPosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin.specimenStartPickupVerticalSlides;
 
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
 
 @TeleOp
 public class LimelightTest0_1 extends LinearOpMode {

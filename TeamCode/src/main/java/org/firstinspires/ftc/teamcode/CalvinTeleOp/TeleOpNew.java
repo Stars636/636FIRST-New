@@ -1,31 +1,31 @@
 package org.firstinspires.ftc.teamcode.CalvinTeleOp;
 
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowFullOutside;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesIn;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesOut;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqScorePosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqSpecimenPickup;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.slowingAllowed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmBucketScore;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmIntakeGrab;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmPassive;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmSpecimenPickup;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.EjectFullPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.EjectPartialPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.FullExtension;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.FullRetraction;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeFullPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeNoPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakePartialPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.TeleopStartPosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.clawClosed;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.elbowFullOutside;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.horizontalSlidesIn;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.horizontalSlidesOut;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.shaqScorePosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.shaqSpecimenPickup;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinConstants.slowingAllowed;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmBucketScore;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmIntakeGrab;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmPassive;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmSpecimenPickup;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.EjectFullPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.EjectPartialPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.FullExtension;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.FullRetraction;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.IntakeFullPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.IntakeNoPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.IntakePartialPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.TeleopStartPosition;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNate;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.BigNate;
 
 import java.util.Deque;
 import java.util.LinkedList;

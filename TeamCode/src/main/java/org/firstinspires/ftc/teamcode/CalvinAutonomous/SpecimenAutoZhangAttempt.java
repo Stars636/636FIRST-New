@@ -7,7 +7,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNate;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.BigNate;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 

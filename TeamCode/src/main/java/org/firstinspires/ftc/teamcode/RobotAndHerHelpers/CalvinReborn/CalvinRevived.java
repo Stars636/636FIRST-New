@@ -1,23 +1,22 @@
-package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.END;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.SLIDES_KP;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.clawOpen;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowFullOutside;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.elbowInside;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesIn;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.horizontalSlidesOut;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeMax;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.intakeOff;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.rotatorPassive;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.shaqPassivePosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.slowingAllowed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.topMultiplier;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesScaler;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesMax;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinConstants.vSlidesMin;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.TeleopStartPosition;
+package org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn;
 
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinBehaviours.TeleOpStart;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.ENDING;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.SLIDE_KP;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.armPassive;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.hClawClosed;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.hClawOpen;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.hSlidesIn;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.hSlidesOut;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.rotatorPassivePos;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.shaqPassive;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.slowing;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.vClawClosed;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.vClawOpen;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.vSlidesMaxi;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.vSlidesMini;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.vSlidesScaling;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinNewConstants.wristPassive;
 import static java.lang.Math.E;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -30,7 +29,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -43,8 +41,10 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinState;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.PID;
+
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.CalvinBehaviours;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.NewCalvinState;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinReborn.WithHisHelpers.PID;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 import java.util.logging.Level;
@@ -52,44 +52,40 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 @Config
-public class BigNate {
-
+public class CalvinRevived {
     //Initializing
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
     public DcMotorEx rightBackCalvin, rightFrontCalvin, leftBackCalvin, leftFrontCalvin;
 
-    public CRServo intakeLeft, intakeUp, intakeRight;
-
     public ServoImplEx shaq, horizontalSlidesLeft, horizontalSlidesRight,
-            elbowLeft, elbowRight, claw, clawRotator;
+            wrist, arm, hClaw, clawRotator, vClaw;
 
     //These controllers allow us to group our servos drive motors and slide motors
-    public MotorSlideController slidesController = new MotorSlideController();
+    public MotorSlidesController slidesController = new MotorSlidesController();
 
-    public ServoController servoController = new ServoController();
+    public ServosController servoController = new ServosController();
 
-    public DriveController driveController = new DriveController();
+    public DriveTrainController driveController = new DriveTrainController();
 
     //I assume this telemetry is for dashboard??
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-
 
     //pinpointt
     public PinpointDrive drive;
 
     private VoltageSensor vs;
-    public CalvinState macroState = null;
+    public NewCalvinState macroState = null;
 
     //The macro code i lowkey still don't understand
     public boolean MACROING = false;
     public ElapsedTime macroTimer = new ElapsedTime();
-    public int macroTimeout = END;
-    public int slidesTrigger = END;
+    public int macroTimeout = ENDING;
+    public int slidesTrigger = ENDING;
     public int slidesTriggerThreshold = 10;
     public boolean done = false;
 
     //The normal constuctor you're used to. 252 does it differently, so I hope this still works
-    public BigNate(HardwareMap hardwareMap) {
+    public CalvinRevived(HardwareMap hardwareMap) {
         //Initializing Vertical Slides
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesLeft");
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class,"verticalSlidesRight");
@@ -125,23 +121,22 @@ public class BigNate {
         horizontalSlidesRight = hardwareMap.get(ServoImplEx.class,"horizontalSlidesRight");
         horizontalSlidesLeft.setDirection(Servo.Direction.FORWARD);
         horizontalSlidesRight.setDirection(Servo.Direction.REVERSE);
-        //Elbow
-        elbowLeft = hardwareMap.get(ServoImplEx.class,"elbowLeft");
-        elbowRight = hardwareMap.get(ServoImplEx.class,"elbowRight");
-        elbowRight.setDirection(Servo.Direction.REVERSE);
+        //Arm
+        arm = hardwareMap.get(ServoImplEx.class,"arm");
+        wrist = hardwareMap.get(ServoImplEx.class,"wrist");
+        hClaw = hardwareMap.get(ServoImplEx.class, "hClaw");
 
-        //Intake Servos
-        intakeLeft = hardwareMap.get(CRServo.class,"continuousIntakeLeft"); //setPower
-        intakeLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeRight = hardwareMap.get(CRServo.class,"continuousIntakeRight"); //setPower
-        intakeUp = hardwareMap.get(CRServo.class, "continuousIntakeUp"); //setPower
+
         //Claw Related Servos
-        claw = hardwareMap.get(ServoImplEx.class,"claw");
+        vClaw = hardwareMap.get(ServoImplEx.class,"vClaw");
         shaq = hardwareMap.get(ServoImplEx.class,"shaq");
         clawRotator = hardwareMap.get(ServoImplEx.class,"clawRotator");
         //Range Booster. I assume 500 is the "zero" and 2500 is the "one" so change as you need
+
         clawRotator.setPwmRange(new PwmControl.PwmRange(500,2500));
         shaq.setPwmRange(new PwmControl.PwmRange(500,2500));
+        wrist.setPwmRange(new PwmControl.PwmRange(500,2500));
+        arm.setPwmRange(new PwmControl.PwmRange(500,2500));
 
         //Voltage Sensor
         vs = hardwareMap.voltageSensor.get("Control Hub");
@@ -155,9 +150,9 @@ public class BigNate {
         return new FinishAction(this);
     }
     public class FinishAction implements Action {
-        BigNate bot = null;
+        CalvinRevived bot = null;
 
-        public FinishAction(BigNate h) {
+        public FinishAction(CalvinRevived h) {
             bot = h;
         }
 
@@ -168,9 +163,9 @@ public class BigNate {
         }
     }
     public class TickingAction implements Action {
-        BigNate bot = null;
+        CalvinRevived bot = null;
 
-        public TickingAction(BigNate h) {
+        public TickingAction(CalvinRevived h) {
             bot = h;
         }
 
@@ -178,7 +173,7 @@ public class BigNate {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bot.tick();
             if (bot.done) {
-                bot.runMacro(TeleopStartPosition);
+                bot.runMacro(TeleOpStart); //UNCOMMENT THIS
                 bot.tick();
                 return false;
             }
@@ -186,10 +181,9 @@ public class BigNate {
         }
     }
     public class MacroAction implements Action {
-        BigNate bot = null;
-        CalvinState macro = null;
-
-        public MacroAction(BigNate h, CalvinState s) {
+        CalvinRevived bot = null;
+        NewCalvinState macro = null;
+        public MacroAction(CalvinRevived h, NewCalvinState s) {
             bot = h;
             macro = s;
         }
@@ -201,13 +195,13 @@ public class BigNate {
         }
     }
     public class MacroActionTimeout implements Action {
-        BigNate bot = null;
-        CalvinState macro = null;
+        CalvinRevived bot = null;
+        NewCalvinState macro = null;
         ElapsedTime et = null;
         int timeout;
         boolean TIMER_RUNNING = false;
 
-        public MacroActionTimeout(BigNate h, CalvinState s, int millis) {
+        public MacroActionTimeout(CalvinRevived h, NewCalvinState s, int millis) {
             bot = h;
             macro = s;
             et = new ElapsedTime();
@@ -248,74 +242,78 @@ public class BigNate {
         }
     }
     public Action actionTick() {
-        return new TickingAction(this);
+        return new CalvinRevived.TickingAction(this);
     }
-    public Action actionMacro(CalvinState macro) {
+    public Action actionMacro(NewCalvinState macro) {
         Logger.getLogger("FUCK").log(new LogRecord(Level.INFO, "action macro :)"));
-        return new SequentialAction(new MacroAction(this, macro));
+        return new SequentialAction(new CalvinRevived.MacroAction(this, macro));
     }
-    public Action actionMacroTimeout(CalvinState macro, int millis) {
-        return new SequentialAction(new MacroActionTimeout(this, macro, millis));
+    public Action actionMacroTimeout(NewCalvinState macro, int millis) {
+        return new SequentialAction(new CalvinRevived.MacroActionTimeout(this, macro, millis));
     }
     public Action actionWait(int millis) {
-        return new SequentialAction(new WaitAction(millis));
+        return new SequentialAction(new CalvinRevived.WaitAction(millis));
     }
 
 
     //Servo controller
-    public class ServoController {
+    public class ServosController {
 
-        public double intakeSpeed = intakeOff;
-        public double intakeMulti = intakeMax;
+        public double armPos = armPassive;
 
-        public double elbowPos = elbowInside;
-        public double HSlidesPos = horizontalSlidesIn;
-        public double clawPos = clawClosed;
-        public double rotatorPos = rotatorPassive;
-        public double shaqPos = shaqPassivePosition;
+        public double wristPos = wristPassive;
+        public double hSlidesPos = hSlidesIn;
 
-        public void setClaw(boolean open) {
-            clawPos = open ? clawOpen : clawClosed;
+        public double hClawPos = hClawClosed;
+        public double vClawPos = vClawClosed;
+        public double rotatorPos = rotatorPassivePos;
+        public double shaqPos = shaqPassive;
+
+        public void setVClaw(boolean open) {
+            vClawPos = open ? vClawOpen : vClawClosed;
         }
-        public void setElbowPos(boolean inside) {elbowPos = inside ? elbowInside : elbowFullOutside;}
-        public void setHSlidesPos(boolean inside) {HSlidesPos = inside ? horizontalSlidesIn : horizontalSlidesOut;}
+        public void setHClaw(boolean open) {
+            hClawPos = open ? hClawOpen : hClawClosed;
+        }
+        //public void setArmPos(boolean inside) {elbowPos = inside ? elbowInside : elbowFullOutside;}
+        public void setHSlidesPos(boolean inside) {hSlidesPos = inside ? hSlidesIn : hSlidesOut;}
 
         public void servosTick() {
 
-            telemetry.addData("Intake Speed", intakeSpeed);
-            telemetry.addData("Intake Multiplier", intakeMulti);
-            telemetry.addData("Elbow Position", elbowPos);
-            telemetry.addData("H Slides Position", HSlidesPos);
-            telemetry.addData("clawPos", clawPos);
-            telemetry.addData("rotatorPos", rotatorPassive);
-            telemetry.addData("shaqPos", shaqPassivePosition);
+            telemetry.addData("h claw pos", hClawPos);
+            telemetry.addData("wrist pos", wristPos);
+            telemetry.addData("arm pos", armPos);
+            telemetry.addData("H Slides Position", hSlidesPos);
+            telemetry.addData("v claw Pos", vClawPos);
+            telemetry.addData("rotatorPos", rotatorPos);
+            telemetry.addData("shaqPos", shaqPos);
 
 
-            intakeLeft.setPower(intakeSpeed * intakeMulti);
-            intakeRight.setPower(intakeSpeed * intakeMulti);
-            intakeUp.setPower(intakeSpeed * intakeMulti * topMultiplier);
+            hClaw.setPosition(hClawPos);
 
-            horizontalSlidesLeft.setPosition(horizontalSlidesIn);
-            horizontalSlidesRight.setPosition(horizontalSlidesIn);
+            wrist.setPosition(wristPos);
 
-            elbowLeft.setPosition(elbowInside);
-            elbowRight.setPosition(elbowInside);
+            arm.setPosition(armPos);
 
-            claw.setPosition(clawClosed);
-            clawRotator.setPosition(rotatorPassive);
-            shaq.setPosition(shaqPassivePosition);
+            horizontalSlidesLeft.setPosition(hSlidesPos);
+            horizontalSlidesRight.setPosition(hSlidesPos);
+
+
+            vClaw.setPosition(vClawPos);
+            clawRotator.setPosition(rotatorPos);
+            shaq.setPosition(shaqPos);
         }
 
 
     }
 
 
-//Drive Controller
-    public class DriveController {
+    //Drive Controller
+    public class DriveTrainController {
 
         public void driveSafely(double lx, double ly, double rx, double rt) {
 
-            double rTrigger = (slowingAllowed) ? 1 - rt : 1;
+            double rTrigger = (slowing) ? 1 - rt : 1;
             double joystickX = -lx;
             double joystickY = ly;
             double joystickR = -rx;
@@ -369,11 +367,11 @@ public class BigNate {
 
     }
 
-//We shall see. This class for controlling the slides works the same as your normal run to position
+    //We shall see. This class for controlling the slides works the same as your normal run to position
     //while still running without an encoder
     //This means we can use button presses for specific heights
     //I don't know why it works, and their comments they said they don't know either LOL
-    public class MotorSlideController {
+    public class MotorSlidesController {
         public double slideTar = 0;
         public boolean runToBottom = false;
         public boolean SLIDE_TARGETING = false;
@@ -402,7 +400,7 @@ public class BigNate {
         public void start() {
             basePos = vSlidesLeft.getCurrentPosition();
 
-            slidePID = new PID(SLIDES_KP, 0, 0, false);
+            slidePID = new PID(SLIDE_KP, 0, 0, false);
             tele = FtcDashboard.getInstance().getTelemetry();
         }
 
@@ -424,22 +422,22 @@ public class BigNate {
                 vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
             if (!SLIDE_TARGETING)
-                slidePID.setConsts(SLIDES_KP, 0, 0);
+                slidePID.setConsts(SLIDE_KP, 0, 0);
             slidePID.setTarget(slideTar);
             pos = -(vSlidesLeft.getCurrentPosition() - basePos);
 
             tele.addData("pos", pos);
             tele.addData("targeting", SLIDE_TARGETING);
             tele.addData("slidetar", slideTar);
-            tele.addData("slidep", SLIDES_KP);
+            tele.addData("slidep", SLIDE_KP);
 
-            if (pos < vSlidesMin - 100 && power < 0) {
+            if (pos < vSlidesMini - 100 && power < 0) {
                 SLIDE_TARGETING = true;
-                slideTar = vSlidesMin - 100;
+                slideTar = vSlidesMini - 100;
             }
-            if (pos > vSlidesMax && power > 0) {
+            if (pos > vSlidesMaxi && power > 0) {
                 SLIDE_TARGETING = true;
-                slideTar = vSlidesMax;
+                slideTar = vSlidesMaxi;
             }
             if (SLIDE_TARGETING) {
                 power = -slidePID.tick(pos);
@@ -459,11 +457,11 @@ public class BigNate {
         }
 
         public void slidesTickJoyStickVersion(double x, double power) {
-            if (vSlidesLeft.getCurrentPosition() > vSlidesMax) {
+            if (vSlidesLeft.getCurrentPosition() > vSlidesMaxi) {
                 //If its above the max, only allow negative power
                 vSlidesLeft.setPower(Math.min(minMaxScaler(x, power), 0));
                 vSlidesRight.setPower(Math.min(minMaxScaler(x, power), 0));
-            } else if (vSlidesRight.getCurrentPosition() < vSlidesMin) {
+            } else if (vSlidesRight.getCurrentPosition() < vSlidesMini) {
                 //If its below the min, only allow positive power
                 vSlidesLeft.setPower(Math.max(minMaxScaler(x, power), 0));
                 vSlidesRight.setPower(Math.max(minMaxScaler(x, power), 0));
@@ -477,8 +475,8 @@ public class BigNate {
         // REWRITE EVENTUALLY AND CLEAN UP PLEASE
         private double minMaxScaler(double x, double power) {
             double p = power * (power > 0
-                    ? ((1.3 * 1 / (1 + pow(E, -vSlidesScaler * (x - 100 + vSlidesMin)))) - 0.1)
-                    : ((1.3 * 1 / (1 + pow(E, vSlidesScaler * (x + 100 - vSlidesMax)))) - 0.1));
+                    ? ((1.3 * 1 / (1 + pow(E, -vSlidesScaling * (x - 100 + vSlidesMini)))) - 0.1)
+                    : ((1.3 * 1 / (1 + pow(E, vSlidesScaling * (x + 100 - vSlidesMaxi)))) - 0.1));
             // uuuuuh
             return p;
         }
@@ -515,42 +513,45 @@ public class BigNate {
 
     }
     //Macros
-    public void runMacro(CalvinState m) {
+    public void runMacro(NewCalvinState m) {
         if (macroTimer.milliseconds() < macroTimeout)
-            macroTimeout = END; // cancel ongoing macro
+            macroTimeout = ENDING; // cancel ongoing macro
         macroState = m;
         MACROING = true;
     }
     public void cancelMacros() {
         MACROING = false;
-        macroTimeout = END;
-        slidesTrigger = END;
+        macroTimeout = ENDING;
+        slidesTrigger = ENDING;
         // slidesController.setTargeting(false);
     }
     public void tickMacros() {
         if (macroTimer.milliseconds() > macroTimeout) {
-            macroTimeout = END;
+            macroTimeout = ENDING;
             MACROING = true;
         }
         if (abs(slidesTrigger-slidesController.pos) < slidesTriggerThreshold) {
-            slidesTrigger = END;
+            slidesTrigger = ENDING;
             MACROING = true;
         }
         if (MACROING) {
-            CalvinState m = macroState;
-            if (m.intakeSpeed != null)
-                servoController.intakeSpeed = m.intakeSpeed;
-            if (m.extendoPosition!= null)
-                servoController.intakeMulti = m.intakeMultiplier;
-            if (m.elbowPosition != null)
-                servoController.elbowPos = m.elbowPosition;
-            if (m.clawPosition != null)
-                servoController.clawPos = m.clawPosition;
+            NewCalvinState m = macroState;
+
+            if (m.armPosition != null)
+                servoController.armPos = m.armPosition;
+            if (m.extendoPosition != null)
+                servoController.hSlidesPos = m.extendoPosition;
+            if (m.wristPosition != null)
+                servoController.wristPos = m.wristPosition;
+            if (m.HClawPosition!= null)
+                servoController.hClawPos = m.HClawPosition;
+            if (m.VClawPosition!= null)
+                servoController.vClawPos = m.VClawPosition;
             if (m.shaqPosition != null)
                 servoController.shaqPos = m.shaqPosition;
             if (m.rotatorPosition != null)
                 servoController.rotatorPos = m.rotatorPosition;
-            if (m.verticalSlidesPosition!= null)
+            if (m.verticalSlidesPosition != null)
                 slidesController.setTarget(m.verticalSlidesPosition);
             MACROING = false;
         }
@@ -573,7 +574,4 @@ public class BigNate {
         telemetry.addData("voltage", vs.getVoltage());
         telemetry.update();
     }
-
-
-
 }

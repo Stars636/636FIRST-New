@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.CalvinTeleOp.Deprecated;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends LinearOpMode {
@@ -16,7 +16,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
-        Calvin calvin = new Calvin(hardwareMap, telemetry);
+        OGCalvin calvin = new OGCalvin(hardwareMap, telemetry);
 
 
         waitForStart();

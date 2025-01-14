@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.RobotAndHerHelpers;
+package org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin;
 
 //import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,7 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-public class Calvin {
+public class OGCalvin {
     public CRServo intakeLeft;
     public CRServo intakeRight;
     public CRServo intakeUp;
@@ -101,7 +100,7 @@ public class Calvin {
 
 
 
-    public Calvin(HardwareMap hardwareMap, Telemetry telemetry) {
+    public OGCalvin(HardwareMap hardwareMap, Telemetry telemetry) {
         //Initializing all the motors. Do not change this unless we change the wiring
         rightBackCalvin = hardwareMap.get(DcMotorEx.class,"rightBack");
         leftBackCalvin = hardwareMap.get(DcMotorEx.class,"leftBack");

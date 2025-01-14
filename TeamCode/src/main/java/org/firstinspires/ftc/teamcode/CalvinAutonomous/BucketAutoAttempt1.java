@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.CalvinAutonomous;
 
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmBucketScore;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmIntakeGrab;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ArmPassive;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.BucketAutoStartPosition;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ClawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ClawOpen;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.FullExtension;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.FullRetraction;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.IntakeFullPower;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.LowBucket;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.ReturnToZero;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Helpers.CalvinMacros.SpecimenAutoStartPosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmBucketScore;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmIntakeGrab;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ArmPassive;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.BucketAutoStartPosition;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ClawClosed;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ClawOpen;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.FullExtension;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.FullRetraction;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.IntakeFullPower;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.LowBucket;
+import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.HelpersBigNate.CalvinMacros.ReturnToZero;
 import static java.lang.Math.PI;
 
 import com.acmerobotics.roadrunner.Action;
@@ -19,13 +18,11 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNate;
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.BigNate;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 

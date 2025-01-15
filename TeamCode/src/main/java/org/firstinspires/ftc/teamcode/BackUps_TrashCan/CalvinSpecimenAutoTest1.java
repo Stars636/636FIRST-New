@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BackUps_TrashCan/CalvinSpecimenAutoTest1.txt
 import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin.specimenStartDepositVerticalSlides;
 =======
 >>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BackUps_TrashCan/CalvinSpecimenAutoTest1.java
+=======
+>>>>>>> Stashed changes
 
 
 import com.acmerobotics.roadrunner.Action;
@@ -16,16 +19,22 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BackUps_TrashCan/CalvinSpecimenAutoTest1.txt
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 =======
+=======
+>>>>>>> Stashed changes
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
 
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BackUps_TrashCan/CalvinSpecimenAutoTest1.java
+=======
+>>>>>>> Stashed changes
 
 
 @Autonomous

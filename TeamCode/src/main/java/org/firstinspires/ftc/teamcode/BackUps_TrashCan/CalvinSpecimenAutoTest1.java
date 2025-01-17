@@ -12,10 +12,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+<<<<<<< Updated upstream
 
 
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
+=======
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
+
+>>>>>>> Stashed changes
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
@@ -30,7 +35,11 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
+<<<<<<< Updated upstream
         OGCalvin calvin = new OGCalvin(hardwareMap, telemetry);
+=======
+        Calvin calvin = new Calvin(hardwareMap, telemetry);
+>>>>>>> Stashed changes
 
 
 

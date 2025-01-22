@@ -1,29 +1,22 @@
 package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 
 
-
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-
-
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
-
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
-
 
 
 @Autonomous
 
-public class CalvinSpecimenAutoTest1 extends LinearOpMode {
+public class CalvinAutoTest2 extends LinearOpMode {
     
     PinpointDrive drive;
     
@@ -110,6 +103,14 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
         Action sDeposit = bDeposit.build();
         Action sPickup = bPickup.build();
 
+        TrajectoryActionBuilder c1 =  drive.actionBuilder(new Pose2d(0, 0, Math.PI/2))
+                .lineToX(24);
+        TrajectoryActionBuilder c2 =  c1.endTrajectory().fresh()
+                .lineToY(24);
+
+        Action C1 = c1.build();
+        Action C2 = c2.build();
+
 
                  
 
@@ -125,8 +126,9 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
 
             Actions.runBlocking(
                     new SequentialAction(
-                            s1,
-                            s2//,
+                            s1
+                            //s2//,
+
                             /*s3,
                             s4,
                             s5,

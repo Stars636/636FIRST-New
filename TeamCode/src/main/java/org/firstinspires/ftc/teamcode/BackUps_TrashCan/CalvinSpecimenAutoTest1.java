@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -23,10 +24,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Autonomous
-
+@Config
 public class CalvinSpecimenAutoTest1 extends LinearOpMode {
     
     PinpointDrive drive;
+    public static int fraudOffset = 25;
     
     @Override
     public void runOpMode() throws InterruptedException {
@@ -58,8 +60,8 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
         Pose2d pickup = new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90));
         Pose2d deposit = new Pose2d(xStart, yStart + 34, Math.toRadians(270));
 
-        TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, Math.PI/2))
-                .splineToLinearHeading(new Pose2d(xStart, yStart + 25, Math.toRadians(270)), Math.toRadians(270));
+        TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, 3*Math.PI/2))
+                .splineToLinearHeading(new Pose2d(xStart, yStart + fraudOffset, Math.toRadians(270)), Math.toRadians(270));
         
         TrajectoryActionBuilder b2 = b1.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xStart + 32, yStart + 26, Math.toRadians(270)), Math.toRadians(270));

@@ -12,10 +12,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+<<<<<<< Updated upstream
 
 
 
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
+=======
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.Calvin;
+>>>>>>> Stashed changes
 
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
@@ -31,8 +35,14 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
+<<<<<<< Updated upstream
 
         OGCalvin calvin = new OGCalvin(hardwareMap, telemetry);
+=======
+        Calvin calvin = new Calvin(hardwareMap, telemetry);
+
+
+>>>>>>> Stashed changes
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
@@ -53,7 +63,11 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
         Pose2d deposit = new Pose2d(xStart, yStart + 34, Math.toRadians(270));
 
         TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, Math.PI/2))
+<<<<<<< Updated upstream
                 .splineToLinearHeading(new Pose2d(xStart, yStart + 25, Math.toRadians(270)), Math.toRadians(270));
+=======
+                .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(270));
+>>>>>>> Stashed changes
         
         TrajectoryActionBuilder b2 = b1.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xStart + 32, yStart + 26, Math.toRadians(270)), Math.toRadians(270));
@@ -126,8 +140,13 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
             Actions.runBlocking(
                     new SequentialAction(
                             s1,
+<<<<<<< Updated upstream
                             s2//,
                             /*s3,
+=======
+                            s2,
+                            s3,
+>>>>>>> Stashed changes
                             s4,
                             s5,
                             s6,
@@ -144,7 +163,11 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
                             sDeposit,
                             sPickup,
                             sDeposit,
+<<<<<<< Updated upstream
                             sPickup*/
+=======
+                            sPickup
+>>>>>>> Stashed changes
                             
                     )
             );

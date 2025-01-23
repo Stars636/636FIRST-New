@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.Bi
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
-@Autonomous(name = "Bucket Auto")
+@Autonomous(name = "Speci Auto")
 public class SpecimenAutoZhangAttempt extends LinearOpMode {
     PinpointDrive drive;
     BigNate calvin = new BigNate(hardwareMap);

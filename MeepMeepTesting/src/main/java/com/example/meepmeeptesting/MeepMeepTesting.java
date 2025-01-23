@@ -21,12 +21,16 @@ public class MeepMeepTesting {
 
         double xStart = 0;
         double yStart = -64;
-
+        double fraudOffset = 20;
         double xStartfraud = 0;
         double yStartfraud = 64;
 
         Pose2d scorePose = new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45));
         RoadRunnerBotEntity basketBot = new DefaultBotBuilder(meepMeep)
+                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12)
+                .build();
+        RoadRunnerBotEntity turnBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12)
                 .build();
@@ -40,7 +44,18 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
-
+        turnBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(0, 0, 0))
+                //.splineTo(new Pose2d(0, 20, Math.toRadians(90)))
+                            //    .splineToLinearHeading(new Pose2d(fraudOffset, 0, Math.toRadians(0)), Math.toRadians(0))
+                 //.splineToLinearHeading(new Pose2d(fraudOffset, fraudOffset, Math.toRadians(90)), Math.toRadians(0))
+                        //.lineToX(fraudOffset)
+                        //.turn(PI)
+                       // .lineToY(fraudOffset)
+                .lineToX( fraudOffset)
+                        .setTangent(PI/2)
+                                .lineToY(fraudOffset)
+                //.splineTo(new Vector2d(fraudOffset, fraudOffset), 0)
+                .build());
 
         basketBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xInitial, yInitial, PI/2))
                 .splineToLinearHeading(scorePose, Math.toRadians(90))
@@ -119,7 +134,8 @@ public class MeepMeepTesting {
                 .setBackgroundAlpha(0.95f)
                 //.addEntity(basketBot)
                 //.addEntity(specimenBot)
-                .addEntity(specimenBotFraud)
+                //.addEntity(specimenBotFraud)
+                .addEntity(turnBot)
                 //.addEntity(myBot)
                 .start();
     }

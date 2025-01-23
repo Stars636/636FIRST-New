@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CalvinAutonomous;
+package org.firstinspires.ftc.teamcode.BackUps_TrashCan.ActualTrash;
 
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.BigNateAndHisHelpers.Bi
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
-@Autonomous(name = "Speci Auto")
-public class SpecimenAutoZhangAttempt extends LinearOpMode {
+@Autonomous(name = "Fraud Auto")
+public class Auto_COPYFROMHERE extends LinearOpMode {
     PinpointDrive drive;
     BigNate calvin = new BigNate(hardwareMap);
     // runs on init press
@@ -20,8 +20,9 @@ public class SpecimenAutoZhangAttempt extends LinearOpMode {
     public void runOpMode() {
         //initial stuff
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
-        double xStart;
-        double yStart;
+        //declare your variable from meep meep
+        double xInitial;
+        double yInitial;
 
         //Make your splines here
         //

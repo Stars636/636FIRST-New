@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -94,13 +95,13 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 10, Math.toRadians(90)), Math.toRadians(270));
                  
         TrajectoryActionBuilder b12 = b11.endTrajectory().fresh()
-                .splineToLinearHeading(pickup, Math.toRadians(270));
+                .splineToLinearHeading(pickup, Math.toRadians(90));
                  
         TrajectoryActionBuilder bDeposit = b12.endTrajectory().fresh()
                 .splineToLinearHeading(deposit, Math.toRadians(90));
                  
         TrajectoryActionBuilder bPickup = bDeposit.endTrajectory().fresh()
-                .splineToLinearHeading(pickup, Math.toRadians(270));
+                .splineToLinearHeading(pickup, Math.toRadians(90));
 
 
         Action s1 = b1.build();
@@ -132,14 +133,11 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
         while (opModeIsActive()) {
 
             Actions.runBlocking(
-                            s1
-
-                            //s2//,
-                            /*s3,
-=======
+                    new SequentialAction(
+                            s1,
                             s2,
                             s3,
->>>>>>> Stashed changes
+
                             s4,
                             s5,
                             s6,
@@ -155,9 +153,8 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
                             sPickup,
                             sDeposit,
                             sPickup,
-                            sDeposit,
-<<<<<<< Updated upstream
-                            sPickup*/
+                            sPickup
+                    )
 
                             //sPickup
 

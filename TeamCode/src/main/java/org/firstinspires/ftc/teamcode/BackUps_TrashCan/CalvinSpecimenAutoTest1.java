@@ -58,41 +58,41 @@ public class CalvinSpecimenAutoTest1 extends LinearOpMode {
 
         //If  a Pose2d is repetitive, define it here:
 
-        Pose2d pickup = new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90));
-        Pose2d deposit = new Pose2d(xStart, yStart + 34, Math.toRadians(270));
+        Pose2d pickup = new Pose2d(xStart - 2, yStart + 38, Math.toRadians(180));
+        Pose2d deposit = new Pose2d(xStart - 34, yStart, Math.toRadians(0));
 
-        TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, 3*Math.PI/2))
-                .splineToLinearHeading(new Pose2d(xStart, yStart + fraudOffset, Math.toRadians(270)), Math.toRadians(270));
+        TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, 0))
+                .splineToLinearHeading(new Pose2d(xStart - fraudOffset, yStart , Math.toRadians(0)), Math.toRadians(0));
         
         TrajectoryActionBuilder b2 = b1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 32, yStart + 26, Math.toRadians(270)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 26, yStart + 32, Math.toRadians(0)), Math.toRadians(0));
         
         TrajectoryActionBuilder b3 = b2.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 40, yStart + 50, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 40, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b4 = b3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 50, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
         
         TrajectoryActionBuilder b5 = b4.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 10, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
                 
         TrajectoryActionBuilder b6 = b5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 50, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
                 
         TrajectoryActionBuilder b7 = b6.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
                  
         TrajectoryActionBuilder b8 = b7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 10, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
                  
         TrajectoryActionBuilder b9 = b8.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
                  
         TrajectoryActionBuilder b10 = b9.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 50, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 64, Math.toRadians(180)), Math.toRadians(0));
                  
         TrajectoryActionBuilder b11 = b10.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 10, Math.toRadians(90)), Math.toRadians(270));
+                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 64, Math.toRadians(180)), Math.toRadians(0));
                  
         TrajectoryActionBuilder b12 = b11.endTrajectory().fresh()
                 .splineToLinearHeading(pickup, Math.toRadians(90));

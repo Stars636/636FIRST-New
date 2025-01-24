@@ -32,6 +32,37 @@ public class Calvin {
 
     public static int hangfinish; //add this to the current position of the hang motors
 
-    public static w
+    public static double vClawOpen = 0.17;
+    public static double vClawClosed = 0.30;
+
+
+    public static double vClawPassivePos = 0.65;
+
+    public static double vClawPassiveRot = 0.43;
+
+    public static double vClawTransferPos = 0.9;
+
+    public static double vClawTransferRot = 0.06;
+
+    public static double vClawScorePos = 0.4;
+
+    public static double vClawScoreRot = 1;
+
+    public static double vClawSpeciPos = 0;
+
+    public static double vClawSpeciRot = 1;
+
+    public static double hSlidesInside = 0.99;
+    public static double hSlidesOutside = 0.68;
+    public static double hClawOpen;
+    public static double hClawClosed;
+    public static double hClawTransferPos;
+    public static double hClawTransferRot;
+    public static double hClawPassivePos;
+    public static double hClawPassiveRot;
+
+    //public static double hClaw
+
+
 
 }

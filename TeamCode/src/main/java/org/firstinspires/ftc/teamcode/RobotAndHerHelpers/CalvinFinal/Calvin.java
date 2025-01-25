@@ -11,21 +11,19 @@ import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.State;
-
 public class Calvin {
-    DcMotorEx leftFront, rightFront, leftBack, rightBack;
-    DcMotorImplEx vSlidesLeft, vSlidesRight;
+    public DcMotorEx leftFront, rightFront, leftBack, rightBack;
+    public DcMotorImplEx vSlidesLeft, vSlidesRight;
 
-    DcMotorImplEx hangLeft, hangRight;
+    public DcMotorImplEx hangLeft, hangRight;
 
-    ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
+    public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
 
-    ServoImplEx depositClaw, depositArm, depositWrist;
+    public ServoImplEx depositClaw, depositArm, depositWrist;
 
-    ServoImplEx hSlidesLeft, hSlidesRight;
+    public ServoImplEx hSlidesLeft, hSlidesRight;
 
-    ServoImpl hangServo;
+    public ServoImpl hangServo;
 
     public static int lowBucket;
 
@@ -68,8 +66,6 @@ public class Calvin {
     public static double intakeClawClosed;
     public static double intakeClawTransferPos;
     public static double intakeClawTransferRot;
-
-    public static double intakeWristTransfer;
     public static double intakeClawPassivePos;
     public static double intakeClawPassiveRot;
     public static double intakeClawHoverPos;
@@ -78,7 +74,8 @@ public class Calvin {
     public static double intakeClawGrabRot;
     public static double intakeWristFlat;
     public static double intakeWristTiltRight;
-    public static double intakeWristNormal; //as in perpendicular
+    public static double intakeWristNormalLeft;
+    public static double intakeWristNormalRight; //as in perpendicular
     //Todo: refactor this to a better name
     public static double intakeWristTiltLeft;
     public static double hangServoInitial;
@@ -101,6 +98,12 @@ public class Calvin {
     public static double transferPart2;
     public static double transferPart3;
     public static double transferPart4;
+
+    private ElapsedTime pickUpTime = new ElapsedTime();
+
+    public static double pickUp1;
+    public static double pickUp2;
+    public static double pickUp3;
     private ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart1;
     public static double specimenPart2;
@@ -250,15 +253,19 @@ public class Calvin {
         hSlidesRight.setPosition(hSlidesOutside);
     }
     public void intakePassive(){
-        intakeClaw.setPosition(intakeClawOpen);
+        //intakeClaw.setPosition(intakeClawOpen);
         intakeWrist.setPosition(intakeWristFlat);
         intakeElbow.setPosition(intakeClawPassiveRot);
         intakeArm.setPosition(intakeClawPassivePos);
     }
     public void depositPassive(){
-        depositClaw.setPosition(depositClawOpen);
+        //depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
+    }
+    public void depositScore(){
+        depositWrist.setPosition(depositClawScoreRot);
+        depositArm.setPosition(depositClawScorePos);
     }
     public void hangPassive(){
         hangServo.setPosition(hangServoInitial);
@@ -272,8 +279,26 @@ public class Calvin {
     // -Function for the pickup
     // -Function for score (maybe with timer) (if you use a statemachine move it to tele)
     // -I'll leave this to you. :)
-    public void scoreSpecimen(){ //so on so forth
 
+    enum SpecimenSteps {
+        READY, FINAL
+    }
+    SpecimenSteps specimenStep = SpecimenSteps.READY;
+    public void scoreSpecimen(boolean buttonPressed, boolean lastButtonPressed) { //so on so forth
+        switch (specimenStep) {
+            case READY:
+                if (buttonPressed && !lastButtonPressed) {
+                    depositClaw.setPosition(depositClawClosed);
+                    specimenStep = SpecimenSteps.FINAL;
+                }
+            case FINAL:
+                specimenTime.reset();
+                if (specimenTime.seconds() >= specimenPart1) {
+                    depositWrist.setPosition(depositClawSpeciRotFinish);
+                    depositArm.setPosition(depositClawSpeciPosFinish);
+                }
+                specimenStep = SpecimenSteps.READY;
+        }
     }
 
     //Todo: Create a function for automating the transfer, whether using the timer or not
@@ -282,12 +307,10 @@ public class Calvin {
     // -Functions for the transfer
     // -Functions for the scoring
     public void hover() {
-        intakeClaw.setPosition(intakeClawOpen);
         intakeElbow.setPosition(intakeClawHoverRot);
         intakeArm.setPosition(intakeClawHoverPos);
     }
     public void grab() {
-        intakeClaw.setPosition(intakeClawOpen);
         intakeElbow.setPosition(intakeClawGrabRot);
         intakeArm.setPosition(intakeClawGrabPos);
     }
@@ -298,10 +321,42 @@ public class Calvin {
         intakeWrist.setPosition(intakeWristTiltRight);
     }
     public void flip(){
-        intakeWrist.setPosition(intakeWristNormal);
+        intakeWrist.setPosition(intakeWristNormalLeft);
     }
     //Todo: find out if set all this positions simultaneuously actually works
     // -otherwise, use timers
+
+    //Todo: timer version of the pickup from chamber
+    public enum PickUpSteps {
+        READY, MOVE, GRAB
+    }
+    PickUpSteps pickUpStep = PickUpSteps.READY;
+
+    public void pickUp(boolean buttonPressed, boolean lastButtonPressed) {
+        switch(pickUpStep) {
+            case READY:
+                if (buttonPressed && !lastButtonPressed) {
+                    pickUpStep = PickUpSteps.MOVE;
+                }
+            case MOVE:
+                grab();
+                pickUpTime.reset();
+                if (pickUpTime.seconds() >= pickUp1) {
+                    pickUpStep = PickUpSteps.GRAB;
+                }
+            case GRAB:
+                if (intakeClaw.getPosition() == intakeClawClosed) {
+                    intakeClawOpen();
+                } else if(intakeClaw.getPosition() == intakeClawOpen) {
+                    intakeClawClosed();
+                }
+                pickUpTime.reset();
+                if (pickUpTime.seconds() >= pickUp2) {
+                    hover();
+                }
+
+        }
+    }
 
     //Todo: this is the timer version (i.e only one button press after closing a claw on sample
     //i.e just use a state machine you guys know what that is
@@ -310,8 +365,18 @@ public class Calvin {
         READY, MOVE, GRAB, LETGO, RETURN;
     }
     TransferSteps transferStep = TransferSteps.READY;
-    public void transferStart(){
-        intakeWrist.setPosition(intakeWristTransfer);
+
+
+    public void transferStartClosed(){
+        intakeWrist.setPosition(intakeWristFlat);
+        intakeElbow.setPosition(intakeClawTransferRot);
+        intakeArm.setPosition(intakeClawTransferRot);
+        depositClaw.setPosition(depositClawOpen);
+        depositWrist.setPosition(depositClawTransferRot);
+        depositArm.setPosition(depositClawTransferPos);
+    }
+    public void transferStartOpen(){
+        intakeWrist.setPosition(intakeWristNormalLeft);
         intakeElbow.setPosition(intakeClawTransferRot);
         intakeArm.setPosition(intakeClawTransferRot);
         depositClaw.setPosition(depositClawOpen);
@@ -319,15 +384,23 @@ public class Calvin {
         depositArm.setPosition(depositClawTransferPos);
     }
 
-    public void transferEnd(){
+    public void transferEnd(boolean buttonPressed, boolean lastButtonPressed){
         switch(transferStep) {
             case READY:
-                intakeClawClosed();
-                transferStep = TransferSteps.MOVE;
+                if (buttonPressed && !lastButtonPressed) {
+                    transferStep = TransferSteps.MOVE;
+                }
+
             case MOVE:
                 specimenTime.reset();
                 if (transferTime.seconds() >= transferPart1){
-                    transferStart();
+                    if(intakeClaw.getPosition() == intakeClawClosed){
+                        transferStartClosed();
+                    }
+                    if(intakeClaw.getPosition() == intakeClawOpen) {
+                        transferStartOpen();
+                    }
+
                 }
                 transferStep = TransferSteps.GRAB;
             case GRAB:

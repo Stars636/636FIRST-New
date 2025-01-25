@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin;
+
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -22,6 +24,8 @@ public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
     public static double specimen1;
     public static double specimen2;
     public static double specimen3;
+
+    Calvin calvin = new Calvin(hardwareMap);
 
 
     @Override

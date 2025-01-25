@@ -267,6 +267,10 @@ public class Calvin {
         depositWrist.setPosition(depositClawScoreRot);
         depositArm.setPosition(depositClawScorePos);
     }
+    public void depositSpecimenStart(){
+        depositWrist.setPosition(depositClawSpeciPosStart);
+        depositArm.setPosition(depositClawSpeciRotStart);
+    }
     public void hangPassive(){
         hangServo.setPosition(hangServoInitial);
     }

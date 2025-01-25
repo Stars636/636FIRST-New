@@ -126,11 +126,12 @@ public class TeleOpNe extends LinearOpMode {
             // - also find a better button haha
             //specimen scoring
             calvin.scoreSpecimen(gamepad2.b, lastGamepad2.b);
+
             if (gamepad2.right_stick_button && !lastGamepad2.right_stick_button) {
-                if (calvin.hangServo.getPosition() == hangServoInitial) {
-                    calvin.hangSet();
+                if (calvin.depositArm.getPosition() == depositClawPassivePos) {
+                    calvin.depositPassive();
                 } else if (calvin.hangServo.getPosition() == hangServoFinish) {
-                    calvin.hangPassive(); //Ideally you won't need to...
+                    calvin.depositSpecimenStart(); //Ideally you won't need to...
                 }
             }
 

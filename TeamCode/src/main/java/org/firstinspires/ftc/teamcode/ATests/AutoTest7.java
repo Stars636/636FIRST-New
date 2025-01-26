@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.BackUps_TrashCan;
+package org.firstinspires.ftc.teamcode.ATests;
 
 
-import static org.firstinspires.ftc.teamcode.BackUps_TrashCan.AutoTest5.turn;
+import static java.lang.Math.PI;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous
 @Config
-public class AutoTest6 extends LinearOpMode {
+public class AutoTest7 extends LinearOpMode {
     
     PinpointDrive drive;
     public static int fraudOffset = 20;
@@ -41,7 +41,10 @@ public class AutoTest6 extends LinearOpMode {
         // Define the starting pose (e.g., starting point on the field)
 
        TrajectoryActionBuilder TrajectoryAction1 = drive.actionBuilder(new Pose2d(0,0,0))
-                .lineToX(fraudOffset);
+               .lineToX(fraudOffset)
+               .setTangent(PI/2)
+               .lineToY(fraudOffset)
+                ;
 
 
         Action t1 = TrajectoryAction1.build();
@@ -52,6 +55,7 @@ public class AutoTest6 extends LinearOpMode {
 
 
         Actions.runBlocking(
+
                 new SequentialAction(
                         t1
                 )

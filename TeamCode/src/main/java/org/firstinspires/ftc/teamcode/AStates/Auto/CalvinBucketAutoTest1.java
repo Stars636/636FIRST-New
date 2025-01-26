@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.BackUps_TrashCan.ActualTrash;
+package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 
 import com.acmerobotics.dashboard.config.Config;

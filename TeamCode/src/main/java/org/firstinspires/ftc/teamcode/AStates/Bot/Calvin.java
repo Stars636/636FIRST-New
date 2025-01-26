@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal;
+package org.firstinspires.ftc.teamcode.AStates.Bot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -94,20 +94,17 @@ public class Calvin {
 
 
     private ElapsedTime transferTime = new ElapsedTime();
-    public static double transferPart1;
-    public static double transferPart2;
-    public static double transferPart3;
-    public static double transferPart4;
+    public static double transferPart1 = 3;
+    public static double transferPart2 = 2.6;
+    public static double transferPart3 = 2.5;
+    public static double transferPart4 = 3;
 
     private ElapsedTime pickUpTime = new ElapsedTime();
 
-    public static double pickUp1;
-    public static double pickUp2;
-    public static double pickUp3;
+    public static double pickUp1 = 3;//lower this over time LOL
+    public static double pickUp2 = 3;
     private ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimenPart1;
-    public static double specimenPart2;
-    public static double specimenPart3;
+    public static double specimenPart1 = 3;
 
 
     public Calvin(HardwareMap hardwareMap) {
@@ -271,6 +268,7 @@ public class Calvin {
         depositWrist.setPosition(depositClawSpeciPosStart);
         depositArm.setPosition(depositClawSpeciRotStart);
     }
+
     public void hangPassive(){
         hangServo.setPosition(hangServoInitial);
     }
@@ -396,7 +394,7 @@ public class Calvin {
                 }
 
             case MOVE:
-                specimenTime.reset();
+                transferTime.reset();
                 if (transferTime.seconds() >= transferPart1){
                     if(intakeClaw.getPosition() == intakeClawClosed){
                         transferStartClosed();
@@ -408,19 +406,19 @@ public class Calvin {
                 }
                 transferStep = TransferSteps.GRAB;
             case GRAB:
-                specimenTime.reset();
+                transferTime.reset();
                 if (transferTime.seconds() >= transferPart2) {
                     depositClaw.setPosition(depositClawClosed);
                 }
                 transferStep = TransferSteps.LETGO;
             case LETGO:
-                specimenTime.reset();
+                transferTime.reset();
                 if (transferTime.seconds() >= transferPart3) {
                     intakeClaw.setPosition(intakeClawOpen);
                 }
                 transferStep = TransferSteps.RETURN;
             case RETURN:
-                specimenTime.reset();
+                transferTime.reset();
                 if (transferTime.seconds() >= transferPart4) {
                     intakeWrist.setPosition(intakeWristFlat);
                     intakeElbow.setPosition(intakeClawPassiveRot);

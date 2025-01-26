@@ -1,43 +1,36 @@
-package org.firstinspires.ftc.teamcode.CalvinTeleOp;
+package org.firstinspires.ftc.teamcode.AStates.TeleOp;
 
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.depositClawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.depositClawOpen;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.depositClawPassivePos;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.hSlidesInside;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.hangServoFinish;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.hangServoInitial;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeClawClosed;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeClawOpen;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeWristFlat;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeWristNormalLeft;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeWristNormalRight;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeWristTiltLeft;
-import static org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin.intakeWristTiltRight;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoFinish;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalLeft;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalRight;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltLeft;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.CalvinFinal.Calvin;
+import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
 @TeleOp
-public class TeleOpNe extends LinearOpMode {
+public class TeleOpFinal extends LinearOpMode {
 
     Gamepad lastGamepad1 = new Gamepad(), lastGamepad2 = new Gamepad();
     Deque<Gamepad> gamepad1History = new LinkedList<>(), gamepad2History = new LinkedList<>();
 
-    private ElapsedTime transferTime = new ElapsedTime();
-    public static double transfer1;
-    public static double transfer2;
-    public static double transfer3;
-    private ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimen1;
-    public static double specimen2;
-    public static double specimen3;
+
 
     Calvin calvin = new Calvin(hardwareMap);
 
@@ -105,6 +98,7 @@ public class TeleOpNe extends LinearOpMode {
                     calvin.intakeWrist.setPosition(intakeWristNormalRight);
                 }
             }
+
             //Todo: deposit
 
             if(gamepad2.y && !lastGamepad2.y) {
@@ -133,6 +127,17 @@ public class TeleOpNe extends LinearOpMode {
                 } else if (calvin.hangServo.getPosition() == hangServoFinish) {
                     calvin.depositSpecimenStart(); //Ideally you won't need to...
                 }
+            }
+            //Todo: Vertical Slide Improvements
+            if (calvin.vSlidesRight.getCurrentPosition() < 0) {
+                calvin.vSlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow positive power
+                calvin.vSlidesRight.setPower(Math.min(-gamepad2.left_stick_y, 0));
+            } else if (calvin.vSlidesRight.getCurrentPosition() > highBucket) {
+                calvin.vSlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow negative power
+                calvin.vSlidesRight.setPower(Math.max(-gamepad2.left_stick_y, 0));
+            } else {
+                calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
+                calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
             }
 
             //Todo: DRIVER CONTROLS

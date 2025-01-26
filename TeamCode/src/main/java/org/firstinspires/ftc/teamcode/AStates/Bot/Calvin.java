@@ -81,16 +81,7 @@ public class Calvin {
     public static double hangServoInitial;
     public static double hangServoFinish;
 
-    public static double hSlidesLeftTest;
-    public static double hSlidesRightTest;
-    public static double intakeClawTest;
-    public static double intakeWristTest;
-    public static double intakeElbowTest;
-    public static double intakeArmTest;
-    public static double depositClawTest;
-    public static double depositWristTest;
-    public static double depositArmTest;
-    public static double hangServoTest;
+
 
 
     private ElapsedTime transferTime = new ElapsedTime();
@@ -207,26 +198,7 @@ public class Calvin {
         hangServo.setPosition(hangServoInitial);
     }
 
-    public void hSlidesTester(){
-        hSlidesLeft.setPosition(hSlidesLeftTest);
-        hSlidesRight.setPosition(hSlidesRightTest);
-    }
-    public void clawTester(){
-        intakeClaw.setPosition(intakeClawTest);
-        intakeWrist.setPosition(intakeWristTest);
-        depositClaw.setPosition(depositClawTest);
-    }
-    public void intakePosition(){
-        intakeElbow.setPosition(intakeElbowTest);
-        intakeArm.setPosition(intakeArmTest);
-    }
-    public void depositPosition() {
-        depositWrist.setPosition(depositWristTest);
-        depositArm.setPosition(depositArmTest);
-    }
-    public void hangTest(){
-        hangServo.setPosition(hangServoTest);
-    }
+
     //FIXME
     // -Add all the basic functions
     public void intakeClawOpen(){

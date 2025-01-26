@@ -13,19 +13,24 @@ import java.util.LinkedList;
 @TeleOp
 public class TeleOpTester extends LinearOpMode {
 
-    Gamepad lastGamepad1 = new Gamepad(), lastGamepad2 = new Gamepad();
-    Deque<Gamepad> gamepad1History = new LinkedList<>(), gamepad2History = new LinkedList<>();
-
-    private ElapsedTime transferTime = new ElapsedTime();
-    public static double transfer1;
-    public static double transfer2;
-    public static double transfer3;
-    private ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimen1;
-    public static double specimen2;
-    public static double specimen3;
-
     Calvin calvin = new Calvin(hardwareMap);
+
+    public static double hSlidesTest = 0;
+    public static double intakeClawTest = 0;
+    public static double intakeWristTest = 0;
+    public static double intakeElbowTest = 0;
+    public static double intakeArmTest = 0;
+    public static double depositClawTest = 0;
+    public static double depositWristTest = 0.65;
+    public static double depositArmTest = 0.43;
+    public static double hangServoTest = 0;
+
+    public static double SlideTesting = 0;
+    public static double IntakeTesting = 0;
+    public static double IntakeClawTesting = 0;
+    public static double DepositClawTesting = 0;
+    public static double DepositTesting = 0;
+    public static double HangTesting = 0;
 
 
     @Override
@@ -41,28 +46,32 @@ public class TeleOpTester extends LinearOpMode {
 
         while (opModeIsActive()) {
             //if something doesn't work start here
-            if (gamepad2.start || gamepad1.start) return;
-
-
-
-
-
-
-
-            gamepad1History.add(gamepad1);
-            gamepad2History.add(gamepad2);
-            // delete everything in gamepad histories with a 500 cycle delay
-            if (gamepad1History.size() > 500) {
-                gamepad1History.removeLast();
-                gamepad2History.removeLast();
+            if (SlideTesting != 0) {
+                calvin.hSlidesLeft.setPosition(hSlidesTest);
+                calvin.hSlidesRight.setPosition(hSlidesTest);
             }
-            telemetry.addData("Gamepad 1",  gamepad1History.getFirst());
-            telemetry.addData("Gamepad 2",  gamepad2History.getFirst());
-            telemetry.update();
+            if (IntakeTesting != 0) {
+                calvin.intakeWrist.setPosition(intakeWristTest);
+                calvin.intakeElbow.setPosition(intakeElbowTest);
+                calvin.intakeArm.setPosition(intakeArmTest);
+            }
 
-            // keep last gamepad in because its useful for simple button presses
-            lastGamepad1.copy(gamepad1);
-            lastGamepad2.copy(gamepad2);
+            if (IntakeClawTesting != 0){
+                calvin.intakeClaw.setPosition(intakeClawTest);
+
+            }
+            if (DepositClawTesting != 0) {
+                calvin.depositClaw.setPosition(depositClawTest);
+            }
+            if (DepositTesting != 0) {
+                calvin.depositWrist.setPosition(depositWristTest);
+                calvin.depositArm.setPosition(depositArmTest);
+            }
+            if (HangTesting != 0){
+                calvin.hangServo.setPosition(hangServoTest);
+            }
+
+
 
         }
 

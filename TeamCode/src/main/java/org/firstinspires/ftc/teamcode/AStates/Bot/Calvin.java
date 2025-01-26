@@ -362,6 +362,7 @@ public class Calvin {
         switch(transferStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
+                    depositPassive();
                     transferStep = TransferSteps.MOVE;
                 }
 

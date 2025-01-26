@@ -130,9 +130,9 @@ public class Calvin {
         hangRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         hangRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        hangRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

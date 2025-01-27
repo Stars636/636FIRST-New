@@ -39,6 +39,8 @@ public class TeleOpFinal extends LinearOpMode {
 
 
 
+
+
         waitForStart();
 
         calvin.initialTele();
@@ -130,7 +132,7 @@ public class TeleOpFinal extends LinearOpMode {
             if (gamepad2.right_stick_button && !lastGamepad2.right_stick_button) {
                 if (calvin.depositArm.getPosition() == depositClawPassivePos) {
                     calvin.depositPassive();
-                } else if (calvin.hangServo.getPosition() == hangServoFinish) {
+                } else {
                     calvin.depositSpecimenStart(); //Ideally you won't need to...
                 }
             }

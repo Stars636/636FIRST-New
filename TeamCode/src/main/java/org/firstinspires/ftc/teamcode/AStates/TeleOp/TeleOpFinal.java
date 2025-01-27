@@ -17,7 +17,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltR
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
@@ -30,21 +29,25 @@ public class TeleOpFinal extends LinearOpMode {
     Gamepad lastGamepad1 = new Gamepad(), lastGamepad2 = new Gamepad();
     Deque<Gamepad> gamepad1History = new LinkedList<>(), gamepad2History = new LinkedList<>();
 
-
+//Tele
 
     Calvin calvin = new Calvin(hardwareMap);
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ElapsedTime et = new ElapsedTime();
+
 
 
         waitForStart();
 
+        calvin.initialTele();
 
-        telemetry.addLine("Best Wishes.");
+
+        telemetry.addLine("Best Wishes!");
         telemetry.update();
+
+        if (isStopRequested()) return;
 
         while (opModeIsActive()) {
             //if something doesn't work start here
@@ -62,7 +65,7 @@ public class TeleOpFinal extends LinearOpMode {
             // -these are both state machines and require the most testing and scrutiny
             calvin.pickUp(gamepad2.left_bumper, lastGamepad2.left_bumper);
             calvin.transferEnd(gamepad2.right_bumper, lastGamepad2.right_bumper);
-            //Natural horizontalslides
+            //Natural horizontal slides
 
             //Todo: change horizontal slides so that driver can increment it
             //Todo: whenever extendo comes out the arm should be forward facing
@@ -144,6 +147,27 @@ public class TeleOpFinal extends LinearOpMode {
 
             //Todo: DRIVER CONTROLS
             // - I.E. DRIVETRAIN and HANG
+
+            //TODO: Driving
+
+            double joystickX = -gamepad1.left_stick_x * 1.1; //apparently counteracts imperfect strafing
+            double joystickY = gamepad1.left_stick_y;
+            double joystickR = -gamepad1.right_stick_x;
+            double brakes = 1 - gamepad1.right_trigger;
+
+            if (gamepad1.right_trigger != 0) {
+                calvin.rightFront.setPower((joystickY - joystickX - joystickR)/brakes);
+                calvin.leftFront.setPower((joystickY + joystickX + joystickR)/brakes);
+                calvin.rightBack.setPower((joystickY + joystickX - joystickR)/brakes);
+                calvin.leftBack.setPower((joystickY - joystickX + joystickR)/brakes);
+            } else {
+                calvin.rightFront.setPower((joystickY - joystickX - joystickR));
+                calvin.leftFront.setPower((joystickY + joystickX + joystickR));
+                calvin.rightBack.setPower((joystickY + joystickX - joystickR));
+                calvin.leftBack.setPower((joystickY - joystickX + joystickR));
+            }
+
+            //TODO: Hang
 
 
 

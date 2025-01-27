@@ -99,15 +99,17 @@ public class Calvin {
     public static double pickUp2 = 3;
     private ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart1 = 3;
-
+    
     public static boolean isMacroing = false;
+
+    public static boolean isTargeting = false; //Todo: make the vertical slides able to go to a specific position
 
 
     public Calvin(HardwareMap hardwareMap) {
-        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
-        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
-        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
+        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");//
+        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");//
+        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");//
+        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");//
 
         rightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -116,8 +118,8 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        vSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"vSlidesLeft");
-        vSlidesRight = hardwareMap.get(DcMotorImplEx.class,"vSlidesRight");
+        vSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"vSlidesLeft");//
+        vSlidesRight = hardwareMap.get(DcMotorImplEx.class,"vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -128,8 +130,8 @@ public class Calvin {
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         vSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        hangLeft = hardwareMap.get(DcMotorImplEx.class,"hangLeft");
+        //Todo: uncomment these when they've been plugged in, null pointer exception issue
+        /*hangLeft = hardwareMap.get(DcMotorImplEx.class,"hangLeft");
         hangRight = hardwareMap.get(DcMotorImplEx.class,"hangRight");
 
         hangRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -142,19 +144,19 @@ public class Calvin {
         hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hangServo = hardwareMap.get(ServoImpl.class, "hangServo");
+        hangServo = hardwareMap.get(ServoImpl.class, "hangServo");*/
 
-        intakeClaw = hardwareMap.get(ServoImplEx.class,"intakeClaw");
-        intakeWrist = hardwareMap.get(ServoImplEx.class,"intakeWrist");
-        intakeElbow = hardwareMap.get(ServoImplEx.class,"intakeElbow");
-        intakeArm = hardwareMap.get(ServoImplEx.class,"intakeArm");
+        intakeClaw = hardwareMap.get(ServoImplEx.class,"intakeClaw");//
+        intakeWrist = hardwareMap.get(ServoImplEx.class,"intakeWrist");//
+        intakeElbow = hardwareMap.get(ServoImplEx.class,"intakeElbow");//
+        intakeArm = hardwareMap.get(ServoImplEx.class,"intakeArm");//
 
-        depositClaw = hardwareMap.get(ServoImplEx.class,"depositClaw");
-        depositArm = hardwareMap.get(ServoImplEx.class,"depositArm");
-        depositWrist = hardwareMap.get(ServoImplEx.class,"depositWrist");
+        depositClaw = hardwareMap.get(ServoImplEx.class,"depositClaw");//
+        depositArm = hardwareMap.get(ServoImplEx.class,"depositArm");//
+        depositWrist = hardwareMap.get(ServoImplEx.class,"depositWrist");//
 
-        hSlidesLeft  = hardwareMap.get(ServoImplEx.class,"hSlidesLeft");
-        hSlidesRight = hardwareMap.get(ServoImplEx.class,"hSlidesRight");
+        hSlidesLeft  = hardwareMap.get(ServoImplEx.class,"hSlidesLeft");//
+        hSlidesRight = hardwareMap.get(ServoImplEx.class,"hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
 
@@ -176,7 +178,7 @@ public class Calvin {
         depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        hangServo.setPosition(hangServoInitial);
+        //hangServo.setPosition(hangServoInitial);
     }
     public void initialSpecimen() {
         hSlidesLeft.setPosition(hSlidesInside);
@@ -188,7 +190,7 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        hangServo.setPosition(hangServoInitial);
+       // hangServo.setPosition(hangServoInitial);
     }
     public void initialBucket() {
         hSlidesLeft.setPosition(hSlidesInside);
@@ -200,7 +202,7 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        hangServo.setPosition(hangServoInitial);
+        //hangServo.setPosition(hangServoInitial);
     }
 
 
@@ -247,10 +249,10 @@ public class Calvin {
     }
 
     public void hangPassive(){
-        hangServo.setPosition(hangServoInitial);
+        //hangServo.setPosition(hangServoInitial);
     }
     public void hangSet(){
-        hangServo.setPosition(hangServoFinish);
+       // hangServo.setPosition(hangServoFinish);
     }
 
     //Todo: Create a function for scoring specimens, whether using the timer or not

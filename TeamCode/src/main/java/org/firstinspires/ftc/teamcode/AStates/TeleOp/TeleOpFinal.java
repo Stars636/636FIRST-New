@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.AStates.TeleOp;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.floatPosition;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoFinish;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.increment;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
@@ -13,6 +16,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNorma
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalRight;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.isMacroing;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -70,7 +74,7 @@ public class TeleOpFinal extends LinearOpMode {
 
             //Todo: change horizontal slides so that driver can increment it
             //Todo: whenever extendo comes out the arm should be forward facing
-            if(gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
+            /*if(gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
                 if(calvin.hSlidesLeft.getPosition() == hSlidesInside) {
                     calvin.hSlidesOut();
                 } else if (calvin.intakeClaw.getPosition() == intakeClawOpen){
@@ -79,9 +83,29 @@ public class TeleOpFinal extends LinearOpMode {
             }
             if(gamepad2.right_trigger != 0 && lastGamepad2.right_trigger == 0) {
                 calvin.hover();
+            }*/
+
+
+            if (calvin.hSlidesLeft.getPosition() <= hSlidesInside && calvin.hSlidesLeft.getPosition() > hSlidesOutside) {
+                if (gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
+                    calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() + increment*gamepad2.left_trigger);
+                    calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment*gamepad2.left_trigger);
+                } else if (gamepad2.right_trigger != 0 && lastGamepad2.right_trigger == 0) {
+                    calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() - increment*gamepad2.left_trigger);
+                    calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment*gamepad2.left_trigger);
+                    if (!isMacroing) {
+                        calvin.hover();
+                    }
+                }
+
             }
+
+
+
+
+
+
             //Todo: wrist code extremely overcomplicated
-            // -change this to an increment, maybe using the triggers
             if(gamepad2.dpad_left && !lastGamepad2.dpad_left) {
                 if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
                     calvin.intakeWrist.setPosition(intakeWristTiltLeft);
@@ -130,7 +154,7 @@ public class TeleOpFinal extends LinearOpMode {
             if (gamepad2.right_stick_button && !lastGamepad2.right_stick_button) {
                 if (calvin.depositArm.getPosition() == depositClawPassivePos) {
                     calvin.depositPassive();
-                } else if (calvin.hangServo.getPosition() == hangServoFinish) {
+                } else {
                     calvin.depositSpecimenStart(); //Ideally you won't need to...
                 }
             }

@@ -58,6 +58,9 @@ public class Calvin {
     public static double depositClawSpeciPosFinish = 0;
     public static double depositClawSpeciRotFinish = 1;
 
+    public static double increment = 0.01;
+    public static double floatPosition = 0.9;
+
 
 
     public static double hSlidesInside = 0.99;
@@ -96,6 +99,8 @@ public class Calvin {
     public static double pickUp2 = 3;
     private ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart1 = 3;
+
+    public static boolean isMacroing = false;
 
 
     public Calvin(HardwareMap hardwareMap) {
@@ -310,6 +315,7 @@ public class Calvin {
         switch(pickUpStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
+                    isMacroing = true;
                     pickUpStep = PickUpSteps.MOVE;
                 }
             case MOVE:
@@ -327,6 +333,8 @@ public class Calvin {
                 pickUpTime.reset();
                 if (pickUpTime.seconds() >= pickUp2) {
                     hover();
+                    isMacroing = false;
+                    pickUpStep = PickUpSteps.READY;
                 }
 
         }
@@ -363,6 +371,7 @@ public class Calvin {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
                     depositPassive();
+                    isMacroing = true;
                     transferStep = TransferSteps.MOVE;
                 }
 
@@ -400,6 +409,7 @@ public class Calvin {
                     depositWrist.setPosition(depositClawPassiveRot);
                     depositArm.setPosition(depositClawPassivePos);
                 }
+                isMacroing = false;
                 transferStep = TransferSteps.READY;
         }
     }

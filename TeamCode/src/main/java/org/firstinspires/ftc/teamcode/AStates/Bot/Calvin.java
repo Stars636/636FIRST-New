@@ -99,7 +99,7 @@ public class Calvin {
     public static double pickUp2 = 3;
     private ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart1 = 3;
-    
+
     public static boolean isMacroing = false;
 
     public static boolean isTargeting = false; //Todo: make the vertical slides able to go to a specific position

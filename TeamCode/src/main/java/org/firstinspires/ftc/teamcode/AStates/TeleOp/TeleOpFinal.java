@@ -63,6 +63,7 @@ public class TeleOpFinal extends LinearOpMode {
             }
             //Todo: check that transfer even works
             // -these are both state machines and require the most testing and scrutiny
+            //Todo: make backups?
             calvin.pickUp(gamepad2.left_bumper, lastGamepad2.left_bumper);
             calvin.transferEnd(gamepad2.right_bumper, lastGamepad2.right_bumper);
             //Natural horizontal slides

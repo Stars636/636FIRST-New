@@ -68,6 +68,8 @@ public class TeleOpFinal extends LinearOpMode {
             calvin.transferEnd(gamepad2.right_bumper, lastGamepad2.right_bumper);
             //Natural horizontal slides
 
+            //Todo: change horizontal slides so that driver can increment it
+            //Todo: whenever extendo comes out the arm should be forward facing
             if(gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
                 if(calvin.hSlidesLeft.getPosition() == hSlidesInside) {
                     calvin.hSlidesOut();

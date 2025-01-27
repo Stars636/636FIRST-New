@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous
 @Config
-public class AutoTest5 extends LinearOpMode {
+public class AutoTest9 extends LinearOpMode {
     PinpointDrive drive;
     public static int fraudOffset = 20;
     public static double turn = Math.PI;

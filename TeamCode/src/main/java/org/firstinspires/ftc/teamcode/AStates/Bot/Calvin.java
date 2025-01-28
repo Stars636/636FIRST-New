@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AStates.Bot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+@Config
 public class Calvin {
     public DcMotorEx leftFront, rightFront, leftBack, rightBack;
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
@@ -66,22 +67,22 @@ public class Calvin {
 
     public static double hSlidesInside = 0.99;
     public static double hSlidesOutside = 0.68;
-    public static double intakeClawOpen;
-    public static double intakeClawClosed;
+    public static double intakeClawOpen = 0;
+    public static double intakeClawClosed = 0.4;
     public static double intakeClawTransferPos;
     public static double intakeClawTransferRot;
     public static double intakeClawPassivePos;
     public static double intakeClawPassiveRot;
-    public static double intakeClawHoverPos;
-    public static double intakeClawHoverRot;
-    public static double intakeClawGrabPos;
-    public static double intakeClawGrabRot;
-    public static double intakeWristFlat;
-    public static double intakeWristTiltRight;
+    public static double intakeClawHoverPos = 0.4;
+    public static double intakeClawHoverRot = 0.9;
+    public static double intakeClawGrabPos = 0.35;
+    public static double intakeClawGrabRot =0.95;
+    public static double intakeWristFlat = 0.55;
+    public static double intakeWristTiltRight = 0.4;
     public static double intakeWristNormalLeft;
     public static double intakeWristNormalRight; //as in perpendicular
     //Todo: refactor this to a better name
-    public static double intakeWristTiltLeft;
+    public static double intakeWristTiltLeft = 0.72;
     public static double hangServoInitial;
     public static double hangServoFinish;
 

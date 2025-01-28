@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AStates.TeleOp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 import java.util.Deque;
 import java.util.LinkedList;
-
+@Config
 @TeleOp
 public class TeleOpTester extends LinearOpMode {
 
@@ -29,7 +30,7 @@ public class TeleOpTester extends LinearOpMode {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
-    public static double hSlidesTest = 0;
+    public static double hSlidesTest = 1;
     public static double intakeClawTest = 0;
     public static double intakeWristTest = 0;
     public static double intakeElbowTest = 0;

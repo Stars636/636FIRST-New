@@ -59,6 +59,7 @@ public class TeleOpFinal extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            //TODO: If you're here
             //if something doesn't work start here
             if (gamepad2.start || gamepad1.start) return;
             //intake claw
@@ -89,27 +90,30 @@ public class TeleOpFinal extends LinearOpMode {
                 calvin.hover();
             }*/
             //TODO: decide how hover works
-
-            if (calvin.hSlidesLeft.getPosition() <= hSlidesInside && calvin.hSlidesLeft.getPosition() > hSlidesOutside) {
+            if (calvin.hSlidesLeft.getPosition() < hSlidesInside && calvin.hSlidesLeft.getPosition() >= hSlidesOutside) {
                 if (gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
                     calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() + increment * gamepad2.left_trigger);
                     calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment * gamepad2.left_trigger);
-                } else if (gamepad2.right_trigger != 0 && lastGamepad2.right_trigger == 0) {
+                }
+            }
+            if (calvin.hSlidesLeft.getPosition() <= hSlidesInside && calvin.hSlidesLeft.getPosition() > hSlidesOutside) {
+                if (gamepad2.right_trigger != 0 && lastGamepad2.right_trigger == 0) {
                     calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() - increment * gamepad2.left_trigger);
                     calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment * gamepad2.left_trigger);
                     if (!isMacroing) {
                         calvin.hover();
                     }
                 }
-
             }
 
+            //Todo: handle edge cases
 
 
 
 
 
-            //Todo: wrist code extremely overcomplicated
+
+            //Todo: wrist code somewhat overcomplicated
             if(gamepad2.dpad_left && !lastGamepad2.dpad_left) {
                 if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
                     calvin.intakeWrist.setPosition(intakeWristTiltLeft);
@@ -214,7 +218,7 @@ public class TeleOpFinal extends LinearOpMode {
             // ....
             // ....
             // Conrad kindly mention that x and y should move the servos and
-            // left bumper and right bumper should move the motors? i think
+            // a and b should move the motors? i think
 
 
 

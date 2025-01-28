@@ -16,14 +16,6 @@ public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
     Gamepad lastGamepad1 = new Gamepad(), lastGamepad2 = new Gamepad();
     Deque<Gamepad> gamepad1History = new LinkedList<>(), gamepad2History = new LinkedList<>();
 
-    private ElapsedTime transferTime = new ElapsedTime();
-    public static double transfer1;
-    public static double transfer2;
-    public static double transfer3;
-    private ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimen1;
-    public static double specimen2;
-    public static double specimen3;
 
     Calvin calvin = new Calvin(hardwareMap);
 
@@ -42,11 +34,6 @@ public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
         while (opModeIsActive()) {
             //if something doesn't work start here
             if (gamepad2.start || gamepad1.start) return;
-
-
-
-
-
 
 
             gamepad1History.add(gamepad1);

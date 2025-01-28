@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Zhang.TrueZhang.Memorable;
+package org.firstinspires.ftc.teamcode.ZTrashCan;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class ClawZhang extends LinearOpMode {
+public class Claw extends LinearOpMode {
 
     Servo Jamal;
 
@@ -13,15 +13,10 @@ public class ClawZhang extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //Jamal = hardwareMap.get(Servo.class,"Ethan");
-        Jamal = hardwareMap.get(Servo.class,"Ethan");
+        Jamal = hardwareMap.get(Servo.class,"Servo1");
 
         double position = 0.0;
 
-        /*
-        jamal.setMode(Servo.RunMode.STOP_AND_RESET_ENCODER);
-        jamal.getPosition()// Reset the motr encoder
-        jamal.setMode(Servo.RunMode.RUN_WITHOUT_ENCODER);
-        */
 
 
         waitForStart();

@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Team636Code.RandomTests.Old;
+package org.firstinspires.ftc.teamcode.ZMemorable;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class Claw extends LinearOpMode {
+public class ClawZhang extends LinearOpMode {
 
     Servo Jamal;
 
@@ -13,10 +13,15 @@ public class Claw extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //Jamal = hardwareMap.get(Servo.class,"Ethan");
-        Jamal = hardwareMap.get(Servo.class,"Servo1");
+        Jamal = hardwareMap.get(Servo.class,"Ethan");
 
         double position = 0.0;
 
+        /*
+        jamal.setMode(Servo.RunMode.STOP_AND_RESET_ENCODER);
+        jamal.getPosition()// Reset the motr encoder
+        jamal.setMode(Servo.RunMode.RUN_WITHOUT_ENCODER);
+        */
 
 
         waitForStart();

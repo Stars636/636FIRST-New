@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Zhang.TrueZhang.Discard;
+package org.firstinspires.ftc.teamcode.ZMemorable;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

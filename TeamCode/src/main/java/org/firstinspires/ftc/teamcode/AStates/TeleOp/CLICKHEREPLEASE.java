@@ -13,6 +13,7 @@ public class CLICKHEREPLEASE {
     // Go through the docs and work on auto (and move silently)
     //  Retune the bot
     //  Test the positions
+    // Reorganize the rest of the files and delete actually unimportant stuff
 
 
     //TODO: Zhang

@@ -1,15 +1,16 @@
-package org.firstinspires.ftc.teamcode.Team636Code.Scrimmage;
+package org.firstinspires.ftc.teamcode.ZImportant.Scrimmage;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp
-public class OldScrimmage extends LinearOpMode{
+@TeleOp(name = "FinalScrimmage", group = "Scrimmage")
+public class FinalScrimmage extends LinearOpMode{
     Servo rotatorJamal;
     Servo clawEthan;
     Servo pushRight;
@@ -21,7 +22,7 @@ public class OldScrimmage extends LinearOpMode{
 
     Servo clawMiddle;
 
-
+    VoltageSensor voltageSensor;
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
@@ -43,7 +44,7 @@ public class OldScrimmage extends LinearOpMode{
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -74,7 +75,9 @@ public class OldScrimmage extends LinearOpMode{
         boolean changedA = false;
         boolean changedB = false;
         boolean changedRightBumper = false;
-        int desiredPosition = 3500;
+        boolean changedZhangCynthia = false;
+
+        int sequenceRB = 0;
 
 
         // I currently don't have an efficient solution for the motor that controls the slides.
@@ -86,7 +89,7 @@ public class OldScrimmage extends LinearOpMode{
         
         while (opModeIsActive()) {
             //Moves the rotator. RETEST these positions
-            if (gamepad1.a && !changedA) {
+            if (gamepad2.b && !changedA) {
                 if (rotatorPosition == 0.88) {
                     rotatorPosition = 0.18;
                     changedA = true;
@@ -98,12 +101,12 @@ public class OldScrimmage extends LinearOpMode{
                     changedA = true;
                 }
 
-            } else if (!gamepad1.a) {
+            } else if (!gamepad2.b) {
                 changedA = false;
             }
             //Moves the intake claw.
             // The positions seem fine right now but alongside the vertical claw there may be issues
-            if (gamepad1.b && !changedB) {
+            if (gamepad2.a && !changedB) {
                 if (intakeClawPosition == 0.515) {
                     intakeClawPosition = 0.40;
                     changedB = true;
@@ -114,32 +117,33 @@ public class OldScrimmage extends LinearOpMode{
                     intakeClawPosition = 0.515;
                     changedB = true;
                 }
-            } else if(!gamepad1.b){
+            } else if(!gamepad2.a){
                 changedB = false;
             }
             //Pushes the extendo. Positions need to be tested.
             // Currently the servos make a high pitched noise that I can't stand so you may have to test this
             //The code works, I think they are slightly offset so the servos are working when they should be rested
 
-            if (gamepad1.right_trigger != 0 && !changedRightTrigger) {
-                if (pushPositionRight == 0.44) {
+            if (gamepad2.right_trigger != 0 && !changedRightTrigger) {
+                if (pushPositionRight == 0.447) {
                     pushPositionRight = 0.55;
                     pushPositionLeft = 0.45;
                     changedRightTrigger = true;
                 } else if (pushPositionRight == 0.55) {
-                    pushPositionRight = 0.43;
-                    pushPositionLeft = 0.57;
+                    pushPositionRight = 0.447;
+                    pushPositionLeft = 0.553;
                     changedRightTrigger = true;
                 } else {
                     pushPositionRight = 0.55;
                     pushPositionLeft = 0.45;
                     changedRightTrigger = true;
                 }
-            } else if (gamepad1.right_trigger == 0) {
+            } else if (gamepad2.right_trigger == 0) {
                 changedRightTrigger = false;
             }
-            //code for middle claw
-            if (gamepad1.right_bumper && !changedRightBumper) {
+
+            //code for vertical claw
+            if (gamepad2.y && !changedRightBumper) {
                 if (clawMiddlePosition == 0.48) {
                     clawMiddlePosition = 0.05;
                     changedRightBumper = true;
@@ -147,39 +151,48 @@ public class OldScrimmage extends LinearOpMode{
                     clawMiddlePosition = 0.48;
                     changedRightBumper = true;
                 }
-            } else if (!gamepad1.right_bumper) {
+            } else if (!gamepad2.y) {
                 changedRightBumper = false;
             }
             //should rotate the huge thingamajig at the top towards the basket
-            if (gamepad1.left_trigger != 0 && !changedLeftTrigger) {
-                if(verticalClawLeft == 0.98) {
+            if (gamepad2.left_trigger != 0 && !changedLeftTrigger) {
+                if(verticalClawLeft == 0.983) {
                     verticalClawRight = 1;
                     verticalClawLeft = 0;
                     changedLeftTrigger = true;
                 } else if (verticalClawLeft == 0) {
-                    verticalClawRight = 0.02;
-                    verticalClawLeft = 0.98;
+                    verticalClawRight = 0.017;
+                    verticalClawLeft = 0.983;
                     changedLeftTrigger = true;
                 } else {
                     verticalClawRight = 1;
                     verticalClawLeft = 0;
                 }
-            } else if(gamepad1.left_trigger == 0) {
+            } else if(gamepad2.left_trigger == 0) {
                 changedLeftTrigger = false;
             }
             //Transfer!! In a single motion
-            if (gamepad1.left_bumper) {
-                clawMiddlePosition = 0.05;
-                verticalClawRight = 0.02;
-                verticalClawLeft = 0.98;
-                rotatorPosition = 0.18;
-                pushPositionRight = 0.43;
-                pushPositionLeft = 0.57;
+
+            if (gamepad2.right_bumper && !changedZhangCynthia) {
+                if(sequenceRB == 0) {
+                    clawMiddlePosition = 0.05;
+                    verticalClawRight = 0.017;
+                    verticalClawLeft = 0.983;
+                    rotatorPosition = 0.18;
+                    pushPositionRight = 0.447;
+                    pushPositionLeft = 0.553;
+                    sequenceRB++;
+                    changedZhangCynthia = true;
+                } else if (sequenceRB == 1) {
+                    clawMiddlePosition = 0.48;
+                    sequenceRB--;
+                    changedZhangCynthia = true;
+                }
+
+            } else if (!gamepad2.right_bumper) {
+                changedZhangCynthia = false;
             }
-            if (gamepad1.x) {
-                clawMiddlePosition = 0.48;
-            }
-            if (gamepad1.y) {
+            if (gamepad2.left_bumper) {
                 intakeClawPosition = 0.45;
                 pushPositionRight = 0.55;
                 pushPositionLeft = 0.45;
@@ -200,23 +213,30 @@ public class OldScrimmage extends LinearOpMode{
             double circumference = Math.PI * diameter;
             double distance = circumference * revolutions;
 
-            if(gamepad1.dpad_up && !changedSlide) {
-                desiredPosition += 10;
+            if(gamepad2.dpad_up && !changedSlide) {
+                int desiredPosition = 5038;
                 verticalSlide.setTargetPosition(desiredPosition);
                 verticalSlide.setPower(0.6); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 changedSlide = true;
-            } else if (!gamepad1.dpad_up) {
+            } else if (!gamepad2.dpad_up) {
                 changedSlide = false;
             }
-            if(gamepad1.dpad_down) {
+            if(gamepad2.dpad_down) {
 
-                desiredPosition = 1;
+                int desiredPosition = 0;
                 // The position (in ticks) that you want the motor to move to
                 verticalSlide.setTargetPosition(desiredPosition); // Tells the motor that the position it should go to is desiredPosition
                 verticalSlide.setPower(0.6);
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                verticalClawRight = 0.02;
+                verticalClawLeft = 0.98;
+
+
+            }
+            if (verticalSlide.getCurrentPosition() < 5) {
+                verticalSlide.setPower(0);
 
             }
 

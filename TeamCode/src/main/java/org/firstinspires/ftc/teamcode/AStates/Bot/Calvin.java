@@ -23,7 +23,8 @@ public class Calvin {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
-    public ServoImpl hangServo;
+    public ServoImpl hangServoLeft;
+    public ServoImpl hangServoRight;
 
     public static int lowBucket;
 
@@ -87,17 +88,17 @@ public class Calvin {
 
 
 
-    private ElapsedTime transferTime = new ElapsedTime();
+    public ElapsedTime transferTime = new ElapsedTime();
     public static double transferPart1 = 3;
     public static double transferPart2 = 2.6;
     public static double transferPart3 = 2.5;
     public static double transferPart4 = 3;
 
-    private ElapsedTime pickUpTime = new ElapsedTime();
+    public ElapsedTime pickUpTime = new ElapsedTime();
 
     public static double pickUp1 = 3;//lower this over time LOL
     public static double pickUp2 = 3;
-    private ElapsedTime specimenTime = new ElapsedTime();
+    public ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart1 = 3;
 
     public static boolean isMacroing = false;
@@ -131,7 +132,8 @@ public class Calvin {
 
         vSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         //Todo: uncomment these when they've been plugged in, null pointer exception issue
-        /*hangLeft = hardwareMap.get(DcMotorImplEx.class,"hangLeft");
+        /*
+        hangLeft = hardwareMap.get(DcMotorImplEx.class,"hangLeft");
         hangRight = hardwareMap.get(DcMotorImplEx.class,"hangRight");
 
         hangRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -144,7 +146,13 @@ public class Calvin {
         hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hangServo = hardwareMap.get(ServoImpl.class, "hangServo");*/
+        hangServoLeft = hardwareMap.get(ServoImpl.class, "hangServoLeft");
+        hangServoRight = hardwareMap.get(ServoImpl.class, "hangServoRight");
+        hangServoLeft.setDirection(Servo.Direction.REVERSE);
+
+        */
+
+        //
 
         intakeClaw = hardwareMap.get(ServoImplEx.class,"intakeClaw");//
         intakeWrist = hardwareMap.get(ServoImplEx.class,"intakeWrist");//
@@ -264,21 +272,26 @@ public class Calvin {
     enum SpecimenSteps {
         READY, FINAL
     }
-    SpecimenSteps specimenStep = SpecimenSteps.READY;
+    public SpecimenSteps specimenStep = SpecimenSteps.READY;
     public void scoreSpecimen(boolean buttonPressed, boolean lastButtonPressed) { //so on so forth
         switch (specimenStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
+                    isMacroing = true;
                     depositClaw.setPosition(depositClawClosed);
+                    specimenTime.reset();
                     specimenStep = SpecimenSteps.FINAL;
                 }
+                break;
             case FINAL:
-                specimenTime.reset();
                 if (specimenTime.seconds() >= specimenPart1) {
                     depositWrist.setPosition(depositClawSpeciRotFinish);
                     depositArm.setPosition(depositClawSpeciPosFinish);
+                    isMacroing = false;
+                    specimenStep = SpecimenSteps.READY;
                 }
-                specimenStep = SpecimenSteps.READY;
+
+                break;
         }
     }
 
@@ -295,15 +308,7 @@ public class Calvin {
         intakeElbow.setPosition(intakeClawGrabRot);
         intakeArm.setPosition(intakeClawGrabPos);
     }
-    public void tiltLeft(){
-        intakeWrist.setPosition(intakeWristTiltLeft);
-    }
-    public void tiltRight(){
-        intakeWrist.setPosition(intakeWristTiltRight);
-    }
-    public void flip(){
-        intakeWrist.setPosition(intakeWristNormalLeft);
-    }
+
     //Todo: find out if set all this positions simultaneuously actually works
     // -otherwise, use timers
 
@@ -311,33 +316,36 @@ public class Calvin {
     public enum PickUpSteps {
         READY, MOVE, GRAB
     }
-    PickUpSteps pickUpStep = PickUpSteps.READY;
+    public PickUpSteps pickUpStep = PickUpSteps.READY;
 
     public void pickUp(boolean buttonPressed, boolean lastButtonPressed) {
         switch(pickUpStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
                     isMacroing = true;
+                    pickUpTime.reset();
                     pickUpStep = PickUpSteps.MOVE;
                 }
+                break;
             case MOVE:
                 grab();
-                pickUpTime.reset();
                 if (pickUpTime.seconds() >= pickUp1) {
+                    pickUpTime.reset();
                     pickUpStep = PickUpSteps.GRAB;
                 }
+                break;
             case GRAB:
                 if (intakeClaw.getPosition() == intakeClawClosed) {
                     intakeClawOpen();
                 } else if(intakeClaw.getPosition() == intakeClawOpen) {
                     intakeClawClosed();
                 }
-                pickUpTime.reset();
                 if (pickUpTime.seconds() >= pickUp2) {
                     hover();
                     isMacroing = false;
                     pickUpStep = PickUpSteps.READY;
                 }
+                break;
 
         }
     }
@@ -345,10 +353,16 @@ public class Calvin {
     //Todo: this is the timer version (i.e only one button press after closing a claw on sample
     //i.e just use a state machine you guys know what that is
     //Todo: move this to your teleop of choice, it only works in the while loop
+    // i think??
     public enum TransferSteps {
         READY, MOVE, GRAB, LETGO, RETURN;
     }
-    TransferSteps transferStep = TransferSteps.READY;
+    // READY: Waits for the button press to start the transfer sequence
+// MOVE: Moves components to the initial transfer position
+// GRAB: Closes the deposit claw to secure the object
+// LETGO: Opens the intake claw to release the object
+// RETURN: Resets all components to their default positions
+    public TransferSteps transferStep = TransferSteps.READY;
 
 
     public void transferStartClosed(){
@@ -368,41 +382,49 @@ public class Calvin {
         depositArm.setPosition(depositClawTransferPos);
     }
 
+    //Todo: in macros, the timer should be reset AT THE END OF THE STEP TO SET UP FOR THE NEXT
+    // otherwise, THE TIMER WILL BE RESET EVERY CYCLE AND NOT WORK
+    // I THINK
     public void transferEnd(boolean buttonPressed, boolean lastButtonPressed){
         switch(transferStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
                     depositPassive();
                     isMacroing = true;
+                    transferTime.reset();
                     transferStep = TransferSteps.MOVE;
                 }
-
+                break;
             case MOVE:
-                transferTime.reset();
                 if (transferTime.seconds() >= transferPart1){
                     if(intakeClaw.getPosition() == intakeClawClosed){
                         transferStartClosed();
+                        transferTime.reset();
+                        transferStep = TransferSteps.GRAB;
                     }
                     if(intakeClaw.getPosition() == intakeClawOpen) {
                         transferStartOpen();
+                        transferTime.reset();
+                        transferStep = TransferSteps.GRAB;
                     }
-
                 }
-                transferStep = TransferSteps.GRAB;
+                break;
             case GRAB:
-                transferTime.reset();
                 if (transferTime.seconds() >= transferPart2) {
                     depositClaw.setPosition(depositClawClosed);
+                    transferTime.reset();
+                    transferStep = TransferSteps.LETGO;
                 }
-                transferStep = TransferSteps.LETGO;
+                break;
             case LETGO:
-                transferTime.reset();
                 if (transferTime.seconds() >= transferPart3) {
                     intakeClaw.setPosition(intakeClawOpen);
+                    transferTime.reset();
+                    transferStep = TransferSteps.RETURN;
                 }
-                transferStep = TransferSteps.RETURN;
+
+                break;
             case RETURN:
-                transferTime.reset();
                 if (transferTime.seconds() >= transferPart4) {
                     intakeWrist.setPosition(intakeWristFlat);
                     intakeElbow.setPosition(intakeClawPassiveRot);
@@ -410,9 +432,10 @@ public class Calvin {
 
                     depositWrist.setPosition(depositClawPassiveRot);
                     depositArm.setPosition(depositClawPassivePos);
+                    isMacroing = false;
+                    transferStep = TransferSteps.READY;
                 }
-                isMacroing = false;
-                transferStep = TransferSteps.READY;
+                break;
         }
     }
     //We can always make the timer faster, so please don't worry

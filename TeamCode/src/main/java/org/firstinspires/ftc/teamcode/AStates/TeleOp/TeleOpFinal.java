@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.isMacroing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
@@ -35,11 +36,13 @@ public class TeleOpFinal extends LinearOpMode {
 
 //Tele
 
-    Calvin calvin = new Calvin(hardwareMap);
 
+    public static boolean isSpecimen = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        ElapsedTime timer = new ElapsedTime();
+        Calvin calvin = new Calvin(hardwareMap);
 
 
 
@@ -73,7 +76,6 @@ public class TeleOpFinal extends LinearOpMode {
             calvin.pickUp(gamepad2.left_bumper, lastGamepad2.left_bumper);
             calvin.transferEnd(gamepad2.right_bumper, lastGamepad2.right_bumper);
             //Natural horizontal slides
-
             //Todo: change horizontal slides so that driver can increment it
             //Todo: whenever extendo comes out the arm should be forward facing
             /*if(gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
@@ -86,15 +88,15 @@ public class TeleOpFinal extends LinearOpMode {
             if(gamepad2.right_trigger != 0 && lastGamepad2.right_trigger == 0) {
                 calvin.hover();
             }*/
-
+            //TODO: decide how hover works
 
             if (calvin.hSlidesLeft.getPosition() <= hSlidesInside && calvin.hSlidesLeft.getPosition() > hSlidesOutside) {
                 if (gamepad2.left_trigger != 0 && lastGamepad2.left_trigger == 0) {
-                    calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() + increment*gamepad2.left_trigger);
-                    calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment*gamepad2.left_trigger);
+                    calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() + increment * gamepad2.left_trigger);
+                    calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment * gamepad2.left_trigger);
                 } else if (gamepad2.right_trigger != 0 && lastGamepad2.right_trigger == 0) {
-                    calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() - increment*gamepad2.left_trigger);
-                    calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment*gamepad2.left_trigger);
+                    calvin.hSlidesLeft.setPosition(calvin.hSlidesLeft.getPosition() - increment * gamepad2.left_trigger);
+                    calvin.hSlidesRight.setPosition(calvin.hSlidesRight.getPosition() + increment * gamepad2.left_trigger);
                     if (!isMacroing) {
                         calvin.hover();
                     }
@@ -130,9 +132,7 @@ public class TeleOpFinal extends LinearOpMode {
                     calvin.intakeWrist.setPosition(intakeWristNormalRight);
                 }
             }
-
             //Todo: deposit
-
             if(gamepad2.y && !lastGamepad2.y) {
                 if (calvin.depositClaw.getPosition() == depositClawOpen) {
                     calvin.depositClawClosed();
@@ -151,15 +151,31 @@ public class TeleOpFinal extends LinearOpMode {
             //Todo: make a better macro for this specimen stuff somehow
             // - also find a better button haha
             //specimen scoring
-            calvin.scoreSpecimen(gamepad2.b, lastGamepad2.b);
+            //Todo: check if this double press fix actually works
+            //Only if you want
+            /*if (isSpecimen){
+                calvin.scoreSpecimen(gamepad2.b, lastGamepad2.b);
+                isSpecimen = true;
+            } else {
+                if (gamepad2.b && !lastGamepad2.b) {
+                    if (calvin.depositArm.getPosition() == depositClawPassivePos) {
+                        calvin.depositPassive();
+                    } else {
+                        calvin.depositSpecimenStart(); //Ideally you won't need to...
+                    }
+                    isSpecimen = true;
+                }
+            }*/
 
+            calvin.scoreSpecimen(gamepad2.b, lastGamepad2.b);
             if (gamepad2.right_stick_button && !lastGamepad2.right_stick_button) {
-                if (calvin.depositArm.getPosition() == depositClawPassivePos) {
+                if (calvin.depositArm.getPosition() != depositClawPassivePos) {
                     calvin.depositPassive();
                 } else {
                     calvin.depositSpecimenStart(); //Ideally you won't need to...
                 }
             }
+
             //Todo: Vertical Slide Improvements
             if (calvin.vSlidesRight.getCurrentPosition() < 0) {
                 calvin.vSlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow positive power
@@ -195,6 +211,10 @@ public class TeleOpFinal extends LinearOpMode {
             }
 
             //TODO: Hang
+            // ....
+            // ....
+            // Conrad kindly mention that x and y should move the servos and
+            // left bumper and right bumper should move the motors? i think
 
 
 
@@ -218,6 +238,14 @@ public class TeleOpFinal extends LinearOpMode {
             }
             telemetry.addData("Gamepad 1",  gamepad1History.getFirst());
             telemetry.addData("Gamepad 2",  gamepad2History.getFirst());
+            telemetry.addData("isMacroing", isMacroing);
+            telemetry.addData("SpecimenMacro", calvin.specimenStep);
+            telemetry.addData("PickupMacro", calvin.pickUpStep);
+            telemetry.addData("TransferMacro", calvin.transferStep);
+
+            if (timer.seconds() % 1 == 1) {
+                telemetry.addData("Time", timer.seconds());
+            }
             telemetry.update();
 
             // keep last gamepad in because its useful for simple button presses

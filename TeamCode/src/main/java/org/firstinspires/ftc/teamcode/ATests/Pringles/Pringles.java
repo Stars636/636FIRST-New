@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ATests.Pringles;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.Deque;
 import java.util.LinkedList;
-
+@Disabled
 @TeleOp
 public class Pringles extends LinearOpMode {
 

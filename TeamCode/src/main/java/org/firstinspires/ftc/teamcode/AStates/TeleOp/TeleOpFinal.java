@@ -137,6 +137,7 @@ public class TeleOpFinal extends LinearOpMode {
 
                             if (intakeClawPos == intakeClawClosed) {
                                 telemetry.addData("what is happening", calvin.intakeClaw.getPosition());
+                                telemetry.update();
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
@@ -144,7 +145,9 @@ public class TeleOpFinal extends LinearOpMode {
                                 transferStep = TransferSteps.TWICE;
                             } else {
                                 telemetry.addData("i know what's happening", calvin.intakeClaw.getPosition());
+                                telemetry.update();
                                 //calvin.intakeWrist.setPosition(intakeWristNormalLeft);
+                                //todo: needs fix, robot is not recognized intakeclawclosed
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);

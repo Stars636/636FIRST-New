@@ -35,8 +35,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "RUN THIS PLEASE")
-public class TeleOpFinal extends LinearOpMode {
+@TeleOp
+public class TeleOpFinalTester extends LinearOpMode {
 
 
 //Tele
@@ -77,7 +77,6 @@ public class TeleOpFinal extends LinearOpMode {
 
 
     public static boolean isTargeting = false;
-    double intakeClawPos = 0.4;
 
 
     @Override
@@ -102,7 +101,6 @@ public class TeleOpFinal extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            intakeClawPos = calvin.intakeClaw.getPosition();
             //TODO: If you're here
             //if something doesn't work start here
             //intake claw
@@ -117,7 +115,6 @@ public class TeleOpFinal extends LinearOpMode {
                         calvin.depositArm.setPosition(depositClawPassivePos);
                         calvin.hSlidesLeft.setPosition(hSlidesInside);
                         calvin.hSlidesRight.setPosition(hSlidesInside);
-                        intakeClawPos = calvin.intakeClaw.getPosition();
                         isMacroing = true;
                         transferTime.reset();
                         changedRB = true;
@@ -135,16 +132,16 @@ public class TeleOpFinal extends LinearOpMode {
                         calvin.hSlidesRight.setPosition(hSlidesInside);
                         if (transferTime.seconds() > transferPart1) {
 
-                            if (intakeClawPos == intakeClawClosed) {
-                                telemetry.addData("what is happening", calvin.intakeClaw.getPosition());
+                            if (calvin.intakeClaw.getPosition() == intakeClawOpen) {
+                                telemetry.addData("i know what's happening", calvin.intakeClaw.getPosition());
+                                //calvin.intakeWrist.setPosition(intakeWristNormalLeft);
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
                                 transferTime.reset();
                                 transferStep = TransferSteps.TWICE;
                             } else {
-                                telemetry.addData("i know what's happening", calvin.intakeClaw.getPosition());
-                                //calvin.intakeWrist.setPosition(intakeWristNormalLeft);
+                                telemetry.addData("what is happening", calvin.intakeClaw.getPosition());
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);

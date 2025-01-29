@@ -68,7 +68,7 @@ public class TeleOpFinal extends LinearOpMode {
     public static double transferPart4 = 1;
     public static double transferPart5 = 1;
 
-    public static double verticalIncrement = 1;
+    public static double verticalIncrement = 25;
     //Todo: slides are likely slow af. increase this verticalIncrement
     //slides r
 Calvin calvin;
@@ -454,21 +454,42 @@ Calvin calvin;
 
             //Todo: Vertical Slide Improvements
             // if it doesnt work uncomment this
-//calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
-//            calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
+            /*if(!isMacroing) {
+                calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
+                calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
+                if (calvin.vSlidesLeft.getCurrentPosition() < 0) {
+                    calvin.vSlidesLeft.setTargetPosition(0);
+                    calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    calvin.vSlidesLeft.setPower(1);
+
+                    calvin.vSlidesRight.setTargetPosition(0);
+                    calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    calvin.vSlidesRight.setPower(1);
+                }
+                if (calvin.vSlidesLeft.getCurrentPosition() > highBucket) {
+                    calvin.vSlidesLeft.setTargetPosition(highBucket);
+                    calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    calvin.vSlidesLeft.setPower(1);
+
+                    calvin.vSlidesRight.setTargetPosition(highBucket);
+                    calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    calvin.vSlidesRight.setPower(1);
+                }
+            }*/
 
             // Test please
-            int changedHeight = calvin.vSlidesLeft.getCurrentPosition();
+            /*int currentHeight = calvin.vSlidesLeft.getCurrentPosition();
+            int changedHeight = (int) Math.round(verticalIncrement * gamepad2.left_stick_y);
             if (calvin.vSlidesLeft.getCurrentPosition() >= 0 && calvin.vSlidesLeft.getCurrentPosition() <= highBucket) {
                 if (!isMacroing) {
                     if (gamepad2.left_stick_y != 0) {
                         //yes, it is minus
-                        changedHeight -= (int) Math.floor(verticalIncrement * gamepad2.left_stick_y);
-                        moveVerticalSlidesTo(changedHeight);
+                        currentHeight -= changedHeight;
+                        moveVerticalSlidesTo(currentHeight);
 
                     }
                 }
-            }
+            }*/SSZ
             //if
 
 

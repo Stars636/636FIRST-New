@@ -14,7 +14,6 @@ import java.util.LinkedList;
 public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
 
     Gamepad lastGamepad1 = new Gamepad(), lastGamepad2 = new Gamepad();
-    Deque<Gamepad> gamepad1History = new LinkedList<>(), gamepad2History = new LinkedList<>();
 
 
 
@@ -33,23 +32,11 @@ public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
 
         while (opModeIsActive()) {
             //if something doesn't work start here
-            if (gamepad2.start || gamepad1.start) return;
-
-
-            gamepad1History.add(gamepad1);
-            gamepad2History.add(gamepad2);
-            // delete everything in gamepad histories with a 500 cycle delay
-            if (gamepad1History.size() > 500) {
-                gamepad1History.removeLast();
-                gamepad2History.removeLast();
-            }
-            telemetry.addData("Gamepad 1",  gamepad1History.getFirst());
-            telemetry.addData("Gamepad 2",  gamepad2History.getFirst());
+            telemetry.addData("gamepad a", gamepad2.a);
+            telemetry.addData("gamepad right trigger", gamepad2.right_trigger);
+            telemetry.addData("gamepad right stick button", gamepad2.right_stick_button);
+            telemetry.addData("gamepad dpad left", gamepad2.dpad_left);
             telemetry.update();
-
-            // keep last gamepad in because its useful for simple button presses
-            lastGamepad1.copy(gamepad1);
-            lastGamepad2.copy(gamepad2);
 
         }
 

@@ -2,14 +2,9 @@ package com.example.meepmeeptesting;
 
 import static java.lang.Math.PI;
 
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
-import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
@@ -21,11 +16,17 @@ public class MeepMeepTesting {
 
         double xStart = 0;
         double yStart = -64;
-        double fraudOffset = 20;
-        double xStartfraud = 0;
-        double yStartfraud = 64;
+
+        double xBegin = 0;
+        double yBegin = -64;
+        double offset = 15;
+
+        //double fraudOffset = 20;
+        //double xStartfraud = 0;
+        //double yStartfraud = 64;
 
         Pose2d scorePose = new Pose2d(xInitial - 17, yInitial + 4, Math.toRadians(45));
+
         RoadRunnerBotEntity basketBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12)
@@ -40,12 +41,14 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        RoadRunnerBotEntity specimenBotFraud = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+
+        RoadRunnerBotEntity specimenAndBasket = new DefaultBotBuilder(meepMeep)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
+
         Pose2d startPose = new Pose2d(0, 0, 0);
         Pose2d scorePosee = new Pose2d(xInitial + 12, yInitial + 12, Math.toRadians(-45));
+
         turnBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xInitial, xInitial, 0))
                 .splineToLinearHeading(scorePosee, Math.toRadians(0))
 
@@ -77,6 +80,15 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(scorePose, Math.toRadians(50))
                 .build());
 
+        specimenAndBasket.runAction(specimenAndBasket.getDrive().actionBuilder(new Pose2d(xBegin, yBegin, 3*PI/2))
+                .splineToLinearHeading(new Pose2d(xBegin, yBegin + 25, Math.toRadians(270)), Math.toRadians(270)) //moves to score specimen
+                //score specimen
+                .splineToLinearHeading(new Pose2d(xBegin - 48, yBegin + 16, Math.toRadians(90)), Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(xBegin + offset, yBegin + 10, Math.toRadians(0)), Math.toRadians(0))
+
+
+                .build());
+
         specimenBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xStart, yStart, 3*PI/2))
                 .splineToLinearHeading(new Pose2d(xStart, yStart + 25, Math.toRadians(270)), Math.toRadians(270))
 
@@ -104,33 +116,6 @@ public class MeepMeepTesting {
 
                 .build());
 
-        specimenBotFraud.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xStart, yStart, 3*PI/2))
-                .splineToLinearHeading(new Pose2d(xStart, yStart + 25, Math.toRadians(270)), Math.toRadians(270))
-                                //.lineToY(24)
-                //.lineToY(24)
-
-                /*.splineToLinearHeading(new Pose2d(xStart + 40, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 48, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 58, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 50, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart + 64, yStart + 10, Math.toRadians(90)), Math.toRadians(270))
-                //CYNTHIA I FOUND SOMETHING COOL
-                .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-                //.splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-                //.splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-                //.splineToLinearHeading(new Pose2d(xStart, yStart + 15, Math.toRadians(270)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xStart, yStart + 34, Math.toRadians(270)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(xStart + 38, yStart + 2, Math.toRadians(90)), Math.toRadians(270))
-*/
-                .build());
 
 
 
@@ -139,10 +124,10 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                //.addEntity(basketBot)
+                .addEntity(basketBot)
                 //.addEntity(specimenBot)
-                //.addEntity(specimenBotFraud)
-                .addEntity(turnBot)
+                //.addEntity(specimenAndBasket)
+                //.addEntity(turnBot)
                 //.addEntity(myBot)
                 .start();
     }

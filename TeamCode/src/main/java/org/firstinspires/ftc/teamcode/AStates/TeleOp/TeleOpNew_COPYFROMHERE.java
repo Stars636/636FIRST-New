@@ -17,13 +17,13 @@ public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
     Deque<Gamepad> gamepad1History = new LinkedList<>(), gamepad2History = new LinkedList<>();
 
 
-    Calvin calvin = new Calvin(hardwareMap);
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
-
+        Calvin calvin = new Calvin(hardwareMap);
 
         waitForStart();
 

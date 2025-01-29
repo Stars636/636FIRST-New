@@ -35,52 +35,50 @@ public class Calvin {
 
     public static int hangFinish; //add this to the current position of the hang motors
 
-    public static double depositClawOpen = 0.17;
-    public static double depositClawClosed = 0.30;
+    public static double depositClawOpen = 0;
+    public static double depositClawClosed = 0.4;
 
 
-    public static double depositClawPassivePos = 0.65;
+    public static double depositClawPassivePos = 0.85;
 
-    public static double depositClawPassiveRot = 0.43;
+    public static double depositClawPassiveRot = 0.3;
 
     public static double depositClawTransferPos = 0.9;
 
-    public static double depositClawTransferRot = 0.06;
+    public static double depositClawTransferRot = 0.13;
 
-    public static double depositClawScorePos = 0.4;
+    public static double depositClawScorePos = 0.5;
 
-    public static double depositClawScoreRot = 1;
+    public static double depositClawScoreRot = 0.8;
 
-    public static double depositClawSpeciPosStart = 0.05;
+    public static double depositClawSpeciPosStart = 0.2;
 
-    public static double depositClawSpeciRotStart = 0.95;
+    public static double depositClawSpeciRotStart = 1;
 
-    public static double depositClawSpeciPosMiddle = 0.3;
-    public static double depositClawSpeciRotMiddle = 0.8;
-    public static double depositClawSpeciPosFinish = 0;
-    public static double depositClawSpeciRotFinish = 1;
+    public static double depositClawSpeciPosFinish = 0.3;
+    public static double depositClawSpeciRotFinish = 0.75;
 
     public static double increment = 0.01;
     public static double floatPosition = 0.9;
 
 
 
-    public static double hSlidesInside = 0.99;
-    public static double hSlidesOutside = 0.68;
+    public static double hSlidesInside = 1;
+    public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0;
     public static double intakeClawClosed = 0.4;
-    public static double intakeClawTransferPos;
-    public static double intakeClawTransferRot;
-    public static double intakeClawPassivePos;
-    public static double intakeClawPassiveRot;
+    public static double intakeClawTransferPos = 0.6;
+    public static double intakeClawTransferRot = 0.29;
+    public static double intakeClawPassivePos = 0.3;
+    public static double intakeClawPassiveRot = 0.3;
     public static double intakeClawHoverPos = 0.4;
     public static double intakeClawHoverRot = 0.9;
     public static double intakeClawGrabPos = 0.35;
-    public static double intakeClawGrabRot =0.95;
+    public static double intakeClawGrabRot = 0.95;
     public static double intakeWristFlat = 0.55;
     public static double intakeWristTiltRight = 0.4;
-    public static double intakeWristNormalLeft;
-    public static double intakeWristNormalRight; //as in perpendicular
+    public static double intakeWristNormalLeft = 0.85;
+    public static double intakeWristNormalRight = 0.2; //as in perpendicular
     //Todo: refactor this to a better name
     public static double intakeWristTiltLeft = 0.72;
     public static double hangServoInitial;
@@ -103,6 +101,8 @@ public class Calvin {
     public static double specimenPart1 = 3;
 
     public static boolean isMacroing = false;
+
+
 
     public static boolean isTargeting = false; //Todo: make the vertical slides able to go to a specific position
 
@@ -217,12 +217,8 @@ public class Calvin {
 
     //FIXME
     // -Add all the basic functions
-    public void intakeClawOpen(){
-        intakeClaw.setPosition(intakeClawOpen);
-    }
-    public void intakeClawClosed(){
-        intakeClaw.setPosition(intakeClawClosed);
-    }
+
+
     public void depositClawOpen(){
         depositClaw.setPosition(depositClawOpen);
     }
@@ -238,7 +234,7 @@ public class Calvin {
         hSlidesRight.setPosition(hSlidesOutside);
     }
     public void intakePassive(){
-        //intakeClaw.setPosition(intakeClawOpen);
+
         intakeWrist.setPosition(intakeWristFlat);
         intakeElbow.setPosition(intakeClawPassiveRot);
         intakeArm.setPosition(intakeClawPassivePos);
@@ -337,9 +333,9 @@ public class Calvin {
                 break;
             case GRAB:
                 if (intakeClaw.getPosition() == intakeClawClosed) {
-                    intakeClawOpen();
+                    intakeClaw.setPosition(intakeClawOpen);
                 } else if(intakeClaw.getPosition() == intakeClawOpen) {
-                    intakeClawClosed();
+                    intakeClaw.setPosition(intakeClawClosed);
                 }
                 if (pickUpTime.seconds() >= pickUp2) {
                     hover();
@@ -369,7 +365,7 @@ public class Calvin {
     public void transferStartClosed(){
         intakeWrist.setPosition(intakeWristFlat);
         intakeElbow.setPosition(intakeClawTransferRot);
-        intakeArm.setPosition(intakeClawTransferRot);
+        intakeArm.setPosition(intakeClawTransferPos);
         depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawTransferRot);
         depositArm.setPosition(depositClawTransferPos);
@@ -377,7 +373,7 @@ public class Calvin {
     public void transferStartOpen(){
         intakeWrist.setPosition(intakeWristNormalLeft);
         intakeElbow.setPosition(intakeClawTransferRot);
-        intakeArm.setPosition(intakeClawTransferRot);
+        intakeArm.setPosition(intakeClawTransferPos);
         depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawTransferRot);
         depositArm.setPosition(depositClawTransferPos);

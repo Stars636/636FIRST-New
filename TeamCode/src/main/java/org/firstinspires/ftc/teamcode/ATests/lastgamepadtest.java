@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AStates.TeleOp;
+package org.firstinspires.ftc.teamcode.ATests;
 
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;

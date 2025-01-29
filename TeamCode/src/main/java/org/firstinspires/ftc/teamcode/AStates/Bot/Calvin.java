@@ -27,9 +27,13 @@ public class Calvin {
     public ServoImpl hangServoLeft;
     public ServoImpl hangServoRight;
 
-    public static int lowBucket;
+    public static int lowBucket = 1400; //todo: test this
 
-    public static int highBucket;
+    public static int highSpecimen = 2000; //todo: test this
+
+    public static int lowSpecimen = 1000; //todo: test this(low priority)
+
+    public static int highBucket = 3000;
 
     public static int hangStart; //note this is the verticalSlides
 
@@ -124,9 +128,9 @@ public class Calvin {
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class,"vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -253,12 +257,7 @@ public class Calvin {
         depositArm.setPosition(depositClawSpeciRotStart);
     }
 
-    public void hangPassive(){
-        //hangServo.setPosition(hangServoInitial);
-    }
-    public void hangSet(){
-       // hangServo.setPosition(hangServoFinish);
-    }
+
 
     //Todo: Create a function for scoring specimens, whether using the timer or not
     // -Currently questionable

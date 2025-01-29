@@ -4,29 +4,31 @@ public class CLICKHEREPLEASE {
     //TODO: If you're here looking at the code, please look at the todo list
     // -You can also add your own lists
     // -Good luck everyone!!
+    //Todo:
+    //  -I have looked through every todo comment in code and placed it here
+    //  -me when i lie please read the code
 
 
 
-    //TODO: Egunjobi
-    // Check edge cases for every if statement
-    // Go through the state machine step by step. Is it sensible
-    // Go through the docs and work on auto (and move silently)
-    //  Retune the bot
-    //  Test the positions
-    // Reorganize the rest of the files and delete actually unimportant stuff
+    //TODO:
+    //  Check edge cases for every if statement
+    //  Go through the roadrunner docs and work on auto (and move silently)
+    //  Retune the bot in roadrunner
+    //  Reorganize the rest of the files and delete actually unimportant stuff
+    // if some code doesnt work for the macros remove random break statements idk
 
 
-    //TODO: Zhang
+    //TODO:
     //
     //
     //
 
-    //TODO: Uchida
+    //TODO:
     //
     //
     //
 
-    //TODO: Presanna
+    //TODO:
     //
     //
     //

@@ -14,6 +14,8 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTrans
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highSpecimen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.increment;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
@@ -30,6 +32,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltR
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
@@ -65,16 +68,20 @@ public class TeleOpFinal extends LinearOpMode {
     public static double transferPart4 = 1;
     public static double transferPart5 = 1;
 
+    public static double verticalIncrement = 1;
+    //Todo: slides are likely slow af. increase this verticalIncrement
+    //slides r
+Calvin calvin;
     public ElapsedTime pickUpTime = new ElapsedTime();
 
     public static double pickUp1 = 0.1;//lower this over time LOL
     public static double pickUp2 = 0.1;
     public ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimenPart1 = 3;
+    public static double specimenPart0 = 1;
+    public static double specimenPart1 = 2;
 
     public static boolean isMacroing = false;
-
-
+    //macroing
 
     public static boolean isTargeting = false;
     double intakeClawPos = 0.4;
@@ -83,7 +90,9 @@ public class TeleOpFinal extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime timer = new ElapsedTime();
-        Calvin calvin = new Calvin(hardwareMap);
+        //todo:maybe call differently?
+        calvin = new Calvin(hardwareMap);
+        //
         //Todo: LAST GAMEPAD is NOT working
         //The code is so messy rn im really sorry but i'm a little off
 
@@ -147,7 +156,7 @@ public class TeleOpFinal extends LinearOpMode {
                                 telemetry.addData("i know what's happening", calvin.intakeClaw.getPosition());
                                 telemetry.update();
                                 //calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                                //todo: needs fix, robot is not recognized intakeclawclosed
+                                //todo: needs fix, robot is not recognized intakeClawClosed
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
@@ -155,9 +164,7 @@ public class TeleOpFinal extends LinearOpMode {
                                 transferStep = TransferSteps.TWICE;
                             }
                         }
-
-
-
+                    break;
                 case TWICE:
                     if (transferTime.seconds() >= transferPart2){
                         telemetry.addLine("yes1");
@@ -253,7 +260,7 @@ public class TeleOpFinal extends LinearOpMode {
                         calvin.intakeClaw.setPosition(intakeClawClosed);
                         pickUpStep = PickUpSteps.GRAB;
                     }
-
+                    break;
                 case GRAB:
                     if (pickUpTime.seconds() >= pickUp2) {
                         calvin.hover();
@@ -298,6 +305,8 @@ public class TeleOpFinal extends LinearOpMode {
                     }
                 }
             }
+            //Todo: handle edge cases
+            //DONE
             if (calvin.hSlidesLeft.getPosition() > hSlidesInside) {
                 calvin.hSlidesLeft.setPosition(hSlidesInside);
                 calvin.hSlidesRight.setPosition(hSlidesInside);
@@ -306,14 +315,6 @@ public class TeleOpFinal extends LinearOpMode {
                 calvin.hSlidesLeft.setPosition(hSlidesOutside);
                 calvin.hSlidesRight.setPosition(hSlidesOutside);
             }
-
-            //Todo: handle edge cases
-
-
-
-
-
-
             //Todo: wrist code somewhat overcomplicated
             if(gamepad2.dpad_left && !changedLeft) {
                 if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
@@ -404,11 +405,22 @@ public class TeleOpFinal extends LinearOpMode {
                     if (gamepad2.b && !changedB) {
                         isMacroing = true;
                         calvin.depositClaw.setPosition(depositClawClosed);
+                        moveVerticalSlidesTo(0);
                         specimenTime.reset();
                         changedB = true;
-                        specimenStep = SpecimenSteps.FINAL;
+                        specimenStep = SpecimenSteps.CHILL;
                     } else if (!gamepad2.b){
                         changedB = false;
+                    }
+                    break;
+                case CHILL:
+                    if (!gamepad2.b){
+                        changedB = false;
+                    }
+                    if (specimenTime.seconds() >= specimenPart0) {
+                        moveVerticalSlidesTo(highSpecimen);
+                        specimenTime.reset();
+                        specimenStep = SpecimenSteps.FINAL;
                     }
                     break;
                 case FINAL:
@@ -419,9 +431,9 @@ public class TeleOpFinal extends LinearOpMode {
                         calvin.depositWrist.setPosition(depositClawSpeciRotFinish);
                         calvin.depositArm.setPosition(depositClawSpeciPosFinish);
                         isMacroing = false;
+                        specimenTime.reset();
                         specimenStep = SpecimenSteps.READY;
                     }
-
                     break;
             }
 
@@ -441,37 +453,30 @@ public class TeleOpFinal extends LinearOpMode {
             }
 
             //Todo: Vertical Slide Improvements
-           /* if (calvin.vSlidesLeft.getCurrentPosition() < 0) {
-                calvin.vSlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow positive power
-                calvin.vSlidesRight.setPower(Math.max(-gamepad2.left_stick_y, 0));
-            } else if (calvin.vSlidesLeft.getCurrentPosition() > highBucket) {
-                calvin.vSlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow negative power
-                calvin.vSlidesRight.setPower(Math.min(-gamepad2.left_stick_y, 0));
-            } else {
-                calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
-                calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
-            }*/
+            // if it doesnt work uncomment this
+//calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
+//            calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
 
-            /*if(calvin.vSlidesLeft.getCurrentPosition() >= 0 && calvin.vSlidesLeft.getCurrentPosition() < highBucket) {
-                calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
-                calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
-            } else if(calvin.vSlidesLeft.getCurrentPosition() > highBucket){
-                calvin.vSlidesLeft.setPower(Math.min(-gamepad2.left_stick_y, 0));  // Only allow negative power
-                calvin.vSlidesRight.setPower(Math.min(-gamepad2.left_stick_y, 0));
-            } else if(calvin.vSlidesLeft.getCurrentPosition() < 0) {
-                calvin.vSlidesLeft.setPower(Math.max(-gamepad2.left_stick_y, 0));  // Only allow positive power
-                calvin.vSlidesRight.setPower(Math.max(-gamepad2.left_stick_y, 0));
+            // Test please
+            int changedHeight = calvin.vSlidesLeft.getCurrentPosition();
+            if (calvin.vSlidesLeft.getCurrentPosition() >= 0 && calvin.vSlidesLeft.getCurrentPosition() <= highBucket) {
+                if (!isMacroing) {
+                    if (gamepad2.left_stick_y != 0) {
+                        //yes, it is minus
+                        changedHeight -= (int) Math.floor(verticalIncrement * gamepad2.left_stick_y);
+                        moveVerticalSlidesTo(changedHeight);
 
-            }*/
-            calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y); //Natural Movement
-            calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
+                    }
+                }
+            }
+            //if
+
 
             //Todo: DRIVER CONTROLS
             // - I.E. DRIVETRAIN and HANG
 
             //TODO: Driving
-            //thansk david
-
+            //thanks, david
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
@@ -536,7 +541,7 @@ public class TeleOpFinal extends LinearOpMode {
 
     }
     enum TransferSteps {
-        READY, MOVE, TWICE, GRAB, LETGO, RETURN;
+        READY, MOVE, TWICE, GRAB, LETGO, RETURN
     }
     // READY: Waits for the button press to start the transfer sequence
 // MOVE: Moves components to the initial transfer position
@@ -551,9 +556,23 @@ public class TeleOpFinal extends LinearOpMode {
     public PickUpSteps pickUpStep = PickUpSteps.READY;
 
     enum SpecimenSteps {
-        READY, FINAL
+        READY, CHILL, FINAL
     }
     public SpecimenSteps specimenStep = SpecimenSteps.READY;
+
+    private void moveVerticalSlidesTo(int targetPosition) {
+        if (targetPosition < 0) targetPosition = 0;
+        if (targetPosition > highBucket) targetPosition = highBucket;
+
+        calvin.vSlidesLeft.setTargetPosition(targetPosition);
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        calvin.vSlidesLeft.setPower(1);
+
+        calvin.vSlidesRight.setTargetPosition(targetPosition);
+        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        calvin.vSlidesRight.setPower(1);
+
+    }
 
 
 }

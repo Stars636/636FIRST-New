@@ -400,7 +400,7 @@ public class TeleOpFinalTester extends LinearOpMode {
                         calvin.depositClaw.setPosition(depositClawClosed);
                         specimenTime.reset();
                         changedB = true;
-                        specimenStep = SpecimenSteps.FINAL;
+                        specimenStep = SpecimenStep.FINAL;
                     } else if (!gamepad2.b){
                         changedB = false;
                     }
@@ -413,7 +413,7 @@ public class TeleOpFinalTester extends LinearOpMode {
                         calvin.depositWrist.setPosition(depositClawSpeciRotFinish);
                         calvin.depositArm.setPosition(depositClawSpeciPosFinish);
                         isMacroing = false;
-                        specimenStep = SpecimenSteps.READY;
+                        specimenStep = SpecimenStep.READY;
                     }
 
                     break;
@@ -544,10 +544,10 @@ public class TeleOpFinalTester extends LinearOpMode {
     }
     public PickUpSteps pickUpStep = PickUpSteps.READY;
 
-    enum SpecimenSteps {
+    enum SpecimenStep {
         READY, FINAL
     }
-    public SpecimenSteps specimenStep = SpecimenSteps.READY;
+    public SpecimenStep specimenStep = SpecimenStep.READY;
 
 
 }

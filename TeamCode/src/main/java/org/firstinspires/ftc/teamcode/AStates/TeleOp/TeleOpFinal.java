@@ -544,7 +544,8 @@ Calvin calvin;
         READY, MOVE, TWICE, GRAB, LETGO, RETURN
     }
     // READY: Waits for the button press to start the transfer sequence
-// MOVE: Moves components to the initial transfer position
+// MOVE: Moves intake claw to transfer position
+    //TWICE: Moves deposit claw to transfer position
 // GRAB: Closes the deposit claw to secure the object
 // LETGO: Opens the intake claw to release the object
 // RETURN: Resets all components to their default positions

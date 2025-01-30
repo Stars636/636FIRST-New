@@ -28,7 +28,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNorma
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -37,21 +36,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "RUN THIS PLEASE")
-public class TeleOpFinal extends LinearOpMode {
+@TeleOp (group = "States", name = "RUN THIS FOR NOW")
+public class Checker extends LinearOpMode {
 
 
 //Tele
 
 
-    public static boolean isSpecimen = false;
     boolean changedX = false;
     boolean changedY = false;
 
     boolean changedA = false;
     boolean changedB = false;
 
-    boolean changedRST = false;
     boolean changedRB = false;
     boolean changedLB = false;
 
@@ -62,48 +59,25 @@ public class TeleOpFinal extends LinearOpMode {
     public static double transferPart1 = 0.3;
     public static double transferPart2 = 0.7;
     public static double transferPart3 = 0.1;
-
-
     public static double transferPart4 = 0.1;
     public static double transferPart5 = 0.7;
-
-
-
-    //Todo: slides are likely slow af. increase this verticalIncrement
-    //slides r
-Calvin calvin;
+    Calvin calvin;
     public ElapsedTime pickUpTime = new ElapsedTime();
-
     public static double pickUp1 = 0.1;//lower this over time LOL
     public static double pickUp2 = 0.1;
     public ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart0 = 1;
     public static double specimenPart1 = 2;
-
     public static boolean isMajorMacroing = false;
-
-    //macroing
-
     double intakeClawPos = 0.4;
-
-
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime timer = new ElapsedTime();
-        //todo:maybe call differently?
         calvin = new Calvin(hardwareMap);
-        //
-        //Todo: LAST GAMEPAD is NOT working
-        //The code is so messy rn im really sorry but i'm a little off
-
-
-
-
 
         waitForStart();
 
         calvin.initialBucket();
-
 
         telemetry.addLine("Best Wishes!");
         telemetry.update();
@@ -111,14 +85,10 @@ Calvin calvin;
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            //Just checking
             intakeClawPos = calvin.intakeClaw.getPosition();
-            //TODO: If you're here
-            //if something doesn't work start here
-            //intake claw
-            //TODO: change button
 
-            //calvin.transferEnd(gamepad2.right_bumper, lastGamepad2.right_bumper);
-
+            //NOTE
             switch(transferStep) {
                 case READY:
                     if (gamepad2.right_bumper && !changedRB) {
@@ -147,16 +117,14 @@ Calvin calvin;
                         calvin.hSlidesRight.setPosition(hSlidesInside);
                         if (transferTime.seconds() > transferPart1) {
                             if (intakeClawPos == intakeClawClosed) {
-                                telemetry.addData("what is happening", calvin.intakeClaw.getPosition());
-                                telemetry.update();
+
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
                                 transferTime.reset();
                                 transferStep = TransferSteps.TWICE;
                             } else {
-                                telemetry.addData("i know what's happening", calvin.intakeClaw.getPosition());
-                                telemetry.update();
+
                                 //calvin.intakeWrist.setPosition(intakeWristNormalLeft);
                                 //todo: needs fix, robot is not recognized intakeClawClosed
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
@@ -219,27 +187,7 @@ Calvin calvin;
                     }
                     break;
             }
-            //erm
-            //todo: fix button issue
-
-            if(gamepad2.x && !changedX) {
-                if(calvin.intakeClaw.getPosition() == intakeClawClosed) {
-                    calvin.intakeClaw.setPosition(intakeClawOpen);
-                    changedX = true;
-                } else if (calvin.intakeClaw.getPosition() == intakeClawOpen){
-                    calvin.intakeClaw.setPosition(intakeClawClosed);
-                    changedX = true;
-                } else {
-                    calvin.intakeClaw.setPosition(intakeClawClosed);
-                    changedX = true;
-                }
-            } else if (!gamepad2.x) {
-                changedX = false;
-            }
-            //Todo: check that transfer even works
-            // -these are both state machines and require the most testing and scrutiny
-            //Todo: make backups?
-            //calvin.pickUp(gamepad2.left_bumper, lastGamepad2.left_bumper);
+            //
             switch(pickUpStep) {
                 case READY:
                     if (gamepad2.left_bumper && !changedLB) {
@@ -282,12 +230,6 @@ Calvin calvin;
 
             }
 
-            //
-            //Natural horizontal slides
-            //Todo: change horizontal slides so that driver can increment it
-            //Todo: whenever extendo comes out the arm should be forward facing
-
-            //TODO: decide how hover works
             double changedBy = calvin.hSlidesLeft.getPosition();
             if (calvin.hSlidesLeft.getPosition() < hSlidesInside && calvin.hSlidesLeft.getPosition() >= hSlidesOutside) {
                 if (gamepad2.left_trigger != 0) {
@@ -352,7 +294,7 @@ Calvin calvin;
             } else if (!gamepad2.dpad_right) {
                 changedRight = false;
             }
-            //Todo: deposit
+
 
             switch (intakeClawMacro){
                 case OPENED:
@@ -396,105 +338,100 @@ Calvin calvin;
             }
 
 
-
-
-                switch(armMacro) {
-                    case PASSIVE:
-                        if (!isMajorMacroing) {
-                            if (gamepad2.a && !changedA) {
-                                calvin.depositWrist.setPosition(depositClawScoreRot);
-                                calvin.depositArm.setPosition(depositClawScorePos);
-                                changedA = true;
-                                armMacro = ArmMacro.SCORE;
-                            } else if (!gamepad2.a) {
-                                changedA = false;
-                            }
-                            if (gamepad2.b && !changedB) {
-                                calvin.depositWrist.setPosition(depositClawSpeciRotStart);
-                                calvin.depositArm.setPosition(depositClawSpeciPosStart);
-                                changedB = true;
-                                armMacro = ArmMacro.SPECIMENSTART;
-                            } else if (!gamepad2.b) {
-                                changedB = false;
-                            }
+            switch(armMacro) {
+                case PASSIVE:
+                    if (!isMajorMacroing) {
+                        if (gamepad2.a && !changedA) {
+                            calvin.depositWrist.setPosition(depositClawScoreRot);
+                            calvin.depositArm.setPosition(depositClawScorePos);
+                            changedA = true;
+                            armMacro = ArmMacro.SCORE;
+                        } else if (!gamepad2.a) {
+                            changedA = false;
                         }
-                        break;
-
-                    case SCORE:
-                        if (!isMajorMacroing) {
-                            if (gamepad2.a && !changedA) {
-                                calvin.depositWrist.setPosition(depositClawPassiveRot);
-                                calvin.depositArm.setPosition(depositClawPassivePos);
-                                changedA = true;
-                                armMacro = ArmMacro.PASSIVE;
-                            } else if (!gamepad2.a) {
-                                changedA = false;
-                            }
-                            if (gamepad2.b && !changedB) {
-                                calvin.depositWrist.setPosition(depositClawSpeciRotStart);
-                                calvin.depositArm.setPosition(depositClawSpeciPosStart);
-                                changedB = true;
-                                armMacro = ArmMacro.SPECIMENSTART;
-                            } else if (!gamepad2.b) {
-                                changedB = false;
-                            }
+                        if (gamepad2.b && !changedB) {
+                            calvin.depositWrist.setPosition(depositClawSpeciRotStart);
+                            calvin.depositArm.setPosition(depositClawSpeciPosStart);
+                            changedB = true;
+                            armMacro = ArmMacro.SPECIMENSTART;
+                        } else if (!gamepad2.b) {
+                            changedB = false;
                         }
-                        break;
+                    }
+                    break;
 
-                    case SPECIMENSTART:
-                        if (!isMajorMacroing) {
-                            if (gamepad2.a && !changedA) {
-                                calvin.depositWrist.setPosition(depositClawScoreRot);
-                                calvin.depositArm.setPosition(depositClawScorePos);
-                                changedA = true;
-                                armMacro = ArmMacro.SCORE;
-                            } else if (!gamepad2.a) {
-                                changedA = false;
-                            }
-                            if (gamepad2.b && !changedB) {
-                                calvin.depositWrist.setPosition(depositClawPassiveRot);
-                                calvin.depositArm.setPosition(depositClawPassivePos);
-                                changedB = true;
-                                armMacro = ArmMacro.PASSIVE;
-                            } else if (!gamepad2.b) {
-                                changedB = false;
-                            }
+                case SCORE:
+                    if (!isMajorMacroing) {
+                        if (gamepad2.a && !changedA) {
+                            calvin.depositWrist.setPosition(depositClawPassiveRot);
+                            calvin.depositArm.setPosition(depositClawPassivePos);
+                            changedA = true;
+                            armMacro = ArmMacro.PASSIVE;
+                        } else if (!gamepad2.a) {
+                            changedA = false;
                         }
-                        break;
-                    case SPECIMENFINISH:
-                        if (!isMajorMacroing) {
-                            if (gamepad2.a && !changedA) {
-                                calvin.depositWrist.setPosition(depositClawPassiveRot);
-                                calvin.depositArm.setPosition(depositClawPassivePos);
-                                changedA = true;
-                                armMacro = ArmMacro.PASSIVE;
-                            } else if (!gamepad2.a) {
-                                changedA = false;
-                            }
-                            if (gamepad2.b && !changedB) {
-                                calvin.depositWrist.setPosition(depositClawPassiveRot);
-                                calvin.depositArm.setPosition(depositClawPassivePos);
-                                changedB = true;
-                                armMacro = ArmMacro.PASSIVE;
-                            } else if (!gamepad2.b) {
-                                changedB = false;
-                            }
+                        if (gamepad2.b && !changedB) {
+                            calvin.depositWrist.setPosition(depositClawSpeciRotStart);
+                            calvin.depositArm.setPosition(depositClawSpeciPosStart);
+                            changedB = true;
+                            armMacro = ArmMacro.SPECIMENSTART;
+                        } else if (!gamepad2.b) {
+                            changedB = false;
                         }
-                        break;
-                    default:
-                        armMacro = ArmMacro.PASSIVE;
-                        break;
+                    }
+                    break;
 
-                }
+                case SPECIMENSTART:
+                    if (!isMajorMacroing) {
+                        if (gamepad2.a && !changedA) {
+                            calvin.depositWrist.setPosition(depositClawScoreRot);
+                            calvin.depositArm.setPosition(depositClawScorePos);
+                            changedA = true;
+                            armMacro = ArmMacro.SCORE;
+                        } else if (!gamepad2.a) {
+                            changedA = false;
+                        }
+                        if (gamepad2.b && !changedB) {
+                            calvin.depositWrist.setPosition(depositClawPassiveRot);
+                            calvin.depositArm.setPosition(depositClawPassivePos);
+                            changedB = true;
+                            armMacro = ArmMacro.PASSIVE;
+                        } else if (!gamepad2.b) {
+                            changedB = false;
+                        }
+                    }
+                    break;
+                case SPECIMENFINISH:
+                    if (!isMajorMacroing) {
+                        if (gamepad2.a && !changedA) {
+                            calvin.depositWrist.setPosition(depositClawPassiveRot);
+                            calvin.depositArm.setPosition(depositClawPassivePos);
+                            changedA = true;
+                            armMacro = ArmMacro.PASSIVE;
+                        } else if (!gamepad2.a) {
+                            changedA = false;
+                        }
+                        if (gamepad2.b && !changedB) {
+                            calvin.depositWrist.setPosition(depositClawPassiveRot);
+                            calvin.depositArm.setPosition(depositClawPassivePos);
+                            changedB = true;
+                            armMacro = ArmMacro.PASSIVE;
+                        } else if (!gamepad2.b) {
+                            changedB = false;
+                        }
+                    }
+                    break;
+                default:
+                    armMacro = ArmMacro.PASSIVE;
+                    break;
+
+            }
 
             //Todo: make a better macro for this specimen stuff somehow
             // - also find a better button haha
             //specimen scoring
             //Todo: check if this double press fix actually works
             //Only if you want
-
-
-
 
             switch (specimenStep) {
                 case READY:
@@ -598,14 +535,7 @@ Calvin calvin;
             telemetry.addData("Deposit Claw", depositClawMacro);
             telemetry.update();
 
-
-            // keep last gamepad in because its useful for simple button presses
-
-
         }
-
-
-
     }
     //Todo: MAJOR MACROS
     enum TransferSteps {
@@ -629,16 +559,12 @@ Calvin calvin;
     }
     public SpecimenSteps specimenStep = SpecimenSteps.READY;
 
-
-
-
     //Todo: MINOR MACROS
 
     public enum ArmMacro {
         PASSIVE, SCORE, SPECIMENSTART, SPECIMENFINISH
     }
     public ArmMacro armMacro = ArmMacro.PASSIVE;
-
     enum IntakeClawMacro {
         OPENED, CLOSED
     }

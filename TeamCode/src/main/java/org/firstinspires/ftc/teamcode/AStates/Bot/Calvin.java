@@ -265,10 +265,10 @@ public class Calvin {
     // -Function for score (maybe with timer) (if you use a statemachine move it to tele)
     // -I'll leave this to you. :)
 
-    enum SpecimenSteps {
+    enum SpecimenPickupSteps {
         READY, FINAL
     }
-    public SpecimenSteps specimenStep = SpecimenSteps.READY;
+    public SpecimenPickupSteps specimenStep = SpecimenPickupSteps.READY;
     public void scoreSpecimen(boolean buttonPressed, boolean lastButtonPressed) { //so on so forth
         switch (specimenStep) {
             case READY:
@@ -276,7 +276,7 @@ public class Calvin {
                     isMacroing = true;
                     depositClaw.setPosition(depositClawClosed);
                     specimenTime.reset();
-                    specimenStep = SpecimenSteps.FINAL;
+                    specimenStep = SpecimenPickupSteps.FINAL;
                 }
                 break;
             case FINAL:
@@ -284,7 +284,7 @@ public class Calvin {
                     depositWrist.setPosition(depositClawSpeciRotFinish);
                     depositArm.setPosition(depositClawSpeciPosFinish);
                     isMacroing = false;
-                    specimenStep = SpecimenSteps.READY;
+                    specimenStep = SpecimenPickupSteps.READY;
                 }
 
                 break;

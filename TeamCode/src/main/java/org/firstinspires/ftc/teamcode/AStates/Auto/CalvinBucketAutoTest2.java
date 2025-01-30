@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.Claw;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
@@ -25,9 +26,12 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 public class CalvinBucketAutoTest2 extends LinearOpMode {
 
-    public class Intake {
+    //Todo: Claw
+    public class Claw {
 
     }
+
+
 
 
     PinpointDrive drive;
@@ -38,8 +42,10 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
         drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
 
+
         ElapsedTime et = new ElapsedTime();
         Calvin calvin = new Calvin(hardwareMap);
+        Calvin.Claw claw = new Calvin.Claw();
 
 
         double xInitial = 0;
@@ -84,8 +90,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
                     new SequentialAction(
                             s1,
                             new SleepAction(fraudWait),
-
-
+                            Calvin.Claw.CloseClaw(),
                             s2,
                             new SleepAction(fraudWait),
                             s3,

@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "RUN THIS FOR NOW")
+@TeleOp (group = "States", name = "RUN, TESTER")
 public class Checker extends LinearOpMode {
 
 
@@ -47,7 +47,7 @@ public class Checker extends LinearOpMode {
     boolean changedY = false;
 
     boolean changedA = false;
-    boolean changedB = false;
+    boolean changedDpadUp = false;
 
     boolean changedRB = false;
     boolean changedLB = false;
@@ -349,13 +349,13 @@ public class Checker extends LinearOpMode {
                         } else if (!gamepad2.a) {
                             changedA = false;
                         }
-                        if (gamepad2.b && !changedB) {
+                        if (gamepad2.dpad_up && !changedDpadUp) {
                             calvin.depositWrist.setPosition(depositClawSpeciRotStart);
                             calvin.depositArm.setPosition(depositClawSpeciPosStart);
-                            changedB = true;
+                            changedDpadUp = true;
                             armMacro = ArmMacro.SPECIMENSTART;
-                        } else if (!gamepad2.b) {
-                            changedB = false;
+                        } else if (!gamepad2.dpad_up) {
+                            changedDpadUp = false;
                         }
                     }
                     break;
@@ -370,13 +370,13 @@ public class Checker extends LinearOpMode {
                         } else if (!gamepad2.a) {
                             changedA = false;
                         }
-                        if (gamepad2.b && !changedB) {
+                        if (gamepad2.dpad_up && !changedDpadUp) {
                             calvin.depositWrist.setPosition(depositClawSpeciRotStart);
                             calvin.depositArm.setPosition(depositClawSpeciPosStart);
-                            changedB = true;
+                            changedDpadUp = true;
                             armMacro = ArmMacro.SPECIMENSTART;
-                        } else if (!gamepad2.b) {
-                            changedB = false;
+                        } else if (!gamepad2.dpad_up) {
+                            changedDpadUp = false;
                         }
                     }
                     break;
@@ -391,13 +391,13 @@ public class Checker extends LinearOpMode {
                         } else if (!gamepad2.a) {
                             changedA = false;
                         }
-                        if (gamepad2.b && !changedB) {
+                        if (gamepad2.dpad_up && !changedDpadUp) {
                             calvin.depositWrist.setPosition(depositClawPassiveRot);
                             calvin.depositArm.setPosition(depositClawPassivePos);
-                            changedB = true;
+                            changedDpadUp = true;
                             armMacro = ArmMacro.PASSIVE;
-                        } else if (!gamepad2.b) {
-                            changedB = false;
+                        } else if (!gamepad2.dpad_up) {
+                            changedDpadUp = false;
                         }
                     }
                     break;
@@ -411,13 +411,13 @@ public class Checker extends LinearOpMode {
                         } else if (!gamepad2.a) {
                             changedA = false;
                         }
-                        if (gamepad2.b && !changedB) {
+                        if (gamepad2.dpad_up && !changedDpadUp) {
                             calvin.depositWrist.setPosition(depositClawPassiveRot);
                             calvin.depositArm.setPosition(depositClawPassivePos);
-                            changedB = true;
+                            changedDpadUp = true;
                             armMacro = ArmMacro.PASSIVE;
-                        } else if (!gamepad2.b) {
-                            changedB = false;
+                        } else if (!gamepad2.dpad_up) {
+                            changedDpadUp = false;
                         }
                     }
                     break;
@@ -433,49 +433,21 @@ public class Checker extends LinearOpMode {
             //Todo: check if this double press fix actually works
             //Only if you want
 
-            switch (specimenStep) {
-                case READY:
-                    if (gamepad2.dpad_up && !changedUp) {
-                        isMajorMacroing = true;
-                        calvin.depositClaw.setPosition(depositClawClosed);
-                        depositClawMacro = DepositClawMacro.CLOSED;
-                        specimenTime.reset();
-                        //slideTimer.reset();
-                        changedUp = true;
-                        specimenStep = SpecimenSteps.CHILL;
-                    } else if (!gamepad2.dpad_up){
-                        changedUp = false;
-                    }
-                    break;
-                case CHILL:
-                    if (!gamepad2.dpad_up){
-                        changedUp = false;
-                    }
-                    //idk if we wanna do something here
-                    if (specimenTime.seconds() >= specimenPart0) {
-                        specimenTime.reset();
-                        specimenStep = SpecimenSteps.FINAL;
-                    }
-                    break;
-                case FINAL:
-                    if (!gamepad2.dpad_up){
-                        changedUp = false;
-                    }
-                    if (specimenTime.seconds() >= specimenPart1) {
-                        calvin.depositWrist.setPosition(depositClawSpeciRotFinish);
-                        calvin.depositArm.setPosition(depositClawSpeciPosFinish);
-                        isMajorMacroing = false;
-                        specimenTime.reset();
-                        armMacro = ArmMacro.SPECIMENFINISH;
-                        specimenStep = SpecimenSteps.READY;
-                    }
-                    break;
+
+            if(gamepad2.b) {
+                calvin.depositWrist.setPosition(depositClawSpeciRotFinish);
+                calvin.depositArm.setPosition(depositClawSpeciPosFinish);
+                armMacro = ArmMacro.SPECIMENFINISH;
             }
 
             if (gamepad2.dpad_down) {
                 if (!isMajorMacroing){
                     calvin.depositArm.setPosition(depositClawPassivePos);
                     calvin.depositWrist.setPosition(depositClawPassiveRot);
+                    calvin.intakeWrist.setPosition(intakeWristFlat);
+                    calvin.intakeElbow.setPosition(intakeClawPassiveRot);
+                    calvin.intakeArm.setPosition(intakeClawPassivePos);
+                    armMacro =ArmMacro.PASSIVE;
                 }
             }
 
@@ -507,10 +479,11 @@ public class Checker extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
 
             if (gamepad1.right_trigger != 0) {
-                calvin.leftFront.setPower((1 - gamepad1.right_trigger) * frontLeftPower);
-                calvin.leftBack.setPower((1 - gamepad1.right_trigger) * backLeftPower);
-                calvin.rightFront.setPower((1 - gamepad1.right_trigger) * frontRightPower);
-                calvin.rightBack.setPower((1 - gamepad1.right_trigger)* backRightPower);
+                double power = (1 - gamepad1.right_trigger);
+                calvin.leftFront.setPower(Math.max(power, 0.45) * frontLeftPower);
+                calvin.leftBack.setPower(Math.max(power, 0.45) * backLeftPower);
+                calvin.rightFront.setPower(Math.max(power, 0.45)  * frontRightPower);
+                calvin.rightBack.setPower(Math.max(power, 0.45) * backRightPower);
             } else {
                 calvin.leftFront.setPower(frontLeftPower);
                 calvin.leftBack.setPower(backLeftPower);
@@ -524,7 +497,7 @@ public class Checker extends LinearOpMode {
             // Conrad kindly mention that x and y should move the servos and
             // a and b should move the motors? i think
             telemetry.addData("isMacroing", isMajorMacroing);
-            telemetry.addData("SpecimenMacro", specimenStep);
+            //telemetry.addData("SpecimenMacro", specimenStep);
             telemetry.addData("SpecimenMacro Timer", specimenTime.seconds());
             telemetry.addData("PickupMacro", pickUpStep);
             telemetry.addData("PickupMacro Timer", pickUpTime.seconds());
@@ -553,11 +526,6 @@ public class Checker extends LinearOpMode {
         READY, MOVE, DECIDE, GRAB
     }
     public PickUpSteps pickUpStep = PickUpSteps.READY;
-
-    public enum SpecimenSteps {
-        READY, CHILL, FINAL
-    }
-    public SpecimenSteps specimenStep = SpecimenSteps.READY;
 
     //Todo: MINOR MACROS
 

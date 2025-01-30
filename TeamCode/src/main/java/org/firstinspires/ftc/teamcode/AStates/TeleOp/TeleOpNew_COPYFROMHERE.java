@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AStates.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import java.util.Deque;
 import java.util.LinkedList;
 
+@Disabled
+//remove fdeprecated
 @TeleOp
 public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
 

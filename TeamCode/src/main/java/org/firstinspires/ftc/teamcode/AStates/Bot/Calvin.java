@@ -39,8 +39,8 @@ public class Calvin {
 
     public static int hangFinish; //add this to the current position of the hang motors
 
-    public static double depositClawOpen = 0;
-    public static double depositClawClosed = 0.4;
+    public static double depositClawOpen = 0.08;
+    public static double depositClawClosed = 0.57;
 
 
     public static double depositClawPassivePos = 0.85;
@@ -53,7 +53,7 @@ public class Calvin {
 
     public static double depositClawScorePos = 0.5;
 
-    public static double depositClawScoreRot = 0.8;
+    public static double depositClawScoreRot = 0.85;
 
     public static double depositClawSpeciPosStart = 0.2;
 

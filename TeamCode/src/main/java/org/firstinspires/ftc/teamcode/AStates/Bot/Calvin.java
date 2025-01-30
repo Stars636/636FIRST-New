@@ -23,7 +23,8 @@ public class Calvin {
     public DcMotorEx leftFront, rightFront, leftBack, rightBack;
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
 
-    public DcMotorImplEx hangLeft, hangRight;
+    public DcMotorImplEx hangRight, hangLeft;
+    public ServoImplEx servHangRight, serHangLeft;
 
     public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
 
@@ -31,8 +32,6 @@ public class Calvin {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
-    public ServoImpl hangServoLeft;
-    public ServoImpl hangServoRight;
 
     public static int lowBucket = 1400; //todo: test this
 

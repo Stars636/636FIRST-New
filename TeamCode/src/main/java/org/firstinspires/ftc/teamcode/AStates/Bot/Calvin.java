@@ -1,6 +1,13 @@
 package org.firstinspires.ftc.teamcode.AStates.Bot;
 
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
+
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -16,7 +23,8 @@ public class Calvin {
     public DcMotorEx leftFront, rightFront, leftBack, rightBack;
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
 
-    public DcMotorImplEx hangLeft, hangRight;
+    public DcMotorImplEx hangRight, hangLeft;
+    public ServoImplEx servHangRight, serHangLeft;
 
     public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
 
@@ -24,8 +32,6 @@ public class Calvin {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
-    public ServoImpl hangServoLeft;
-    public ServoImpl hangServoRight;
 
     public static int lowBucket = 1400; //todo: test this
 
@@ -436,4 +442,35 @@ public class Calvin {
     }
     //We can always make the timer faster, so please don't worry
 
+    //Todo: Auto functions
+
+
+}
+public class Claw {
+    Calvin calvin = new Calvin(new HardwareMap());
+
+    
+    public class CloseClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            calvin.intakeClaw.setPosition(intakeClawClosed);
+            return false;
+        }
+    }
+
+    public Action closeClaw() {
+        return new CloseClaw();
+    }
+
+    public class OpenClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            calvin.intakeClaw.setPosition(intakeClawOpen);
+            return false;
+        }
+    }
+
+    public Action openClaw() {
+        return new OpenClaw();
+    }
 }

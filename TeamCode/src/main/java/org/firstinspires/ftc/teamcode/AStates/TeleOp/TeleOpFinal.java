@@ -62,7 +62,7 @@ public class TeleOpFinal extends LinearOpMode {
     public static double transferPart1 = 0.3;
     public static double transferPart2 = 0.7;
     public static double transferPart3 = 0.1;
-
+    public static double hooking = 0;
 
     public static double transferPart4 = 0.1;
     public static double transferPart5 = 0.7;
@@ -493,7 +493,7 @@ Calvin calvin;
             //Only if you want
 
 
-
+            if (gamepad1.x )
 
             switch (specimenStep) {
                 case READY:
@@ -579,6 +579,8 @@ Calvin calvin;
                 calvin.rightFront.setPower(frontRightPower);
                 calvin.rightBack.setPower(backRightPower);
             }
+
+
 
             //TODO: Hang
             // ....

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
@@ -20,7 +21,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import java.util.concurrent.atomic.AtomicReference;
-
+@Disabled
 @Autonomous(name="FtcDashboard Camera", group="Linear")
 public class FtcDashboard_Camera extends LinearOpMode {
     //Talk Volatile vs AtomicReference, final to make sure it is only initialized once, etc.

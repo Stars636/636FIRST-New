@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ZImportant.Scrimmage;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
+@Disabled
 @TeleOp(name = "FinalScrimmage", group = "Scrimmage")
 public class FinalScrimmage extends LinearOpMode{
     Servo rotatorJamal;

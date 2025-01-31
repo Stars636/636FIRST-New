@@ -106,8 +106,9 @@ public class CalvinTele extends LinearOpMode {
                         armMacro = ArmMacro.PASSIVE;
                         calvin.depositClaw.setPosition(depositClawOpen);
                         depositClawMacro = DepositClawMacro.OPENED;
-                        calvin.hSlidesLeft.setPosition(hSlidesInside);
-                        calvin.hSlidesRight.setPosition(hSlidesInside);
+                        calvin.intakeWrist.setPosition(intakeWristFlat);
+                        calvin.intakeElbow.setPosition(intakeClawTransferRot);
+                        calvin.intakeArm.setPosition(intakeClawTransferPos);
                         intakeClawPos = calvin.intakeClaw.getPosition();
                         isMajorMacroing = true;
                         transferTime.reset();
@@ -121,16 +122,12 @@ public class CalvinTele extends LinearOpMode {
                         if (!gamepad2.right_bumper) {
                             changedRB = false;
                         }
-
-                        calvin.hSlidesLeft.setPosition(hSlidesInside);
-                        calvin.hSlidesRight.setPosition(hSlidesInside);
                         if (transferTime.seconds() > transferPart1) {
 
-                                calvin.intakeWrist.setPosition(intakeWristFlat);
-                                calvin.intakeElbow.setPosition(intakeClawTransferRot);
-                                calvin.intakeArm.setPosition(intakeClawTransferPos);
-                                transferTime.reset();
-                                transferStep = TransferSteps.TWICE;
+                            calvin.hSlidesLeft.setPosition(hSlidesInside);
+                            calvin.hSlidesRight.setPosition(hSlidesInside);
+                            transferTime.reset();
+                            transferStep = TransferSteps.TWICE;
 
                         }
                     break;

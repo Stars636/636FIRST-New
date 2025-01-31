@@ -119,18 +119,16 @@ public class CalvinTele extends LinearOpMode {
                         calvin.hSlidesLeft.setPosition(hSlidesInside);
                         calvin.hSlidesRight.setPosition(hSlidesInside);
                         if (transferTime.seconds() > transferPart1) {
-                            if (intakeClawPos == intakeClawClosed) {
+                            if (intakeClawMacro == IntakeClawMacro.CLOSED) {
 
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
                                 transferTime.reset();
                                 transferStep = TransferSteps.TWICE;
-                            } else {
+                            } else if (intakeClawMacro == IntakeClawMacro.OPENED){
 
-                                //calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                                //todo: needs fix, robot is not recognized intakeClawClosed
-                                calvin.intakeWrist.setPosition(intakeWristFlat);
+                                calvin.intakeWrist.setPosition(intakeWristNormalLeft);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
                                 transferTime.reset();
@@ -150,7 +148,6 @@ public class CalvinTele extends LinearOpMode {
                        transferTime.reset();
                        transferStep = TransferSteps.GRAB;
                             //if not working remove else if
-
                     }
                     break;
                 case GRAB:

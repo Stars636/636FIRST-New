@@ -8,13 +8,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
 @Disabled
 //remove fdeprecated
 @TeleOp
-public class TeleOpNew_COPYFROMHERE extends LinearOpMode {
+public class TeleOpTester3 extends LinearOpMode {
 
     Gamepad lastGamepad1 = new Gamepad(), lastGamepad2 = new Gamepad();
 

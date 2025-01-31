@@ -14,8 +14,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTrans
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoFinish;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoInitial;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.increment;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
@@ -54,6 +52,9 @@ public class CalvinTele extends LinearOpMode {
     boolean changedLB = false;
     boolean changedLeft = false;
     boolean changedRight = false;
+
+    boolean changedDY = false;
+    boolean changedDX = false;
 
     boolean driverLB = false;
 
@@ -124,20 +125,13 @@ public class CalvinTele extends LinearOpMode {
                         calvin.hSlidesLeft.setPosition(hSlidesInside);
                         calvin.hSlidesRight.setPosition(hSlidesInside);
                         if (transferTime.seconds() > transferPart1) {
-                            if (intakeClawMacro == IntakeClawMacro.CLOSED) {
 
                                 calvin.intakeWrist.setPosition(intakeWristFlat);
                                 calvin.intakeElbow.setPosition(intakeClawTransferRot);
                                 calvin.intakeArm.setPosition(intakeClawTransferPos);
                                 transferTime.reset();
                                 transferStep = TransferSteps.TWICE;
-                            } else if (intakeClawMacro == IntakeClawMacro.OPENED){
-                                calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                                calvin.intakeElbow.setPosition(intakeClawTransferRot);
-                                calvin.intakeArm.setPosition(intakeClawTransferPos);
-                                transferTime.reset();
-                                transferStep = TransferSteps.TWICE;
-                            }
+
                         }
                     break;
                 case TWICE:
@@ -252,13 +246,7 @@ public class CalvinTele extends LinearOpMode {
                     if (!isMajorMacroing) {
                         calvin.hover();
                     }
-                    //Todo: software limits
-                    if (!isMajorMacroing) {
-                        calvin.depositWrist.setPosition(depositClawScoreRot);
-                        calvin.depositArm.setPosition(depositClawScorePos);
-                        armMacro = ArmMacro.PASSIVE;
 
-                    }
                 }
             }
             //Todo: HSlides Edge Cases
@@ -269,11 +257,6 @@ public class CalvinTele extends LinearOpMode {
             if (calvin.hSlidesLeft.getPosition() < hSlidesOutside) {
                 calvin.hSlidesLeft.setPosition(hSlidesOutside);
                 calvin.hSlidesRight.setPosition(hSlidesOutside);
-            }
-            //Todo: software limits
-            if (armMacro != ArmMacro.PASSIVE) {
-                calvin.hSlidesLeft.setPosition(hSlidesInside);
-                calvin.hSlidesRight.setPosition(hSlidesInside);
             }
 
 
@@ -519,58 +502,44 @@ public class CalvinTele extends LinearOpMode {
             }
 
             //TODO: Hang
-            if (gamepad1.x && !changedX) {
+            if (gamepad1.x && !changedDX) {
                 if (calvin.servHangRight.getPosition() == hookRetract) {
                     calvin.servHangRight.setPosition(hookExtend);
-                    changedX = true;
+                    calvin.servHangLeft.setPosition(hookExtend);
+                    changedDX = true;
                 }
                 else if (calvin.servHangRight.getPosition() == hookExtend) {
+                    calvin.servHangLeft.setPosition(hookRetract);
                     calvin.servHangRight.setPosition(hookRetract);
-                    changedX = true;
+                    changedDX = true;
                 }
-                else {
-                    calvin.servHangRight.setPosition(hookRetract);
-                    changedX = false;
-                }
+            } else if (!gamepad1.x) {
+                changedDX = false;
             }
 
-            if (gamepad1.x && !changedX) {
-                if (calvin.servHangLeft.getPosition() == hangServoInitial) {
-                    calvin.servHangLeft.setPosition(hangServoFinish);
-                    changedX = true;
-                }
-                else if (calvin.servHangLeft.getPosition() == hangServoFinish) {
-                    calvin.servHangRight.setPosition(hangServoInitial);
-                    changedX = true;
-                }
-                else {
-                    calvin.servHangLeft.setPosition(hangServoInitial);
-                    changedX = false;
-                }
-            }
+           if(!gamepad1.y) {
+               changedDY = false;
+           }
+           if(!gamepad1.b) {
+               changedB = false;
 
-            if (gamepad1.y && !changedY) {
+           }
+            if (gamepad1.y && !changedDY) {
                 calvin.hangRight.setPower(0.3);
                 calvin.hangLeft.setPower(0.3);
-                changedY = true;
-
+                changedDY = true;
             }
-            else {
-                calvin.hangRight.setPower(0);
-                calvin.hangLeft.setPower(0);
-                changedY = false;
-            }
-
-            if (gamepad1.b && !changedB) {
+            else if (gamepad1.b && !changedB) {
                 calvin.hangRight.setPower(-0.3);
                 calvin.hangLeft.setPower(-0.3);
                 changedB = true;
-            }
-            else {
+            } else {
                 calvin.hangRight.setPower(0);
-                calvin.hangRight.setPower(0);
-                changedB = false;
+                calvin.hangLeft.setPower(0);
+
             }
+
+
 
             // Conrad kindly mention that x and y should move the servos and
             // a and b should move the motors? i think
@@ -583,6 +552,7 @@ public class CalvinTele extends LinearOpMode {
             telemetry.addData("TransferMacro Timer", transferTime.seconds());
             telemetry.addData("Arm Macro", armMacro);
             telemetry.addData("Intake Claw", intakeClawMacro);
+            telemetry.addData("Intake Claw Pos", calvin.intakeClaw.getPosition());
             telemetry.addData("Deposit Claw", depositClawMacro);
             telemetry.update();
 

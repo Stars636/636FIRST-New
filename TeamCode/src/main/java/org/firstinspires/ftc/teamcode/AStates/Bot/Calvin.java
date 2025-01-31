@@ -47,8 +47,8 @@ public class Calvin {
     public static double hangServoInitial;
     public static double hangServoFinish;
 
-    public static double depositClawOpen = 0;
-    public static double depositClawClosed = 0.4;
+    public static double depositClawOpen = 0.08;
+    public static double depositClawClosed = 0.58;
 
 
     public static double depositClawPassivePos = 0.85;
@@ -76,7 +76,7 @@ public class Calvin {
 
     public static double hSlidesInside = 1;
     public static double hSlidesOutside = 0.74;
-    public static double intakeClawOpen = 0;
+    public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.4;
     public static double intakeClawTransferPos = 0.6;
     public static double intakeClawTransferRot = 0.29;
@@ -139,8 +139,6 @@ public class Calvin {
 
         vSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        servHangLeft.setDirection(Servo.Direction.REVERSE);
-
 
 
         //Todo: uncomment these when they've been plugged in, null pointer exception issue
@@ -157,6 +155,12 @@ public class Calvin {
         depositArm = hardwareMap.get(ServoImplEx.class, "depositArm");//
         depositWrist = hardwareMap.get(ServoImplEx.class, "depositWrist");//
 
+        servHangRight = hardwareMap.get(ServoImplEx.class, "servHangRight");//
+        servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
+        hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
+        hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
+
+        servHangLeft.setDirection(Servo.Direction.REVERSE);
         hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//
         hSlidesRight = hardwareMap.get(ServoImplEx.class, "hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);

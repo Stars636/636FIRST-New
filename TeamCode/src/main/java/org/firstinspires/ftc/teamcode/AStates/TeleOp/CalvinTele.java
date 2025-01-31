@@ -14,6 +14,8 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTrans
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoFinish;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoInitial;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.increment;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
@@ -46,6 +48,7 @@ public class CalvinTele extends LinearOpMode {
     boolean changedX = false;
     boolean changedY = false;
     boolean changedA = false;
+    boolean changedB = false;
     boolean changedDpadUp = false;
     boolean changedRB = false;
     boolean changedLB = false;
@@ -67,19 +70,11 @@ public class CalvinTele extends LinearOpMode {
     public static double pickUp1 = 0.1;//lower this over time LOL
     public static double pickUp2 = 0.1;
 
-    //Specimen Timers
-    public ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimenPart0 = 2;
-    public static double specimenPart1 = 2;
-    public static double specimenPart2 = 2;
-    public static double specimenPart3 = 2;
-    public static double specimenPart4 = 2;
-    public static double specimenPart5 = 2;
-    public static double specimenPart6 = 2;
-    public static double specimenPart7 = 2;
-    public static double specimenPart8 = 2;
 
     public static boolean isMajorMacroing = false;
+
+    public static double hookExtend = 0.58;
+    public static double hookRetract = 0;
 
     //Hopeful fix
     double intakeClawPos = 0.4;
@@ -524,8 +519,59 @@ public class CalvinTele extends LinearOpMode {
             }
 
             //TODO: Hang
-            // ....
-            // ....
+            if (gamepad1.x && !changedX) {
+                if (calvin.servHangRight.getPosition() == hookRetract) {
+                    calvin.servHangRight.setPosition(hookExtend);
+                    changedX = true;
+                }
+                else if (calvin.servHangRight.getPosition() == hookExtend) {
+                    calvin.servHangRight.setPosition(hookRetract);
+                    changedX = true;
+                }
+                else {
+                    calvin.servHangRight.setPosition(hookRetract);
+                    changedX = false;
+                }
+            }
+
+            if (gamepad1.x && !changedX) {
+                if (calvin.servHangLeft.getPosition() == hangServoInitial) {
+                    calvin.servHangLeft.setPosition(hangServoFinish);
+                    changedX = true;
+                }
+                else if (calvin.servHangLeft.getPosition() == hangServoFinish) {
+                    calvin.servHangRight.setPosition(hangServoInitial);
+                    changedX = true;
+                }
+                else {
+                    calvin.servHangLeft.setPosition(hangServoInitial);
+                    changedX = false;
+                }
+            }
+
+            if (gamepad1.y && !changedY) {
+                calvin.hangRight.setPower(0.3);
+                calvin.hangLeft.setPower(0.3);
+                changedY = true;
+
+            }
+            else {
+                calvin.hangRight.setPower(0);
+                calvin.hangLeft.setPower(0);
+                changedY = false;
+            }
+
+            if (gamepad1.b && !changedB) {
+                calvin.hangRight.setPower(-0.3);
+                calvin.hangLeft.setPower(-0.3);
+                changedB = true;
+            }
+            else {
+                calvin.hangRight.setPower(0);
+                calvin.hangRight.setPower(0);
+                changedB = false;
+            }
+
             // Conrad kindly mention that x and y should move the servos and
             // a and b should move the motors? i think
 

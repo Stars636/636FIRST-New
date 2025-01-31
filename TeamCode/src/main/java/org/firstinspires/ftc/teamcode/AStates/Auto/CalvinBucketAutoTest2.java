@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScorePos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScoreRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferPos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawGrabPos;
@@ -208,13 +212,53 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         public class DepositArm {
 
-            public class
+            public class DepositArmTransfer implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositArm.setPosition(depositClawTransferPos);
+                    return false;
+                }
+            }
+            public Action depositArmTransfer() {
+                return new DepositArmTransfer();
+            }
+
+            public class DepositArmScore implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositArm.setPosition(depositClawScorePos);
+                    return false;
+                }
+            }
+            public Action depositArmScore() {
+                return new DepositArmScore();
+            }
 
         }
 
         public class DepositWrist {
 
+            public class DepositWristTransfer implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositWrist.setPosition(depositClawTransferRot);
+                    return false;
+                }
+            }
+            public Action depositWristTransfer() {
+                return new DepositWristTransfer();
+            }
 
+            public class DepositWristScore implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositWrist.setPosition(depositClawScoreRot);
+                    return false;
+                }
+            }
+            public Action depositWristScore() {
+                return new DepositWristScore();
+            }
 
         }
 
@@ -288,6 +332,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+            
 
             Actions.runBlocking(
                     new SequentialAction(

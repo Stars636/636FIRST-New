@@ -38,13 +38,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "RUN THIS ONE")
+@TeleOp (group = "States", name = "DOESN'T WORK")
 public class FraudTele extends LinearOpMode {
-
-
 //Tele
-
-
     public static boolean isSpecimen = false;
     boolean changedX = false;
     boolean changedY = false;

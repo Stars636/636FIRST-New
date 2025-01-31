@@ -91,6 +91,8 @@ public class Calvin {
     public static double intakeWristNormalRight = 0.2; //as in perpendicular
     //Todo: refactor this to a better name
     public static double intakeWristTiltLeft = 0.72;
+
+    public static double intakeWristFullRotation = 0;
     public static double hangServoInitial;
     public static double hangServoFinish;
 
@@ -111,6 +113,12 @@ public class Calvin {
     public static double specimenPart1 = 3;
 
     public static boolean isMacroing = false;
+
+    public static double intakeSpecimenPickupPos = 0.4;
+    public static double intakeSpecimenPickupRot = 0.5;
+
+    public static double intakeSpecimenLiftPos = 0.35;
+    public static double intakeSpecimenLiftRot = 0.45;
 
 
 
@@ -134,9 +142,9 @@ public class Calvin {
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class,"vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

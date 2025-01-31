@@ -469,7 +469,7 @@ public class Checker extends LinearOpMode {
             // - I.E. DRIVETRAIN and HANG
 
             //TODO: Driving
-            //thanks, david
+            //thank you, zohra and david
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
@@ -498,8 +498,9 @@ public class Checker extends LinearOpMode {
             // ....
             // Conrad kindly mention that x and y should move the servos and
             // a and b should move the motors? i think
+
+
             telemetry.addData("isMacroing", isMajorMacroing);
-            //telemetry.addData("SpecimenMacro", specimenStep);
             telemetry.addData("SpecimenMacro Timer", specimenTime.seconds());
             telemetry.addData("PickupMacro", pickUpStep);
             telemetry.addData("PickupMacro Timer", pickUpTime.seconds());
@@ -517,11 +518,11 @@ public class Checker extends LinearOpMode {
         READY, MOVE, TWICE, GRAB, LETGO, RETURN
     }
     // READY: Waits for the button press to start the transfer sequence
-// MOVE: Moves intake claw to transfer position
+    // MOVE: Moves intake claw to transfer position
     //TWICE: Moves deposit claw to transfer position
-// GRAB: Closes the deposit claw to secure the object
-// LET GO: Opens the intake claw to release the object
-// RETURN: Resets all components to their default positions
+    // GRAB: Closes the deposit claw to secure the object
+    // LET GO: Opens the intake claw to release the object
+    // RETURN: Resets all components to their default positions
     TransferSteps transferStep = TransferSteps.READY;
 
     public enum PickUpSteps {
@@ -544,6 +545,7 @@ public class Checker extends LinearOpMode {
         OPENED, CLOSED
     }
     DepositClawMacro depositClawMacro = DepositClawMacro.CLOSED;
+
 
 
 }

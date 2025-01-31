@@ -332,7 +332,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            
+
 
             Actions.runBlocking(
                     new SequentialAction(

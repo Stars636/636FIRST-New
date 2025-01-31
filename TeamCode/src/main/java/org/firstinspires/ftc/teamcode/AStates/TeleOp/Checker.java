@@ -163,7 +163,7 @@ public class Checker extends LinearOpMode {
                     if (transferTime.seconds() >= transferPart4) {
                         telemetry.addLine("yes3");
                         calvin.intakeClaw.setPosition(intakeClawOpen);
-                        intakeClawMacro = IntakeClawMacro.CLOSED;
+                        intakeClawMacro = IntakeClawMacro.OPENED;
                         transferTime.reset();
                         transferStep = TransferSteps.RETURN;
                     }
@@ -260,39 +260,41 @@ public class Checker extends LinearOpMode {
                 calvin.hSlidesRight.setPosition(hSlidesOutside);
             }
             //Todo: wrist code somewhat overcomplicated
-            if(gamepad2.dpad_left && !changedLeft) {
-                if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
-                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
-                    changedLeft = true;
-                } else if (calvin.intakeWrist.getPosition() == intakeWristTiltLeft) {
-                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                    changedLeft = true;
-                } else if (calvin.intakeWrist.getPosition() == intakeWristNormalRight) {
-                    calvin.intakeWrist.setPosition(intakeWristTiltRight);
-                    changedLeft = true;
-                } else if (calvin.intakeWrist.getPosition() == intakeWristTiltRight) {
-                    calvin.intakeWrist.setPosition(intakeWristFlat);
-                    changedLeft = true;
+            if(!isMajorMacroing) {
+                if (gamepad2.dpad_left && !changedLeft) {
+                    if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
+                        calvin.intakeWrist.setPosition(intakeWristTiltLeft);
+                        changedLeft = true;
+                    } else if (calvin.intakeWrist.getPosition() == intakeWristTiltLeft) {
+                        calvin.intakeWrist.setPosition(intakeWristNormalLeft);
+                        changedLeft = true;
+                    } else if (calvin.intakeWrist.getPosition() == intakeWristNormalRight) {
+                        calvin.intakeWrist.setPosition(intakeWristTiltRight);
+                        changedLeft = true;
+                    } else if (calvin.intakeWrist.getPosition() == intakeWristTiltRight) {
+                        calvin.intakeWrist.setPosition(intakeWristFlat);
+                        changedLeft = true;
+                    }
+                } else if (!gamepad2.dpad_left) {
+                    changedLeft = false;
                 }
-            } else if (!gamepad2.dpad_left) {
-                changedLeft = false;
-            }
-            if(gamepad2.dpad_right && !changedRight) {
-                if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
-                    calvin.intakeWrist.setPosition(intakeWristTiltRight);
-                    changedRight = true;
-                } else if (calvin.intakeWrist.getPosition() == intakeWristTiltLeft) {
-                    calvin.intakeWrist.setPosition(intakeWristFlat);
-                    changedRight = true;
-                } else if (calvin.intakeWrist.getPosition() == intakeWristNormalLeft) {
-                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
-                    changedRight = true;
-                } else if (calvin.intakeWrist.getPosition() == intakeWristTiltRight) {
-                    calvin.intakeWrist.setPosition(intakeWristNormalRight);
-                    changedRight = true;
+                if (gamepad2.dpad_right && !changedRight) {
+                    if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
+                        calvin.intakeWrist.setPosition(intakeWristTiltRight);
+                        changedRight = true;
+                    } else if (calvin.intakeWrist.getPosition() == intakeWristTiltLeft) {
+                        calvin.intakeWrist.setPosition(intakeWristFlat);
+                        changedRight = true;
+                    } else if (calvin.intakeWrist.getPosition() == intakeWristNormalLeft) {
+                        calvin.intakeWrist.setPosition(intakeWristTiltLeft);
+                        changedRight = true;
+                    } else if (calvin.intakeWrist.getPosition() == intakeWristTiltRight) {
+                        calvin.intakeWrist.setPosition(intakeWristNormalRight);
+                        changedRight = true;
+                    }
+                } else if (!gamepad2.dpad_right) {
+                    changedRight = false;
                 }
-            } else if (!gamepad2.dpad_right) {
-                changedRight = false;
             }
 
 
@@ -447,7 +449,7 @@ public class Checker extends LinearOpMode {
                     calvin.intakeWrist.setPosition(intakeWristFlat);
                     calvin.intakeElbow.setPosition(intakeClawPassiveRot);
                     calvin.intakeArm.setPosition(intakeClawPassivePos);
-                    armMacro =ArmMacro.PASSIVE;
+                    armMacro = ArmMacro.PASSIVE;
                 }
             }
 

@@ -493,7 +493,9 @@ Calvin calvin;
             //Only if you want
 
 
-            if (gamepad1.x )
+            if (gamepad1.x ){
+
+            }
 
             switch (specimenStep) {
                 case READY:

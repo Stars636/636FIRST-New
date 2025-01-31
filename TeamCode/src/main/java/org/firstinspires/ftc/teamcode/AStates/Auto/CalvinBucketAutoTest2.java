@@ -1,7 +1,25 @@
 package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScorePos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScoreRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferPos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawGrabPos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawGrabRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
+
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -10,10 +28,11 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
-import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.Claw;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
@@ -26,10 +45,225 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 public class CalvinBucketAutoTest2 extends LinearOpMode {
 
-    //Todo: Claw
-    public class Claw {
 
-    }
+
+        Calvin calvin = new Calvin(hardwareMap);
+
+
+        private void moveVerticalSlidesTo(int targetPosition) {
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            calvin.vSlidesLeft.setTargetPosition(targetPosition);
+            calvin.vSlidesLeft.setPower(0.8);
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            calvin.vSlidesRight.setTargetPosition(targetPosition);
+            calvin.vSlidesRight.setPower(0.8);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        //Todo: have hang open before auto
+
+        public class IntakeClaw {
+
+            public class CloseIntakeClaw implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeClaw.setPosition(intakeClawClosed);
+                    return false;
+                }
+            }
+
+            public Action closeIntakeClaw() {
+                return new CloseIntakeClaw();
+            }
+
+            public class OpenIntakeClaw implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeClaw.setPosition(intakeClawOpen);
+                    return false;
+                }
+            }
+
+            public Action openIntakeClaw() {
+                return new OpenIntakeClaw();
+            }
+        }
+
+        public class VerticalSlides {
+
+            public class SlidesUp implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    moveVerticalSlidesTo(highBucket);
+                    return false;
+                }
+            }
+
+            public Action slidesUp() {
+                return new SlidesUp();
+            }
+
+            public class SlidesDown implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    moveVerticalSlidesTo(0);
+                    return false;
+                }
+            }
+
+            public Action slidesDown() {
+                return new SlidesDown();
+            }
+        }
+
+        public class IntakeWrist {
+            public class NeutralPos implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeWrist.setPosition(intakeWristFlat);
+                    return false;
+                }
+            }
+            public Action neutralPos() {
+                return new NeutralPos();
+            }
+
+        }
+
+        public class IntakeElbow {
+            public class ElbowIntake implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeElbow.setPosition(intakeClawGrabRot);
+                    return false;
+                }
+            }
+            public Action elbowIntake() {
+                return new ElbowIntake();
+            }
+
+            public class ElbowTransfer implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeElbow.setPosition(intakeClawTransferRot);
+                    return false;
+                }
+            }
+            public Action elbowTransfer() {
+                return new ElbowTransfer();
+            }
+
+        }
+
+        public class IntakeArm {
+
+            public class ArmIntake implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeArm.setPosition(intakeClawGrabPos);
+                    return false;
+                }
+            }
+            public Action armIntake() {
+                return new ArmIntake();
+            }
+            public class ArmTransfer implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.intakeArm.setPosition(intakeClawTransferPos);
+                    return false;
+                }
+            }
+            public Action armTransfer() {
+                return new ArmTransfer();
+            }
+
+        }
+
+        public class DepositClaw {
+
+            public class DepositClawOpen implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositClaw.setPosition(depositClawOpen);
+                    return false;
+                }
+            }
+            public Action depositClawOpen() {
+                return new DepositClawOpen();
+            }
+            public class DepositClawClose implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositClaw.setPosition(depositClawClosed);
+                    return false;
+                }
+            }
+            public Action depositClawClose() {
+                return new DepositClawClose();
+            }
+
+        }
+
+        public class DepositArm {
+
+            public class DepositArmTransfer implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositArm.setPosition(depositClawTransferPos);
+                    return false;
+                }
+            }
+            public Action depositArmTransfer() {
+                return new DepositArmTransfer();
+            }
+
+            public class DepositArmScore implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositArm.setPosition(depositClawScorePos);
+                    return false;
+                }
+            }
+            public Action depositArmScore() {
+                return new DepositArmScore();
+            }
+
+        }
+
+        public class DepositWrist {
+
+            public class DepositWristTransfer implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositWrist.setPosition(depositClawTransferRot);
+                    return false;
+                }
+            }
+            public Action depositWristTransfer() {
+                return new DepositWristTransfer();
+            }
+
+            public class DepositWristScore implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositWrist.setPosition(depositClawScoreRot);
+                    return false;
+                }
+            }
+            public Action depositWristScore() {
+                return new DepositWristScore();
+            }
+
+        }
+
+
+
 
 
 
@@ -45,7 +279,20 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         ElapsedTime et = new ElapsedTime();
         Calvin calvin = new Calvin(hardwareMap);
-        Calvin.Claw claw = new Calvin.Claw();
+        IntakeClaw intakeClaw = new IntakeClaw();
+        VerticalSlides vSlides = new VerticalSlides();
+        IntakeWrist wrist = new IntakeWrist();
+        IntakeElbow elbow = new IntakeElbow();
+        IntakeArm arm = new IntakeArm();
+
+
+        //Zhang we need using encode for auto but in teleop we need run without encoder
+        // so im putting this here for you
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //Calvin.Claw claw = new Calvin.Claw();
 
 
         double xInitial = 0;
@@ -86,11 +333,15 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+
             Actions.runBlocking(
                     new SequentialAction(
+                            intakeClaw.closeIntakeClaw(),
                             s1,
                             new SleepAction(fraudWait),
-                            Calvin.Claw.CloseClaw(),
+                            vSlides.slidesUp(),
+                            new SleepAction(2),
+                            intakeClaw.openIntakeClaw(),
                             s2,
                             new SleepAction(fraudWait),
                             s3,

@@ -10,8 +10,11 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
@@ -30,7 +33,13 @@ public class CalvinBucketAutoTest1 extends LinearOpMode {
 
 
 
-        OGCalvin calvin = new OGCalvin(hardwareMap, telemetry);
+        Calvin calvin = new Calvin(hardwareMap);
+        //Zhang we need using encode for auto but in teleop we need run without encoder
+        // so im putting this here for you
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 

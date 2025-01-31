@@ -174,19 +174,7 @@ public class HighBasketAuto extends LinearOpMode {
             
 
         }
-        /*
-        double joystickX = -gamepad1.left_stick_x;
-        double joystickY = gamepad1.left_stick_y;
-        double joystickR = -gamepad1.right_stick_x;
 
-        rightFront.setPower(joystickY - joystickX - joystickR);
-        leftFront.setPower(joystickY + joystickX + joystickR);
-        rightBack.setPower(joystickY + joystickX - joystickR);
-        leftBack.setPower(joystickY - joystickX + joystickR);*/
-
-        //first, y becomes negative
-        //second, r becomes negative
-        //third, y becomes positive
     }
 
 

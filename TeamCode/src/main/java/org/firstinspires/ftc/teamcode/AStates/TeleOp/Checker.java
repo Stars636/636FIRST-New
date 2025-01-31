@@ -38,57 +38,60 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 @Config
 @TeleOp (group = "States", name = "RUN, TESTER")
 public class Checker extends LinearOpMode {
+    //The robot.
+    //"Isn't she lovely" - Stevie Wonder
+    Calvin calvin;
 
-
-//Tele
-
-
+    //Debouncers
     boolean changedX = false;
     boolean changedY = false;
-
     boolean changedA = false;
     boolean changedDpadUp = false;
-
     boolean changedRB = false;
     boolean changedLB = false;
-
-    boolean changedUp = false;
     boolean changedLeft = false;
     boolean changedRight = false;
+
+    //Transfer and the timers
     public ElapsedTime transferTime = new ElapsedTime();
     public static double transferPart1 = 0.3;
     public static double transferPart2 = 0.7;
     public static double transferPart3 = 0.1;
     public static double transferPart4 = 0.1;
     public static double transferPart5 = 0.7;
-    Calvin calvin;
+
+    //Pickup timers
     public ElapsedTime pickUpTime = new ElapsedTime();
     public static double pickUp1 = 0.1;//lower this over time LOL
     public static double pickUp2 = 0.1;
+
+    //Specimen Timers
     public ElapsedTime specimenTime = new ElapsedTime();
     public static double specimenPart0 = 1;
     public static double specimenPart1 = 2;
     public static boolean isMajorMacroing = false;
+
+    //Hopeful fix
     double intakeClawPos = 0.4;
     @Override
     public void runOpMode() throws InterruptedException {
-        ElapsedTime timer = new ElapsedTime();
+        //Initializing the bot
         calvin = new Calvin(hardwareMap);
-
         waitForStart();
 
+        //Initial Positions
         calvin.initialBucket();
 
         telemetry.addLine("Best Wishes!");
         telemetry.update();
-
+        //Idk
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
             //Just checking
             intakeClawPos = calvin.intakeClaw.getPosition();
 
-            //NOTE
+            //Todo: Transfer Macro
             switch(transferStep) {
                 case READY:
                     if (gamepad2.right_bumper && !changedRB) {
@@ -187,7 +190,7 @@ public class Checker extends LinearOpMode {
                     }
                     break;
             }
-            //
+            //Todo: Pickup Macro
             switch(pickUpStep) {
                 case READY:
                     if (gamepad2.left_bumper && !changedLB) {
@@ -229,7 +232,7 @@ public class Checker extends LinearOpMode {
                     break;
 
             }
-
+            //Todo: HSlides Movement
             double changedBy = calvin.hSlidesLeft.getPosition();
             if (calvin.hSlidesLeft.getPosition() < hSlidesInside && calvin.hSlidesLeft.getPosition() >= hSlidesOutside) {
                 if (gamepad2.left_trigger != 0) {
@@ -249,8 +252,7 @@ public class Checker extends LinearOpMode {
                     }
                 }
             }
-            //Todo: handle edge cases
-            //DONE
+            //Todo: HSlides Edge Cases
             if (calvin.hSlidesLeft.getPosition() > hSlidesInside) {
                 calvin.hSlidesLeft.setPosition(hSlidesInside);
                 calvin.hSlidesRight.setPosition(hSlidesInside);
@@ -259,7 +261,9 @@ public class Checker extends LinearOpMode {
                 calvin.hSlidesLeft.setPosition(hSlidesOutside);
                 calvin.hSlidesRight.setPosition(hSlidesOutside);
             }
-            //Todo: wrist code somewhat overcomplicated
+
+            //Todo: wrist code
+            // somewhat overcomplicated
             if(!isMajorMacroing) {
                 if (gamepad2.dpad_left && !changedLeft) {
                     if (calvin.intakeWrist.getPosition() == intakeWristFlat) {
@@ -297,49 +301,58 @@ public class Checker extends LinearOpMode {
                 }
             }
 
-
+            //Todo: Intake Claw Macro
             switch (intakeClawMacro){
                 case OPENED:
-                    if(gamepad2.x && !changedX) {
-                        calvin.intakeClaw.setPosition(intakeClawClosed);
-                        changedX = true;
-                        intakeClawMacro = IntakeClawMacro.CLOSED;
-                    } else if (!gamepad2.x) {
-                        changedX = false;
+                    if (isMajorMacroing) {
+                        if (gamepad2.x && !changedX) {
+                            calvin.intakeClaw.setPosition(intakeClawClosed);
+                            changedX = true;
+                            intakeClawMacro = IntakeClawMacro.CLOSED;
+                        } else if (!gamepad2.x) {
+                            changedX = false;
+                        }
                     }
                     break;
                 case CLOSED:
-                    if(gamepad2.x && !changedX) {
-                        calvin.intakeClaw.setPosition(intakeClawOpen);
-                        changedX = true;
-                        intakeClawMacro = IntakeClawMacro.OPENED;
-                    } else if (!gamepad2.x) {
-                        changedX = false;
+                    if (isMajorMacroing) {
+                        if (gamepad2.x && !changedX) {
+                            calvin.intakeClaw.setPosition(intakeClawOpen);
+                            changedX = true;
+                            intakeClawMacro = IntakeClawMacro.OPENED;
+                        } else if (!gamepad2.x) {
+                            changedX = false;
+                        }
                     }
                     break;
             }
+            //Todo: Deposit Claw Macro
             switch (depositClawMacro){
                 case OPENED:
-                    if(gamepad2.y && !changedY) {
-                        calvin.depositClaw.setPosition(depositClawClosed);
-                        changedY = true;
-                        depositClawMacro = DepositClawMacro.CLOSED;
-                    } else if (!gamepad2.y) {
-                        changedY = false;
+                    if (!isMajorMacroing) {
+                        if (gamepad2.y && !changedY) {
+                            calvin.depositClaw.setPosition(depositClawClosed);
+                            changedY = true;
+                            depositClawMacro = DepositClawMacro.CLOSED;
+                        } else if (!gamepad2.y) {
+                            changedY = false;
+                        }
                     }
                     break;
                 case CLOSED:
-                    if(gamepad2.y && !changedY) {
-                        calvin.depositClaw.setPosition(depositClawOpen);
-                        changedY = true;
-                        depositClawMacro = DepositClawMacro.OPENED;
-                    } else if (!gamepad2.y) {
-                        changedY = false;
+                    if (isMajorMacroing) {
+                        if (gamepad2.y && !changedY) {
+                            calvin.depositClaw.setPosition(depositClawOpen);
+                            changedY = true;
+                            depositClawMacro = DepositClawMacro.OPENED;
+                        } else if (!gamepad2.y) {
+                            changedY = false;
+                        }
                     }
                     break;
             }
 
-
+            //Todo: Arm Macro
             switch(armMacro) {
                 case PASSIVE:
                     if (!isMajorMacroing) {
@@ -429,19 +442,14 @@ public class Checker extends LinearOpMode {
 
             }
 
-            //Todo: make a better macro for this specimen stuff somehow
-            // - also find a better button haha
-            //specimen scoring
-            //Todo: check if this double press fix actually works
-            //Only if you want
 
-
+            //Todo: Specimen Score Button
             if(gamepad2.b) {
                 calvin.depositWrist.setPosition(depositClawSpeciRotFinish);
                 calvin.depositArm.setPosition(depositClawSpeciPosFinish);
                 armMacro = ArmMacro.SPECIMENFINISH;
             }
-
+            //Todo: Passive setter
             if (gamepad2.dpad_down) {
                 if (!isMajorMacroing){
                     calvin.depositArm.setPosition(depositClawPassivePos);
@@ -454,7 +462,6 @@ public class Checker extends LinearOpMode {
             }
 
             //Todo: Vertical Slide Improvements
-
             if (calvin.vSlidesRight.getCurrentPosition() < highBucket && calvin.vSlidesRight.getCurrentPosition() >= 0) {
                 calvin.vSlidesLeft.setPower(-gamepad2.left_stick_y);
                 calvin.vSlidesRight.setPower(-gamepad2.left_stick_y);
@@ -467,7 +474,6 @@ public class Checker extends LinearOpMode {
             }
             //Todo: DRIVER CONTROLS
             // - I.E. DRIVETRAIN and HANG
-
             //TODO: Driving
             //thank you, zohra and david
             double y = gamepad1.left_stick_y; // Remember, this is reversed!

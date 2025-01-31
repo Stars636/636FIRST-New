@@ -446,7 +446,9 @@ public class Calvin {
 
 
 }
+/*
 public class Claw {
+
     Calvin calvin = new Calvin(new HardwareMap());
 
     
@@ -474,3 +476,5 @@ public class Claw {
         return new OpenClaw();
     }
 }
+
+ */

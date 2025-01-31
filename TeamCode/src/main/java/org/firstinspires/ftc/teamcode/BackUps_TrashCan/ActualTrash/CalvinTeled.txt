@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AStates.TeleOp;
+package org.firstinspires.ftc.teamcode.BackUps_TrashCan.ActualTrash;
 
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
@@ -22,10 +22,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiveRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenLiftPos;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenLiftRot;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenPickupPos;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenPickupRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalRight;
@@ -41,7 +37,7 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
 @TeleOp (group = "States", name = "BEST TELEOP - 1/31/24")
-public class CalvinTele extends LinearOpMode {
+public class CalvinTeled extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
     Calvin calvin;
@@ -72,16 +68,6 @@ public class CalvinTele extends LinearOpMode {
     public static double pickUp2 = 0.1;
 
     //Specimen Timers
-    public ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimenPart0 = 2;
-    public static double specimenPart1 = 2;
-    public static double specimenPart2 = 2;
-    public static double specimenPart3 = 2;
-    public static double specimenPart4 = 2;
-    public static double specimenPart5 = 2;
-    public static double specimenPart6 = 2;
-    public static double specimenPart7 = 2;
-    public static double specimenPart8 = 2;
 
     public static boolean isMajorMacroing = false;
 
@@ -328,7 +314,7 @@ public class CalvinTele extends LinearOpMode {
             //Todo: Intake Claw Macro
             switch (intakeClawMacro){
                 case OPENED:
-                    if (!isMajorMacroing) {
+                    if (isMajorMacroing) {
                         if (gamepad2.x && !changedX) {
                             calvin.intakeClaw.setPosition(intakeClawClosed);
                             changedX = true;
@@ -339,7 +325,7 @@ public class CalvinTele extends LinearOpMode {
                     }
                     break;
                 case CLOSED:
-                    if (!isMajorMacroing) {
+                    if (isMajorMacroing) {
                         if (gamepad2.x && !changedX) {
                             calvin.intakeClaw.setPosition(intakeClawOpen);
                             changedX = true;
@@ -364,7 +350,7 @@ public class CalvinTele extends LinearOpMode {
                     }
                     break;
                 case CLOSED:
-                    if (!isMajorMacroing) {
+                    if (isMajorMacroing) {
                         if (gamepad2.y && !changedY) {
                             calvin.depositClaw.setPosition(depositClawOpen);
                             changedY = true;

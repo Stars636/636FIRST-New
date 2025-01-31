@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "RUN, TESTER")
+@TeleOp (group = "States", name = "BEST TELEOP - 1/31/24")
 public class CalvinTele extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
@@ -328,7 +328,7 @@ public class CalvinTele extends LinearOpMode {
             //Todo: Intake Claw Macro
             switch (intakeClawMacro){
                 case OPENED:
-                    if (isMajorMacroing) {
+                    if (!isMajorMacroing) {
                         if (gamepad2.x && !changedX) {
                             calvin.intakeClaw.setPosition(intakeClawClosed);
                             changedX = true;
@@ -339,7 +339,7 @@ public class CalvinTele extends LinearOpMode {
                     }
                     break;
                 case CLOSED:
-                    if (isMajorMacroing) {
+                    if (!isMajorMacroing) {
                         if (gamepad2.x && !changedX) {
                             calvin.intakeClaw.setPosition(intakeClawOpen);
                             changedX = true;
@@ -364,7 +364,7 @@ public class CalvinTele extends LinearOpMode {
                     }
                     break;
                 case CLOSED:
-                    if (isMajorMacroing) {
+                    if (!isMajorMacroing) {
                         if (gamepad2.y && !changedY) {
                             calvin.depositClaw.setPosition(depositClawOpen);
                             changedY = true;
@@ -467,139 +467,7 @@ public class CalvinTele extends LinearOpMode {
             }
             //Todo: gunner is out of buttons, I'm placing Adarsh specimen transfer idea in the drivers for now
             //Todo: the wrist can't actually rotate that far, as far as i know, but lets try
-            switch (specMacro) {
-                case READY:
-                    if (gamepad1.left_bumper && !driverLB) {
-                        isMajorMacroing = true;
-                        calvin.intakeClaw.setPosition(intakeClawOpen);
-                        intakeClawMacro = IntakeClawMacro.OPENED;
-                        calvin.intakeWrist.setPosition(intakeWristFlat);
-                        calvin.intakeElbow.setPosition(intakeClawPassiveRot);
-                        calvin.intakeArm.setPosition(intakeClawPassivePos);
-                        calvin.hSlidesLeft.setPosition(hSlidesInside);
-                        calvin.hSlidesRight.setPosition(hSlidesInside);
 
-                        calvin.depositClaw.setPosition(depositClawOpen);
-                        depositClawMacro = DepositClawMacro.OPENED;
-                        calvin.depositWrist.setPosition(depositClawTransferRot);
-                        calvin.depositArm.setPosition(depositClawTransferPos);
-                        armMacro = ArmMacro.PASSIVE;
-
-                        driverLB = true;
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.HIT;
-                    } else if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    break;
-                case HIT:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart0) {
-                        calvin.intakeElbow.setPosition(intakeSpecimenPickupRot);
-                        calvin.intakeArm.setPosition(intakeSpecimenPickupPos);
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.GRAB;
-                    }
-                    break;
-                case GRAB:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart1) {
-                        calvin.intakeClaw.setPosition(intakeClawClosed);
-                        intakeClawMacro = IntakeClawMacro.CLOSED;
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.LIFT;
-                    }
-                    break;
-                case LIFT:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart2) {
-                        calvin.intakeElbow.setPosition(intakeSpecimenLiftRot);
-                        calvin.intakeArm.setPosition(intakeSpecimenLiftPos);
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.MOVE;
-                    }
-                    break;
-                case MOVE:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart3) {
-                        calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                        calvin.intakeElbow.setPosition(intakeClawTransferRot);
-                        calvin.intakeArm.setPosition(intakeClawTransferPos);
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.TWICE;
-                    }
-                    break;
-                case TWICE:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart4) {
-                        calvin.depositClaw.setPosition(depositClawOpen);
-                        depositClawMacro = DepositClawMacro.OPENED;
-                        calvin.depositWrist.setPosition(depositClawTransferRot);
-                        calvin.depositArm.setPosition(depositClawTransferPos);
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.TAKEIT;
-                    }
-                    break;
-                case TAKEIT:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart5) {
-                        calvin.depositClaw.setPosition(depositClawClosed);
-                        depositClawMacro = DepositClawMacro.CLOSED;
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.LETGO;
-                    }
-                    break;
-                case LETGO:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart6) {
-                        calvin.intakeClaw.setPosition(intakeClawOpen);
-                        intakeClawMacro = IntakeClawMacro.OPENED;
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.SCORE;
-                    }
-                    break;
-                case SCORE:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart7) {
-                        calvin.depositArm.setPosition(depositClawSpeciPosFinish);
-                        calvin.depositWrist.setPosition(depositClawScoreRot);
-                        specimenTime.reset();
-                        specMacro = SpecimenTransferMacro.RETURN;
-                    }
-                    break;
-                case RETURN:
-                    if(!gamepad1.left_bumper) {
-                        driverLB = false;
-                    }
-                    if(specimenTime.seconds() > specimenPart8) {
-                        calvin.depositWrist.setPosition(depositClawSpeciRotFinish);
-                        armMacro = ArmMacro.SPECIMENFINISH;
-                        calvin.intakeWrist.setPosition(intakeWristFlat);
-                        calvin.intakeElbow.setPosition(intakeClawPassiveRot);
-                        calvin.intakeArm.setPosition(intakeClawPassivePos);
-                        specimenTime.reset();
-                        isMajorMacroing = false;
-                        specMacro = SpecimenTransferMacro.READY;
-                    }
-                    break;
-
-            }
             //READY, HIT, GRAB, LIFT, MOVE, TWICE, TAKEIT, LETGO, SCORE, RETURN
 
 
@@ -667,8 +535,6 @@ public class CalvinTele extends LinearOpMode {
 
 
             telemetry.addData("isMacroing", isMajorMacroing);
-            telemetry.addData("SpecimenTranferMacro", specMacro);
-            telemetry.addData("SpecimenMacro Timer", specimenTime.seconds());
             telemetry.addData("PickupMacro", pickUpStep);
             telemetry.addData("PickupMacro Timer", pickUpTime.seconds());
             telemetry.addData("TransferMacro", transferStep);
@@ -697,22 +563,6 @@ public class CalvinTele extends LinearOpMode {
     }
     public PickUpSteps pickUpStep = PickUpSteps.READY;
 
-    public enum SpecimenTransferMacro {
-        READY, HIT, GRAB, LIFT, MOVE, TWICE, TAKEIT, LETGO, SCORE, RETURN
-    }
-    //READY: Macro is ready
-    //HIT: The intake claw moves to land on the walled specimen, the deposit claw moves to passive
-    //GRAB: The intake claw closed on the specimen
-    //LIFT: The intake claw lifts off the wall
-    //MOVE: The intake claw moves to transfer position and rotates 180
-    //TWICE: THe deposit claw moves to transfer position
-    //TAKEIT: THe deposit claw closes
-    //LETGO: The intake claw opens
-    //SCORE: Deposit arm moves to scoring position
-    //RETURN: EVverything else moves back to passive
-    public SpecimenTransferMacro specMacro = SpecimenTransferMacro.READY;
-
-    //Todo: MINOR MACROS
 
     public enum ArmMacro {
         PASSIVE, SCORE, SPECIMENSTART, SPECIMENFINISH
@@ -721,15 +571,9 @@ public class CalvinTele extends LinearOpMode {
     enum IntakeClawMacro {
         OPENED, CLOSED
     }
-
     IntakeClawMacro intakeClawMacro = IntakeClawMacro.OPENED;
     enum DepositClawMacro {
         OPENED, CLOSED
     }
     DepositClawMacro depositClawMacro = DepositClawMacro.CLOSED;
-
-
-
-
-
 }

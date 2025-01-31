@@ -97,8 +97,6 @@ public class Calvin {
     public static double hangServoFinish;
 
 
-
-
     public ElapsedTime transferTime = new ElapsedTime();
     public static double transferPart1 = 3;
     public static double transferPart2 = 2.6;
@@ -442,6 +440,7 @@ public class Calvin {
 
                     depositWrist.setPosition(depositClawPassiveRot);
                     depositArm.setPosition(depositClawPassivePos);
+
                     isMacroing = false;
                     transferStep = TransferSteps.READY;
                 }

@@ -713,7 +713,6 @@ public class CalvinTele extends LinearOpMode {
     public SpecimenTransferMacro specMacro = SpecimenTransferMacro.READY;
 
     //Todo: MINOR MACROS
-
     public enum ArmMacro {
         PASSIVE, SCORE, SPECIMENSTART, SPECIMENFINISH
     }
@@ -721,15 +720,9 @@ public class CalvinTele extends LinearOpMode {
     enum IntakeClawMacro {
         OPENED, CLOSED
     }
-
     IntakeClawMacro intakeClawMacro = IntakeClawMacro.OPENED;
     enum DepositClawMacro {
         OPENED, CLOSED
     }
     DepositClawMacro depositClawMacro = DepositClawMacro.CLOSED;
-
-
-
-
-
 }

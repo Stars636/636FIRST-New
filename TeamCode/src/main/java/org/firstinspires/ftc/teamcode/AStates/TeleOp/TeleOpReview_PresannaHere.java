@@ -64,7 +64,7 @@ public class TeleOpReview_PresannaHere extends LinearOpMode {
     public static double transferPart1 = 0.3;
     public static double transferPart2 = 0.7;
     public static double transferPart3 = 0.1;
-    public static double hookExtend = 1;
+    public static double hookExtend = 0.58;
     public static double hookRetract = 0;
 
     public static double transferPart4 = 0.1;
@@ -74,7 +74,7 @@ public class TeleOpReview_PresannaHere extends LinearOpMode {
 
     //Todo: slides are likely slow af. increase this verticalIncrement
     //slides r
-Calvin calvin;
+    Calvin calvin;
     public ElapsedTime pickUpTime = new ElapsedTime();
 
     public static double pickUp1 = 0.1;//lower this over time LOL
@@ -241,16 +241,16 @@ Calvin calvin;
             }
 
             if (gamepad1.x && !changedX) {
-                if (calvin.servHangRight.getPosition() == hangServoInitial) {
-                    calvin.servHangRight.setPosition(hangServoFinish);
+                if (calvin.servHangRight.getPosition() == hookRetract) {
+                    calvin.servHangRight.setPosition(hookExtend);
                     changedX = true;
                 }
-                else if (calvin.servHangRight.getPosition() == hangServoFinish) {
-                    calvin.servHangRight.setPosition(hangServoInitial);
+                else if (calvin.servHangRight.getPosition() == hookExtend) {
+                    calvin.servHangRight.setPosition(hookRetract);
                     changedX = true;
                 }
                 else {
-                    calvin.servHangRight.setPosition(hangServoInitial);
+                    calvin.servHangRight.setPosition(hookRetract);
                     changedX = false;
                 }
             }
@@ -268,6 +268,29 @@ Calvin calvin;
                     calvin.servHangLeft.setPosition(hangServoInitial);
                     changedX = false;
                 }
+            }
+
+            if (gamepad1.y && !changedY) {
+                calvin.hangRight.setPower(0.3);
+                calvin.hangLeft.setPower(0.3);
+                changedY = true;
+                
+            }
+            else {
+                calvin.hangRight.setPower(0);
+                calvin.hangLeft.setPower(0);
+                changedY = false;
+            }
+
+            if (gamepad1.b && !changedB) {
+                calvin.hangRight.setPower(-0.3);
+                calvin.hangLeft.setPower(-0.3);
+                changedB = true;
+            }
+            else {
+                calvin.hangRight.setPower(0);
+                calvin.hangRight.setPower(0);
+                changedB = false;
             }
 
 

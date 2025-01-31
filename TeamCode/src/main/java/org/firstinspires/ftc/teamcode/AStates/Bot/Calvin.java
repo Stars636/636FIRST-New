@@ -74,7 +74,6 @@ public class Calvin {
     public static double floatPosition = 0.9;
 
 
-
     public static double hSlidesInside = 1;
     public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0;
@@ -95,9 +94,6 @@ public class Calvin {
     public static double intakeWristTiltLeft = 0.72;
 
 
-
-
-
     public ElapsedTime transferTime = new ElapsedTime();
     public static double transferPart1 = 3;
     public static double transferPart2 = 2.6;
@@ -114,15 +110,14 @@ public class Calvin {
     public static boolean isMacroing = false;
 
 
-
     public static boolean isTargeting = false; //Todo: make the vertical slides able to go to a specific position
 
 
     public Calvin(HardwareMap hardwareMap) {
-        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");//
-        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");//
-        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");//
-        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");//
+        rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");//
+        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");//
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");//
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");//
 
         rightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -131,8 +126,8 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        vSlidesLeft = hardwareMap.get(DcMotorImplEx.class,"vSlidesLeft");//
-        vSlidesRight = hardwareMap.get(DcMotorImplEx.class,"vSlidesRight");//
+        vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
+        vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -145,30 +140,33 @@ public class Calvin {
         vSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         servHangLeft.setDirection(Servo.Direction.REVERSE);
+
+
+
         //Todo: uncomment these when they've been plugged in, null pointer exception issue
 
 
         //
 
-        intakeClaw = hardwareMap.get(ServoImplEx.class,"intakeClaw");//
-        intakeWrist = hardwareMap.get(ServoImplEx.class,"intakeWrist");//
-        intakeElbow = hardwareMap.get(ServoImplEx.class,"intakeElbow");//
-        intakeArm = hardwareMap.get(ServoImplEx.class,"intakeArm");//
+        intakeClaw = hardwareMap.get(ServoImplEx.class, "intakeClaw");//
+        intakeWrist = hardwareMap.get(ServoImplEx.class, "intakeWrist");//
+        intakeElbow = hardwareMap.get(ServoImplEx.class, "intakeElbow");//
+        intakeArm = hardwareMap.get(ServoImplEx.class, "intakeArm");//
 
-        depositClaw = hardwareMap.get(ServoImplEx.class,"depositClaw");//
-        depositArm = hardwareMap.get(ServoImplEx.class,"depositArm");//
-        depositWrist = hardwareMap.get(ServoImplEx.class,"depositWrist");//
+        depositClaw = hardwareMap.get(ServoImplEx.class, "depositClaw");//
+        depositArm = hardwareMap.get(ServoImplEx.class, "depositArm");//
+        depositWrist = hardwareMap.get(ServoImplEx.class, "depositWrist");//
 
-        hSlidesLeft  = hardwareMap.get(ServoImplEx.class,"hSlidesLeft");//
-        hSlidesRight = hardwareMap.get(ServoImplEx.class,"hSlidesRight");//
+        hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//
+        hSlidesRight = hardwareMap.get(ServoImplEx.class, "hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
 
-        depositArm.setPwmRange(new PwmControl.PwmRange(500,2500));
-        depositWrist.setPwmRange(new PwmControl.PwmRange(500,2500));
-        intakeArm.setPwmRange(new PwmControl.PwmRange(500,2500));
-        intakeElbow.setPwmRange(new PwmControl.PwmRange(500,2500));
-        intakeWrist.setPwmRange(new PwmControl.PwmRange(500,2500));
+        depositArm.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        depositWrist.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        intakeArm.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        intakeElbow.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        intakeWrist.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
     }
 
@@ -184,6 +182,7 @@ public class Calvin {
         depositArm.setPosition(depositClawPassivePos);
         //hangServo.setPosition(hangServoInitial);
     }
+
     public void initialSpecimen() {
         hSlidesLeft.setPosition(hSlidesInside);
         hSlidesRight.setPosition(hSlidesInside);
@@ -194,8 +193,9 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-       // hangServo.setPosition(hangServoInitial);
+        // hangServo.setPosition(hangServoInitial);
     }
+
     public void initialBucket() {
         hSlidesLeft.setPosition(hSlidesInside);
         hSlidesRight.setPosition(hSlidesInside);
@@ -214,40 +214,46 @@ public class Calvin {
     // -Add all the basic functions
 
 
-    public void depositClawOpen(){
+    public void depositClawOpen() {
         depositClaw.setPosition(depositClawOpen);
     }
-    public void depositClawClosed(){
+
+    public void depositClawClosed() {
         depositClaw.setPosition(depositClawClosed);
     }
-    public void hSlidesIn(){
+
+    public void hSlidesIn() {
         hSlidesLeft.setPosition(hSlidesInside);
         hSlidesRight.setPosition(hSlidesInside);
     }
-    public void hSlidesOut(){
+
+    public void hSlidesOut() {
         hSlidesLeft.setPosition(hSlidesOutside);
         hSlidesRight.setPosition(hSlidesOutside);
     }
-    public void intakePassive(){
+
+    public void intakePassive() {
 
         intakeWrist.setPosition(intakeWristFlat);
         intakeElbow.setPosition(intakeClawPassiveRot);
         intakeArm.setPosition(intakeClawPassivePos);
     }
-    public void depositPassive(){
+
+    public void depositPassive() {
         //depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
     }
-    public void depositScore(){
+
+    public void depositScore() {
         depositWrist.setPosition(depositClawScoreRot);
         depositArm.setPosition(depositClawScorePos);
     }
-    public void depositSpecimenStart(){
+
+    public void depositSpecimenStart() {
         depositWrist.setPosition(depositClawSpeciPosStart);
         depositArm.setPosition(depositClawSpeciRotStart);
     }
-
 
 
     //Todo: Create a function for scoring specimens, whether using the timer or not
@@ -259,7 +265,9 @@ public class Calvin {
     enum SpecimenPickupSteps {
         READY, FINAL
     }
+
     public SpecimenPickupSteps specimenStep = SpecimenPickupSteps.READY;
+
     public void scoreSpecimen(boolean buttonPressed, boolean lastButtonPressed) { //so on so forth
         switch (specimenStep) {
             case READY:
@@ -291,6 +299,7 @@ public class Calvin {
         intakeElbow.setPosition(intakeClawHoverRot);
         intakeArm.setPosition(intakeClawHoverPos);
     }
+
     public void grab() {
         intakeElbow.setPosition(intakeClawGrabRot);
         intakeArm.setPosition(intakeClawGrabPos);
@@ -303,10 +312,11 @@ public class Calvin {
     public enum PickUpSteps {
         READY, MOVE, GRAB
     }
+
     public PickUpSteps pickUpStep = PickUpSteps.READY;
 
     public void pickUp(boolean buttonPressed, boolean lastButtonPressed) {
-        switch(pickUpStep) {
+        switch (pickUpStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
                     isMacroing = true;
@@ -324,7 +334,7 @@ public class Calvin {
             case GRAB:
                 if (intakeClaw.getPosition() == intakeClawClosed) {
                     intakeClaw.setPosition(intakeClawOpen);
-                } else if(intakeClaw.getPosition() == intakeClawOpen) {
+                } else if (intakeClaw.getPosition() == intakeClawOpen) {
                     intakeClaw.setPosition(intakeClawClosed);
                 }
                 if (pickUpTime.seconds() >= pickUp2) {
@@ -344,6 +354,7 @@ public class Calvin {
     public enum TransferSteps {
         READY, MOVE, GRAB, LETGO, RETURN;
     }
+
     // READY: Waits for the button press to start the transfer sequence
 // MOVE: Moves components to the initial transfer position
 // GRAB: Closes the deposit claw to secure the object
@@ -352,7 +363,7 @@ public class Calvin {
     public TransferSteps transferStep = TransferSteps.READY;
 
 
-    public void transferStartClosed(){
+    public void transferStartClosed() {
         intakeWrist.setPosition(intakeWristFlat);
         intakeElbow.setPosition(intakeClawTransferRot);
         intakeArm.setPosition(intakeClawTransferPos);
@@ -360,7 +371,8 @@ public class Calvin {
         depositWrist.setPosition(depositClawTransferRot);
         depositArm.setPosition(depositClawTransferPos);
     }
-    public void transferStartOpen(){
+
+    public void transferStartOpen() {
         intakeWrist.setPosition(intakeWristNormalLeft);
         intakeElbow.setPosition(intakeClawTransferRot);
         intakeArm.setPosition(intakeClawTransferPos);
@@ -372,8 +384,8 @@ public class Calvin {
     //Todo: in macros, the timer should be reset AT THE END OF THE STEP TO SET UP FOR THE NEXT
     // otherwise, THE TIMER WILL BE RESET EVERY CYCLE AND NOT WORK
     // I THINK
-    public void transferEnd(boolean buttonPressed, boolean lastButtonPressed){
-        switch(transferStep) {
+    public void transferEnd(boolean buttonPressed, boolean lastButtonPressed) {
+        switch (transferStep) {
             case READY:
                 if (buttonPressed && !lastButtonPressed) {
                     depositPassive();
@@ -383,13 +395,13 @@ public class Calvin {
                 }
                 break;
             case MOVE:
-                if (transferTime.seconds() >= transferPart1){
-                    if(intakeClaw.getPosition() == intakeClawClosed){
+                if (transferTime.seconds() >= transferPart1) {
+                    if (intakeClaw.getPosition() == intakeClawClosed) {
                         transferStartClosed();
                         transferTime.reset();
                         transferStep = TransferSteps.GRAB;
                     }
-                    if(intakeClaw.getPosition() == intakeClawOpen) {
+                    if (intakeClaw.getPosition() == intakeClawOpen) {
                         transferStartOpen();
                         transferTime.reset();
                         transferStep = TransferSteps.GRAB;
@@ -428,7 +440,7 @@ public class Calvin {
     //We can always make the timer faster, so please don't worry
 
     //Todo: Auto functions
-
+/*
 
 }
 public class Claw {
@@ -458,4 +470,6 @@ public class Claw {
     public Action openClaw() {
         return new OpenClaw();
     }
+}
+*/
 }

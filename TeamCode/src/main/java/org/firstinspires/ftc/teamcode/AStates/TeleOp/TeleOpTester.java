@@ -24,11 +24,15 @@ public class TeleOpTester extends LinearOpMode {
 
     public DcMotorImplEx hangLeft, hangRight;
 
+    public ServoImplEx servHangRight, servHangLeft;
+
     public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
 
     public ServoImplEx depositClaw, depositArm, depositWrist;
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
+
+
 
     public static double hSlidesTest = 1;
     public static double intakeClawTest = 0;
@@ -63,8 +67,12 @@ public class TeleOpTester extends LinearOpMode {
 
         hSlidesLeft  = hardwareMap.get(ServoImplEx.class,"hSlidesLeft");//
         hSlidesRight = hardwareMap.get(ServoImplEx.class,"hSlidesRight");//
+
+        servHangRight = hardwareMap.get(ServoImplEx.class, "servHangRight");
+        servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
+        servHangLeft.setDirection(Servo.Direction.REVERSE);
 
         depositArm.setPwmRange(new PwmControl.PwmRange(500,2500));
         depositWrist.setPwmRange(new PwmControl.PwmRange(500,2500));
@@ -100,7 +108,10 @@ public class TeleOpTester extends LinearOpMode {
                 depositWrist.setPosition(depositWristTest);
                 depositArm.setPosition(depositArmTest);
             }
-            
+            if (HangTesting != 0) {
+                servHangRight.setPosition(hangServoTest);
+                servHangLeft.setPosition(hangServoTest);
+            }
 
 
 

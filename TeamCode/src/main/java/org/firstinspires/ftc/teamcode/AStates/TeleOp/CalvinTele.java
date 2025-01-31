@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "RUN, TESTER")
+@TeleOp (group = "States", name = "RUN THIS ONE")
 public class CalvinTele extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
@@ -469,7 +469,8 @@ public class CalvinTele extends LinearOpMode {
             //Todo: the wrist can't actually rotate that far, as far as i know, but lets try
             switch (specMacro) {
                 case READY:
-                    if (gamepad1.left_bumper && !driverLB) {
+                    //Todo : fix this
+                    /*if (gamepad1.left_bumper && !driverLB) {
                         isMajorMacroing = true;
                         calvin.intakeClaw.setPosition(intakeClawOpen);
                         intakeClawMacro = IntakeClawMacro.OPENED;
@@ -490,7 +491,7 @@ public class CalvinTele extends LinearOpMode {
                         specMacro = SpecimenTransferMacro.HIT;
                     } else if(!gamepad1.left_bumper) {
                         driverLB = false;
-                    }
+                    }*/
                     break;
                 case HIT:
                     if(!gamepad1.left_bumper) {

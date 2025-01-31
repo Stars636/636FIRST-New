@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "States", name = "ACTUALLY DON'T RUN, OTHER TESTER")
+@TeleOp (group = "States", name = "DON'T RUN")
 public class TeleOpReview_PresannaHere extends LinearOpMode {
 
 

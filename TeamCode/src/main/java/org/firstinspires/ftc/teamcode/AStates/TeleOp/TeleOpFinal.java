@@ -14,6 +14,8 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTrans
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoFinish;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hangServoInitial;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.increment;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
@@ -62,7 +64,8 @@ public class TeleOpFinal extends LinearOpMode {
     public static double transferPart1 = 0.3;
     public static double transferPart2 = 0.7;
     public static double transferPart3 = 0.1;
-    public static double hooking = 0;
+    public static double hookExtend = 1;
+    public static double hookRetract = 0;
 
     public static double transferPart4 = 0.1;
     public static double transferPart5 = 0.7;
@@ -236,6 +239,38 @@ Calvin calvin;
             } else if (!gamepad2.x) {
                 changedX = false;
             }
+
+            if (gamepad1.x && !changedX) {
+                if (calvin.servHangRight.getPosition() == hangServoInitial) {
+                    calvin.servHangRight.setPosition(hangServoFinish);
+                    changedX = true;
+                }
+                else if (calvin.servHangRight.getPosition() == hangServoFinish) {
+                    calvin.servHangRight.setPosition(hangServoInitial);
+                    changedX = true;
+                }
+                else {
+                    calvin.servHangRight.setPosition(hangServoInitial);
+                    changedX = false;
+                }
+            }
+
+            if (gamepad1.x && !changedX) {
+                if (calvin.servHangLeft.getPosition() == hangServoInitial) {
+                    calvin.servHangLeft.setPosition(hangServoFinish);
+                    changedX = true;
+                }
+                else if (calvin.servHangLeft.getPosition() == hangServoFinish) {
+                    calvin.servHangRight.setPosition(hangServoInitial);
+                    changedX = true;
+                }
+                else {
+                    calvin.servHangLeft.setPosition(hangServoInitial);
+                    changedX = false;
+                }
+            }
+
+
             //Todo: check that transfer even works
             // -these are both state machines and require the most testing and scrutiny
             //Todo: make backups?
@@ -494,7 +529,6 @@ Calvin calvin;
             //Only if you want
 
 
-            if (gamepad1.x )
 
             switch (specimenStep) {
                 case READY:

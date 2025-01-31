@@ -24,7 +24,8 @@ public class Calvin {
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
 
     public DcMotorImplEx hangRight, hangLeft;
-    public ServoImplEx servHangRight, serHangLeft;
+    public ServoImplEx servHangRight, servHangLeft;
+
 
     public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
 
@@ -42,8 +43,9 @@ public class Calvin {
     public static int highBucket = 3000;
 
     public static int hangStart; //note this is the verticalSlides
-
     public static int hangFinish; //add this to the current position of the hang motors
+    public static double hangServoInitial;
+    public static double hangServoFinish;
 
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.4;
@@ -91,8 +93,7 @@ public class Calvin {
     public static double intakeWristNormalRight = 0.2; //as in perpendicular
     //Todo: refactor this to a better name
     public static double intakeWristTiltLeft = 0.72;
-    public static double hangServoInitial;
-    public static double hangServoFinish;
+
 
 
 
@@ -142,26 +143,10 @@ public class Calvin {
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         vSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        servHangLeft.setDirection(Servo.Direction.REVERSE);
         //Todo: uncomment these when they've been plugged in, null pointer exception issue
-        /*
-        hangLeft = hardwareMap.get(DcMotorImplEx.class,"hangLeft");
-        hangRight = hardwareMap.get(DcMotorImplEx.class,"hangRight");
 
-        hangRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        hangServoLeft = hardwareMap.get(ServoImpl.class, "hangServoLeft");
-        hangServoRight = hardwareMap.get(ServoImpl.class, "hangServoRight");
-        hangServoLeft.setDirection(Servo.Direction.REVERSE);
-
-        */
 
         //
 

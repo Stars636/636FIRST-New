@@ -22,10 +22,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiveRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenLiftPos;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenLiftRot;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenPickupPos;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeSpecimenPickupRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalRight;

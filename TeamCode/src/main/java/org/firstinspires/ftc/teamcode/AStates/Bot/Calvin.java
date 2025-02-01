@@ -46,16 +46,10 @@ public class Calvin {
     public static int hangFinish; //add this to the current position of the hang motors
     public static double hangServoInitial;
     public static double hangServoFinish;
-
-<<<<<<< Updated upstream
     public static double depositClawOpen = 0.08;
     public static double depositClawClosed = 0.58;
-=======
->>>>>>> Stashed changes
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
-
-
     public static double depositClawPassivePos = 0.85;
 
     public static double depositClawPassiveRot = 0.3;

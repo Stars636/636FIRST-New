@@ -47,8 +47,6 @@ public class Calvin {
     public static double hangServoInitial;
     public static double hangServoFinish;
     public static double depositClawOpen = 0.08;
-    public static double depositClawClosed = 0.58;
-    public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
     public static double depositClawPassivePos = 0.85;
 

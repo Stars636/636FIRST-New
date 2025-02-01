@@ -312,7 +312,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(30)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(25)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
 

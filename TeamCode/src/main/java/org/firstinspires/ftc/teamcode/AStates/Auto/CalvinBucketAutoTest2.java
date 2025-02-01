@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScore
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScoreRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawGrabPos;
@@ -338,6 +340,41 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
             }
 
         }
+
+        public static class HorizontalSlides {
+
+            Calvin calvin;
+
+            public HorizontalSlides(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
+
+            public class HSlidesOutside implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.hSlidesLeft.setPosition(hSlidesOutside);
+                    calvin.hSlidesRight.setPosition(hSlidesOutside);
+                    return false;
+                }
+            }
+            public Action hSlidesOutside() {
+                return new HSlidesOutside();
+            }
+
+            public class HSlidesInside implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.hSlidesLeft.setPosition(hSlidesInside);
+                    calvin.hSlidesRight.setPosition(hSlidesInside);
+                    return false;
+                }
+            }
+            public Action hSlidesInside() {
+                return new HSlidesInside();
+            }
+
+        }
+
     PinpointDrive drive;
 
     @Override
@@ -357,6 +394,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         DepositWrist depositWrist = new DepositWrist(hardwareMap);
         DepositClaw depositClaw = new DepositClaw(hardwareMap);
         DepositArm depositArm = new DepositArm(hardwareMap);
+        HorizontalSlides hSlides = new HorizontalSlides(hardwareMap);
 
         //where hslides cynthia? where hslides
         //please add idk how to do ur thing LOL

@@ -11,8 +11,8 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
 
-        double xInitial = 0; //i have Initial variables because in real life i think the robot will start from zero
-        double yInitial = 0;// so use Initial variables haha
+        double xInitial = -45; //i have Initial variables because in real life i think the robot will start from zero
+        double yInitial = -64;// so use Initial variables haha
 
         double xStart = 0;
         double yStart = -64;

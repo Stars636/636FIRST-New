@@ -50,8 +50,6 @@ public class CalvinBucketAutoTest1 extends LinearOpMode {
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
         //if you are coming from meep meep, define your initial here
-        double xStart = 0;
-        double yStart = 0;
 
 
         // Set the initial pose of the robot

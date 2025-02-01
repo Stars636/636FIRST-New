@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassiveRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScorePos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScoreRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferPos;
@@ -21,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -30,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
@@ -46,9 +50,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 public class CalvinBucketAutoTest2 extends LinearOpMode {
 
 
-
-        Calvin calvin = new Calvin(hardwareMap);
-
+    /*Calvin calvin = new Calvin(hardwareMap);
 
         private void moveVerticalSlidesTo(int targetPosition) {
             calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -63,12 +65,16 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
             calvin.vSlidesRight.setTargetPosition(targetPosition);
             calvin.vSlidesRight.setPower(0.8);
             calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+        }*/
 
         //Todo: have hang open before auto
 
-        public class IntakeClaw {
+        public static class IntakeClaw {
+            Calvin calvin;
 
+            public IntakeClaw(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
             public class CloseIntakeClaw implements Action {
                 @Override
                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -94,8 +100,26 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
             }
         }
 
-        public class VerticalSlides {
+        public static class VerticalSlides {
+            Calvin calvin;
 
+            public VerticalSlides(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
+            private void moveVerticalSlidesTo(int targetPosition) {
+                calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+                calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                calvin.vSlidesLeft.setTargetPosition(targetPosition);
+                calvin.vSlidesLeft.setPower(0.8);
+                calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                calvin.vSlidesRight.setTargetPosition(targetPosition);
+                calvin.vSlidesRight.setPower(0.8);
+                calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
             public class SlidesUp implements Action {
                 @Override
                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -121,7 +145,12 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
             }
         }
 
-        public class IntakeWrist {
+        public static class IntakeWrist {
+            Calvin calvin;
+
+            public IntakeWrist(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
             public class NeutralPos implements Action {
                 @Override
                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -135,7 +164,12 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         }
 
-        public class IntakeElbow {
+        public static class IntakeElbow {
+            Calvin calvin;
+
+            public IntakeElbow(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
             public class ElbowIntake implements Action {
                 @Override
                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -160,7 +194,12 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         }
 
-        public class IntakeArm {
+        public static class IntakeArm {
+            Calvin calvin;
+
+            public IntakeArm(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
 
             public class ArmIntake implements Action {
                 @Override
@@ -185,7 +224,12 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         }
 
-        public class DepositClaw {
+        public static class DepositClaw {
+            Calvin calvin;
+
+            public DepositClaw(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
 
             public class DepositClawOpen implements Action {
                 @Override
@@ -210,7 +254,23 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         }
 
-        public class DepositArm {
+        public static class DepositArm {
+            Calvin calvin;
+
+            public DepositArm(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
+
+            public class DepositArmPassive implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositArm.setPosition(depositClawPassivePos);
+                    return false;
+                }
+            }
+            public Action depositArmPassive() {
+                return new DepositArmPassive();
+            }
 
             public class DepositArmTransfer implements Action {
                 @Override
@@ -236,7 +296,24 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         }
 
-        public class DepositWrist {
+        public static class DepositWrist {
+
+            Calvin calvin;
+
+            public DepositWrist(HardwareMap hardwareMap){
+                calvin = new Calvin(hardwareMap);
+            }
+
+            public class DepositWristPassive implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                    calvin.depositWrist.setPosition(depositClawPassiveRot);
+                    return false;
+                }
+            }
+            public Action depositWristPassive() {
+                return new DepositWrist.DepositWristPassive();
+            }
 
             public class DepositWristTransfer implements Action {
                 @Override
@@ -261,13 +338,6 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
             }
 
         }
-
-
-
-
-
-
-
     PinpointDrive drive;
 
     @Override
@@ -279,11 +349,17 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         ElapsedTime et = new ElapsedTime();
         Calvin calvin = new Calvin(hardwareMap);
-        IntakeClaw intakeClaw = new IntakeClaw();
-        VerticalSlides vSlides = new VerticalSlides();
-        IntakeWrist wrist = new IntakeWrist();
-        IntakeElbow elbow = new IntakeElbow();
-        IntakeArm arm = new IntakeArm();
+        IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
+        VerticalSlides vSlides = new VerticalSlides(hardwareMap);
+        IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
+        IntakeElbow intakeElbow = new IntakeElbow(hardwareMap);
+        IntakeArm intakeArm = new IntakeArm(hardwareMap);
+        DepositWrist depositWrist = new DepositWrist(hardwareMap);
+        DepositClaw depositClaw = new DepositClaw(hardwareMap);
+        DepositArm depositArm = new DepositArm(hardwareMap);
+
+        //where hslides cynthia? where hslides
+        //please add idk how to do ur thing LOL
 
 
         //Zhang we need using encode for auto but in teleop we need run without encoder
@@ -299,6 +375,25 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         double yInitial = 0;
         int fraudOffset = 15;
         int fraudWait = 2;
+        int fraudSmallWait = 1;
+
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+
+        // Define the starting pose (e.g., starting point on the field)
+        //if you are coming from meep meep, define your initial here
+
+
+        // Set the initial pose of the robot
+
+        // Define the trajectories for moving forward
+
+        //If  a Pose2d is repetitive, define it here:
+
+
+        // Set the initial pose of the robot
+        //drive.setPoseEstimate(startPose);
+
+        // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
@@ -316,6 +411,8 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
 
+
+
         Action s1 = a1.build();
         Action s2 = a2.build();
         Action s3 = a3.build();
@@ -323,6 +420,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
+
 
 
         waitForStart();
@@ -336,12 +434,26 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
             Actions.runBlocking(
                     new SequentialAction(
-                            intakeClaw.closeIntakeClaw(),
+                            depositArm.depositArmPassive(),
+                            depositWrist.depositWristPassive(),
+                            depositClaw.depositClawClose(),
+                            //Starting Positions
                             s1,
                             new SleepAction(fraudWait),
-                            vSlides.slidesUp(),
+                            vSlides.slidesUp(), //Going Up
                             new SleepAction(2),
-                            intakeClaw.openIntakeClaw(),
+                            depositWrist.depositWristScore(),
+                            depositArm.depositArmScore(),
+                            depositClaw.depositClawOpen(), //SCORE YAYY
+                            new SleepAction(fraudSmallWait),
+                            depositClaw.depositClawClose(),
+                            depositArm.depositArmPassive(),
+                            depositWrist.depositWristPassive(),
+                            new SleepAction(fraudSmallWait),
+                            new ParallelAction(
+                                    //???
+                            ),
+                            vSlides.slidesDown(),
                             s2,
                             new SleepAction(fraudWait),
                             s3,

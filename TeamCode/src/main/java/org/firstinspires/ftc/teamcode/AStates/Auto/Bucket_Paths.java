@@ -15,13 +15,12 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Autonomous
 @Config
-public class CalvinBucketAutoTest1 extends LinearOpMode {
+public class Bucket_Paths extends LinearOpMode {
     
     PinpointDrive drive;
     public static int fraudOffset = 15;

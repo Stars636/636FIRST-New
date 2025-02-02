@@ -9,8 +9,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScore
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawScoreRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawTransferRot;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawGrabPos;
@@ -45,11 +43,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous (name = "Specimen_Bucket_Auto", group = "Autonomous")
+@Autonomous
 
 
 
-public class CalvinBucketAutoTest2 extends LinearOpMode {
+public class Outdated extends LinearOpMode {
 
 
     /*Calvin calvin = new Calvin(hardwareMap);
@@ -341,7 +339,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
 
         }
 
-        public static class HorizontalSlides {
+        /*public static class HorizontalSlides {
 
             Calvin calvin;
 
@@ -374,6 +372,8 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
             }
 
         }
+        */
+
 
     PinpointDrive drive;
 
@@ -394,7 +394,7 @@ public class CalvinBucketAutoTest2 extends LinearOpMode {
         DepositWrist depositWrist = new DepositWrist(hardwareMap);
         DepositClaw depositClaw = new DepositClaw(hardwareMap);
         DepositArm depositArm = new DepositArm(hardwareMap);
-        HorizontalSlides hSlides = new HorizontalSlides(hardwareMap);
+        //HorizontalSlides hSlides = new HorizontalSlides(hardwareMap);
 
         //where hslides cynthia? where hslides
         //please add idk how to do ur thing LOL

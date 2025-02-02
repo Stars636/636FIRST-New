@@ -52,9 +52,9 @@ public class Calvin {
 
     public static double depositClawPassiveRot = 0.3;
 
-    public static double depositClawTransferPos = 0.9;
+    public static double depositClawTransferPos = 0.89;
 
-    public static double depositClawTransferRot = 0.13;
+    public static double depositClawTransferRot = 0.15;
 
     public static double depositClawScorePos = 0.5;
 
@@ -127,9 +127,9 @@ public class Calvin {
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

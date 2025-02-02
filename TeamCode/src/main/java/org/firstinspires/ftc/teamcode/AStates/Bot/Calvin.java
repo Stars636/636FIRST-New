@@ -263,7 +263,7 @@ public class Calvin {
     // -Function for score (maybe with timer) (if you use a statemachine move it to tele)
     // -I'll leave this to you. :)
 
-    enum SpecimenPickupSteps {
+    public enum SpecimenPickupSteps {
         READY, FINAL
     }
 

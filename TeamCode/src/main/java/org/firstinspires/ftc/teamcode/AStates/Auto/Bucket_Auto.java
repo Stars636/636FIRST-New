@@ -26,6 +26,12 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp1;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp2;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart1;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart2;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart3;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart4;
 
 import androidx.annotation.NonNull;
 
@@ -56,6 +62,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 public class Bucket_Auto extends LinearOpMode {
 
     //Todo: have hang open before auto
+    public static double FOREVER = 30;
 
     public static class HorizontalSlides {
 
@@ -133,10 +140,6 @@ public class Bucket_Auto extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         public VerticalSlides(HardwareMap hardwareMap) {
             calvin = new Calvin(hardwareMap);
-            calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         public void moveVerticalSlidesTo(int targetPosition) {
@@ -467,14 +470,8 @@ public class Bucket_Auto extends LinearOpMode {
 
         //where hslides cynthia? where hslides
         //please add idk how to do ur thing LOL
-
-
         //Zhang we need using encode for auto but in teleop we need run without encoder
         // so im putting this here for you
-        calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //Calvin.Claw claw = new Calvin.Claw();
 
 
@@ -570,20 +567,22 @@ public class Bucket_Auto extends LinearOpMode {
                                             hSlides.hSlidesOutside(),
                                             intakeArm.armHover(),
                                             intakeElbow.elbowHover(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(fraudMediumWait),
                                             intakeArm.armIntake(),
                                             intakeElbow.elbowIntake(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(pickUp1),
                                             intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(pickUp2),
                                             intakeArm.armTransfer(),
                                             intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudMediumWait),
+                                            new SleepAction(transferPart1),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(transferPart2),
                                             depositArm.depositArmTransfer(),
                                             depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudMediumWait),
+                                            new SleepAction(transferPart3),
                                             depositClaw.depositClawClose(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(transferPart4),
                                             intakeClaw.openIntakeClaw()
                                     )
                             ),
@@ -608,20 +607,22 @@ public class Bucket_Auto extends LinearOpMode {
                                             hSlides.hSlidesOutside(),
                                             intakeArm.armHover(),
                                             intakeElbow.elbowHover(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(fraudMediumWait),
                                             intakeArm.armIntake(),
                                             intakeElbow.elbowIntake(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(pickUp1),
                                             intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(pickUp2),
                                             intakeArm.armTransfer(),
                                             intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudMediumWait),
+                                            new SleepAction(transferPart1),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(transferPart2),
                                             depositArm.depositArmTransfer(),
                                             depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudMediumWait),
+                                            new SleepAction(transferPart3),
                                             depositClaw.depositClawClose(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(transferPart4),
                                             intakeClaw.openIntakeClaw()
                                     )
                             ),
@@ -642,24 +643,26 @@ public class Bucket_Auto extends LinearOpMode {
                                     new SequentialAction(
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
-                                            // GO TO FOURTH SAMPLE
+                                            // GO TO SECOND SAMPLE
                                             hSlides.hSlidesOutside(),
                                             intakeArm.armHover(),
                                             intakeElbow.elbowHover(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(fraudMediumWait),
                                             intakeArm.armIntake(),
                                             intakeElbow.elbowIntake(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(pickUp1),
                                             intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(pickUp2),
                                             intakeArm.armTransfer(),
                                             intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudMediumWait),
+                                            new SleepAction(transferPart1),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(transferPart2),
                                             depositArm.depositArmTransfer(),
                                             depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudMediumWait),
+                                            new SleepAction(transferPart3),
                                             depositClaw.depositClawClose(),
-                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(transferPart4),
                                             intakeClaw.openIntakeClaw()
                                     )
                             ),
@@ -673,7 +676,12 @@ public class Bucket_Auto extends LinearOpMode {
                                             depositClaw.depositClawOpen(),//SCORE YAYY FOURTH SAMPLE
                                             new SleepAction(fraudMediumWait)
                                     )
+                            ),
+                            new ParallelAction(
+                                    vSlides.slidesDown(),
+                                    new SleepAction(FOREVER)
                             )
+
                     )
             );
 

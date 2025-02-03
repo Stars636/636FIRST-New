@@ -499,6 +499,8 @@ public class CalvinTele extends LinearOpMode {
             }
 
             //TODO: Hang
+
+            //Todo: test both codes, if both work, then use the more streamlined one
             /*if (gamepad1.x) {
                 if (calvin.servHangRight.getPosition() == hookRetract) {
                     calvin.servHangRight.setPosition(hookExtend);
@@ -510,17 +512,22 @@ public class CalvinTele extends LinearOpMode {
                 }
             }*/
 
-            if (gamepad1.x && calvin.servHangRight.getPosition() == hookRetract && calvin.servHangLeft.getPosition() == hookRetract) {
+            if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == hookRetract && calvin.servHangLeft.getPosition() == hookRetract) {
                 calvin.servHangRight.setPosition(hookExtend);
                 calvin.servHangLeft.setPosition(hookExtend);
+                changedDX = true;
             }
-            else if (gamepad1.x && calvin.servHangRight.getPosition() == hookExtend && calvin.servHangLeft.getPosition() == hookExtend) {
+            else if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == hookExtend && calvin.servHangLeft.getPosition() == hookExtend) {
                 calvin.servHangRight.setPosition(hookRetract);
                 calvin.servHangRight.setPosition(hookRetract);
+                changedDX = true;
+            }
+            else {
+                changedDX = false;
             }
 
-
-            if (gamepad1.y) {
+            //TODO: Test both codes, if both work, use the more streamlined one
+            /*if (gamepad1.y) {
                 calvin.hangRight.setPower(0.3);
                 calvin.hangLeft.setPower(0.3);
 
@@ -533,6 +540,19 @@ public class CalvinTele extends LinearOpMode {
             }
 
             if (!gamepad1.y && !gamepad1.b) {
+                calvin.hangRight.setPower(0);
+                calvin.hangLeft.setPower(0);
+            }*/
+
+            if (gamepad1.y) {
+                calvin.hangRight.setPower(0.3);
+                calvin.hangLeft.setPower(0.3);
+            }
+            else if (gamepad1.b) {
+                calvin.hangRight.setPower(-0.3);
+                calvin.hangLeft.setPower(-0.3);
+            }
+            else {
                 calvin.hangRight.setPower(0);
                 calvin.hangLeft.setPower(0);
             }

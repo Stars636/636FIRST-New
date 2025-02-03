@@ -512,6 +512,9 @@ public class CalvinTele extends LinearOpMode {
                 }
             }*/
 
+            calvin.servHangRight.setPosition(hookRetract);
+            calvin.servHangLeft.setPosition(hookRetract);
+
             if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == hookRetract && calvin.servHangLeft.getPosition() == hookRetract) {
                 calvin.servHangRight.setPosition(hookExtend);
                 calvin.servHangLeft.setPosition(hookExtend);
@@ -522,7 +525,7 @@ public class CalvinTele extends LinearOpMode {
                 calvin.servHangRight.setPosition(hookRetract);
                 changedDX = true;
             }
-            else {
+            else if  (!gamepad1.x) {
                 changedDX = false;
             }
 
@@ -572,6 +575,9 @@ public class CalvinTele extends LinearOpMode {
             telemetry.addData("Intake Claw", intakeClawMacro);
             telemetry.addData("Intake Claw Pos", calvin.intakeClaw.getPosition());
             telemetry.addData("Deposit Claw", depositClawMacro);
+            telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
+            telemetry.addData("Hang Power", calvin.hangLeft.getPower());
+
             telemetry.update();
 
         }

@@ -42,10 +42,7 @@ public class Calvin {
 
     public static int highBucket = 3000;
 
-    public static int hangStart; //note this is the verticalSlides
-    public static int hangFinish; //add this to the current position of the hang motors
-    public static double hangServoInitial;
-    public static double hangServoFinish;
+
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
     public static double depositClawPassivePos = 0.85;

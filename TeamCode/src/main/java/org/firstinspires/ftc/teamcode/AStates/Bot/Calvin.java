@@ -42,6 +42,8 @@ public class Calvin {
 
     public static int highBucket = 3000;
 
+    public static double hookExtend = 0.52;
+    public static double hookRetract = 0;
 
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
@@ -120,6 +122,8 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
@@ -153,6 +157,7 @@ public class Calvin {
         servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
         hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
         hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
+        hangLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         servHangLeft.setDirection(Servo.Direction.REVERSE);
         hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//
@@ -178,6 +183,9 @@ public class Calvin {
         depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
+
+        servHangRight.setPosition(Calvin.hookRetract);
+        servHangLeft.setPosition(Calvin.hookRetract);
         //hangServo.setPosition(hangServoInitial);
     }
 
@@ -191,6 +199,8 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
+        servHangRight.setPosition(Calvin.hookRetract);
+        servHangLeft.setPosition(Calvin.hookRetract);
         // hangServo.setPosition(hangServoInitial);
     }
 
@@ -204,6 +214,8 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
+        servHangRight.setPosition(Calvin.hookRetract);
+        servHangLeft.setPosition(Calvin.hookRetract);
         //hangServo.setPosition(hangServoInitial);
     }
 

@@ -55,6 +55,7 @@ public class CalvinTele extends LinearOpMode {
 
     boolean changedDY = false;
     boolean changedDX = false;
+    boolean hookExtended = false;
 
     boolean driverLB = false;
 
@@ -74,8 +75,7 @@ public class CalvinTele extends LinearOpMode {
 
     public static boolean isMajorMacroing = false;
 
-    public static double hookExtend = 0.55;
-    public static double hookRetract = 0;
+
 
     //Hopeful fix
     double intakeClawPos = 0.4;
@@ -501,6 +501,8 @@ public class CalvinTele extends LinearOpMode {
             //TODO: Hang
 
             //Todo: test both codes, if both work, then use the more streamlined one
+
+
             /*if (gamepad1.x) {
                 if (calvin.servHangRight.getPosition() == hookRetract) {
                     calvin.servHangRight.setPosition(hookExtend);
@@ -512,22 +514,38 @@ public class CalvinTele extends LinearOpMode {
                 }
             }*/
 
-            calvin.servHangRight.setPosition(hookRetract);
-            calvin.servHangLeft.setPosition(hookRetract);
 
-            if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == hookRetract && calvin.servHangLeft.getPosition() == hookRetract) {
-                calvin.servHangRight.setPosition(hookExtend);
-                calvin.servHangLeft.setPosition(hookExtend);
+            if (gamepad1.x && !changedDX && !hookExtended) {
+                calvin.servHangRight.setPosition(Calvin.hookExtend);
+                calvin.servHangLeft.setPosition(Calvin.hookExtend - 0.2);
+                hookExtended = true;
                 changedDX = true;
             }
-            else if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == hookExtend && calvin.servHangLeft.getPosition() == hookExtend) {
-                calvin.servHangRight.setPosition(hookRetract);
-                calvin.servHangRight.setPosition(hookRetract);
+            else if (gamepad1.x && !changedDX && hookExtended) {
+                calvin.servHangRight.setPosition(Calvin.hookRetract);
+                calvin.servHangLeft.setPosition(Calvin.hookRetract - 0.2);
+                hookExtended = false;
                 changedDX = true;
             }
             else if  (!gamepad1.x) {
                 changedDX = false;
             }
+
+            /*if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == Calvin.hookRetract) {
+                calvin.servHangRight.setPosition(Calvin.hookExtend);
+                calvin.servHangLeft.setPosition(Calvin.hookExtend);
+                changedDX = true;
+            }
+            if (gamepad1.x && !changedDX && calvin.servHangRight.getPosition() == Calvin.hookExtend) {
+                calvin.servHangRight.setPosition(Calvin.hookRetract);
+                calvin.servHangRight.setPosition(Calvin.hookRetract);
+                changedDX = true;
+            }
+            if  (!gamepad1.x) {
+                changedDX = false;
+            }*/
+
+
 
             //TODO: Test both codes, if both work, use the more streamlined one
             /*if (gamepad1.y) {
@@ -548,12 +566,12 @@ public class CalvinTele extends LinearOpMode {
             }*/
 
             if (gamepad1.y) {
-                calvin.hangRight.setPower(0.3);
-                calvin.hangLeft.setPower(0.3);
+                calvin.hangRight.setPower(1);
+                calvin.hangLeft.setPower(1);
             }
             else if (gamepad1.b) {
-                calvin.hangRight.setPower(-0.3);
-                calvin.hangLeft.setPower(-0.3);
+                calvin.hangRight.setPower(-1);
+                calvin.hangLeft.setPower(-1);
             }
             else {
                 calvin.hangRight.setPower(0);
@@ -576,7 +594,7 @@ public class CalvinTele extends LinearOpMode {
             telemetry.addData("Intake Claw Pos", calvin.intakeClaw.getPosition());
             telemetry.addData("Deposit Claw", depositClawMacro);
             telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
-            telemetry.addData("Hang Power", calvin.hangLeft.getPower());
+            telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
 
             telemetry.update();
 
@@ -612,4 +630,10 @@ public class CalvinTele extends LinearOpMode {
         OPENED, CLOSED
     }
     DepositClawMacro depositClawMacro = DepositClawMacro.CLOSED;
+
+    public enum hang {
+        EXTENDED, RETRACTED
+    }
+
 }
+

@@ -47,7 +47,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,9 +56,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous (name = "Bucket_Auto", group = "Autonomous")
+@Autonomous (name = "Bucket_Auto_Tester", group = "Autonomous")
 
-public class Bucket_Auto extends LinearOpMode {
+public class Bucket_AutoTest2 extends LinearOpMode {
 
     //Todo: have hang open before auto
     public static double FOREVER = 30;
@@ -143,22 +142,14 @@ public class Bucket_Auto extends LinearOpMode {
         }
 
         public void moveVerticalSlidesTo(int targetPosition) {
-                // obtain the encoder position
-                double encoderPosition = calvin.vSlidesLeft.getCurrentPosition();
-                // calculate the error
-                double error = targetPosition - encoderPosition;
-                // rate of change of the error
-                double derivative = (error - lastError) / timer.seconds();
-                // sum of all error over time
-                integralSum = integralSum + (error * timer.seconds());
+            calvin.vSlidesLeft.setTargetPosition(targetPosition);
+            calvin.vSlidesLeft.setPower(0.8);
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                double power = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+            calvin.vSlidesRight.setTargetPosition(targetPosition);
+            calvin.vSlidesRight.setPower(0.8);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                calvin.vSlidesLeft.setPower(power);
-                calvin.vSlidesRight.setPower(power);
-                lastError = error;
-                // reset the timer for next time
-                timer.reset();
         }
         public class SlidesUp implements Action {
             @Override
@@ -179,7 +170,7 @@ public class Bucket_Auto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-                moveVerticalSlidesTo(5);
+                moveVerticalSlidesTo(0);
 
                 return false;
             }

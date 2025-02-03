@@ -15,7 +15,7 @@ public class PIDController extends LinearOpMode {
     boolean changedX = false;
     Calvin calvin;
     public static double target = 2000;
-    public  static double Kp = 0.001, Ki = 0.00, Kd = 0.00;
+    public  static double Kp = 0.05, Ki = 0.000008, Kd = 0.00007;
     public static double integralSum = 0;
     public  static double lastError = 0;
 

@@ -74,7 +74,7 @@ public class CalvinTele extends LinearOpMode {
 
     public static boolean isMajorMacroing = false;
 
-    public static double hookExtend = 0.58;
+    public static double hookExtend = 0.55;
     public static double hookRetract = 0;
 
     //Hopeful fix

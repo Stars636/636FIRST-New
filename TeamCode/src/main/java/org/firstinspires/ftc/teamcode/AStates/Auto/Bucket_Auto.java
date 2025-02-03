@@ -179,7 +179,7 @@ public class Bucket_Auto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-                moveVerticalSlidesTo(0);
+                moveVerticalSlidesTo(5);
 
                 return false;
             }

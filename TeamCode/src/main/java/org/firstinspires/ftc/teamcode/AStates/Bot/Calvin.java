@@ -69,7 +69,7 @@ public class Calvin {
 
 
     public static double hSlidesInside = 1;
-    public static double hSlidesOutside = 0.74;
+    public static double hSlidesOutside = 0.82;
     public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.4;
     public static double intakeClawTransferPos = 0.6;

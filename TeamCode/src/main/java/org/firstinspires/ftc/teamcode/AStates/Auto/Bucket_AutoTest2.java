@@ -495,7 +495,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 8, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
         TrajectoryActionBuilder a3 = a2.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
@@ -508,6 +508,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
 
 
+
         Action s1 = a1.build();
         Action s2 = a2.build();
         Action s3 = a3.build();
@@ -517,12 +518,16 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         Action s7 = a7.build();
 
 
+
+
         waitForStart();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();
 
         while (opModeIsActive()) {
+            calvin.servHangLeft.setPosition(0);
+            calvin.servHangRight.setPosition(0);
             Actions.runBlocking(
                     new SequentialAction(
                             new ParallelAction(
@@ -540,6 +545,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(), //SLIDES GOING UP
                                     s1, //MOVE TO SCORING
                                     new SequentialAction(
+                                            new SleepAction(fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudWait + fraudWait),

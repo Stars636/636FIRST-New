@@ -42,19 +42,7 @@ public class Calvin {
 
     public static int highBucket = 3000;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static double hookExtend = 0.52;
-=======
     public static double hookExtend = 0.58;
->>>>>>> Stashed changes
-=======
-    public static double hookExtend = 0.58;
->>>>>>> Stashed changes
-=======
-    public static double hookExtend = 0.58;
->>>>>>> Stashed changes
     public static double hookRetract = 0;
 
     public static double depositClawOpen = 0;
@@ -83,7 +71,7 @@ public class Calvin {
 
 
     public static double hSlidesInside = 1;
-    public static double hSlidesOutside = 0.82;
+    public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.4;
     public static double intakeClawTransferPos = 0.6;
@@ -134,8 +122,6 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
@@ -169,7 +155,6 @@ public class Calvin {
         servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
         hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
         hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
-        hangLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         servHangLeft.setDirection(Servo.Direction.REVERSE);
         hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//
@@ -195,9 +180,6 @@ public class Calvin {
         depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-
-        servHangRight.setPosition(Calvin.hookRetract);
-        servHangLeft.setPosition(Calvin.hookRetract);
         //hangServo.setPosition(hangServoInitial);
     }
 
@@ -211,8 +193,6 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        servHangRight.setPosition(Calvin.hookRetract);
-        servHangLeft.setPosition(Calvin.hookRetract);
         // hangServo.setPosition(hangServoInitial);
     }
 
@@ -226,8 +206,6 @@ public class Calvin {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        servHangRight.setPosition(Calvin.hookRetract);
-        servHangLeft.setPosition(Calvin.hookRetract);
         //hangServo.setPosition(hangServoInitial);
     }
 

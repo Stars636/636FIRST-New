@@ -503,14 +503,6 @@ public class CalvinTele extends LinearOpMode {
             //Todo: test both codes, if both work, then use the more streamlined one
 
 
-            calvin.servHangRight.setPosition(Calvin.hookRetract);
-            calvin.servHangLeft.setPosition(Calvin.hookRetract);
-
-            calvin.servHangRight.setPosition(Calvin.hookRetract);
-            calvin.servHangLeft.setPosition(Calvin.hookRetract);
-
-            calvin.servHangRight.setPosition(Calvin.hookRetract);
-            calvin.servHangLeft.setPosition(Calvin.hookRetract);
 
 
             /*if (gamepad1.x) {

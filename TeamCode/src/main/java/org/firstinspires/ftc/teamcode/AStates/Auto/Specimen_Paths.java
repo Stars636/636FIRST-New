@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,18 +13,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
-import org.firstinspires.ftc.teamcode.RobotAndHerHelpers.QualsCalvin.OGCalvin;
-
-
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 
 @Autonomous
 @Config
-public class CalvinSpecimenAutoTest1 extends LinearOpMode {
+public class Specimen_Paths extends LinearOpMode {
     
     PinpointDrive drive;
     public static int fraudOffset = 25;

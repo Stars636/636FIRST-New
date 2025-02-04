@@ -43,7 +43,11 @@ public class Calvin {
     public static int highBucket = 3000;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static double hookExtend = 0.52;
+=======
+    public static double hookExtend = 0.58;
+>>>>>>> Stashed changes
 =======
     public static double hookExtend = 0.58;
 >>>>>>> Stashed changes

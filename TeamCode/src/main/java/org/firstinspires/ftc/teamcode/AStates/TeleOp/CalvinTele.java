@@ -502,6 +502,11 @@ public class CalvinTele extends LinearOpMode {
 
             //Todo: test both codes, if both work, then use the more streamlined one
 
+<<<<<<< Updated upstream
+=======
+            calvin.servHangRight.setPosition(Calvin.hookRetract);
+            calvin.servHangLeft.setPosition(Calvin.hookRetract);
+>>>>>>> Stashed changes
 
             /*if (gamepad1.x) {
                 if (calvin.servHangRight.getPosition() == hookRetract) {
@@ -517,13 +522,21 @@ public class CalvinTele extends LinearOpMode {
 
             if (gamepad1.x && !changedDX && !hookExtended) {
                 calvin.servHangRight.setPosition(Calvin.hookExtend);
+<<<<<<< Updated upstream
                 calvin.servHangLeft.setPosition(Calvin.hookExtend - 0.2);
+=======
+                calvin.servHangLeft.setPosition(Calvin.hookExtend);
+>>>>>>> Stashed changes
                 hookExtended = true;
                 changedDX = true;
             }
             else if (gamepad1.x && !changedDX && hookExtended) {
                 calvin.servHangRight.setPosition(Calvin.hookRetract);
+<<<<<<< Updated upstream
                 calvin.servHangLeft.setPosition(Calvin.hookRetract - 0.2);
+=======
+                calvin.servHangLeft.setPosition(Calvin.hookRetract);
+>>>>>>> Stashed changes
                 hookExtended = false;
                 changedDX = true;
             }

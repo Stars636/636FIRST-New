@@ -504,6 +504,11 @@ public class CalvinTele extends LinearOpMode {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+            calvin.servHangRight.setPosition(Calvin.hookRetract);
+            calvin.servHangLeft.setPosition(Calvin.hookRetract);
+>>>>>>> Stashed changes
 =======
             calvin.servHangRight.setPosition(Calvin.hookRetract);
             calvin.servHangLeft.setPosition(Calvin.hookRetract);
@@ -529,7 +534,11 @@ public class CalvinTele extends LinearOpMode {
                 calvin.servHangRight.setPosition(Calvin.hookExtend);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 calvin.servHangLeft.setPosition(Calvin.hookExtend - 0.2);
+=======
+                calvin.servHangLeft.setPosition(Calvin.hookExtend);
+>>>>>>> Stashed changes
 =======
                 calvin.servHangLeft.setPosition(Calvin.hookExtend);
 >>>>>>> Stashed changes
@@ -543,7 +552,11 @@ public class CalvinTele extends LinearOpMode {
                 calvin.servHangRight.setPosition(Calvin.hookRetract);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 calvin.servHangLeft.setPosition(Calvin.hookRetract - 0.2);
+=======
+                calvin.servHangLeft.setPosition(Calvin.hookRetract);
+>>>>>>> Stashed changes
 =======
                 calvin.servHangLeft.setPosition(Calvin.hookRetract);
 >>>>>>> Stashed changes

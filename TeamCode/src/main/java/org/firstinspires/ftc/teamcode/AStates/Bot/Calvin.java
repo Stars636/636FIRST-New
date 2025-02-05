@@ -42,7 +42,7 @@ public class Calvin {
 
     public static int highBucket = 3000;
 
-    public static double hookExtend = 0.6;
+    public static double hookExtend = 0.53;
     public static double hookRetract = 0;
 
     public static double depositClawOpen = 0;

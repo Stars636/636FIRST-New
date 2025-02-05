@@ -688,7 +688,9 @@ public class Specimen_Auto extends LinearOpMode {
 
 
                             ),
-                            new SequentialAction
+                            new SequentialAction(
+
+                            )
 
 
                     )

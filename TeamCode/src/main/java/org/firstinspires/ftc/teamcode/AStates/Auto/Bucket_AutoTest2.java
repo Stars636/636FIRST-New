@@ -26,6 +26,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp1;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp2;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart1;
@@ -200,6 +201,18 @@ public class Bucket_AutoTest2 extends LinearOpMode {
             return new NeutralPos();
         }
 
+        public class IntakeWristClockwise implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                calvin.intakeWrist.setPosition(intakeWristTiltRight);
+                return false;
+            }
+        }
+
+        public Action intakeWristClockwise() {
+            return new IntakeWristClockwise();
+        }
+
     }
 
     public static class IntakeElbow {
@@ -253,7 +266,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         }
 
         public Action elbowHover() {
-            return new ElbowPassive();
+            return new ElbowHover();
         }
 
     }
@@ -309,7 +322,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         }
 
         public Action armHover() {
-            return new ArmPassive();
+            return new ArmHover();
         }
 
     }
@@ -468,10 +481,10 @@ public class Bucket_AutoTest2 extends LinearOpMode {
 
         double xInitial = 0;
         double yInitial = 0;
-        int fraudOffset = 15;
-        double fraudWait = 2.5;
-        double fraudMediumWait = 0.75;
-        double fraudSmallWait = 0.5;
+        double fraudOffset = 12.5;
+        double fraudWait = 1;
+        double fraudMediumWait = 0.5;
+        double fraudSmallWait = 0.25;
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
 
@@ -491,19 +504,19 @@ public class Bucket_AutoTest2 extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
+        Pose2d scorePose = new Pose2d(xInitial + 8.5, yInitial + 15, Math.toRadians(-45)); //(9, 15)
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 0.2, yInitial + 8.5, Math.toRadians(0)), Math.toRadians(0));
         TrajectoryActionBuilder a3 = a2.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17.75, Math.toRadians(0)), Math.toRadians(0));
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(25)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + 15.5, yInitial + 17, Math.toRadians(25)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
 
@@ -545,10 +558,10 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(), //SLIDES GOING UP
                                     s1, //MOVE TO SCORING
                                     new SequentialAction(
-                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait + fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawOpen(),//SCORE YAYY FIRST SAMPLE
                                             new SleepAction(fraudMediumWait)
                                     )
@@ -564,22 +577,23 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                             hSlides.hSlidesOutside(),
                                             intakeArm.armHover(),
                                             intakeElbow.elbowHover(),
-                                            new SleepAction(fraudMediumWait),
-                                            intakeArm.armIntake(),
+                                            intakeWrist.neutralPos(),
+                                            new SleepAction(fraudWait),
                                             intakeElbow.elbowIntake(),
-                                            new SleepAction(pickUp1),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudSmallWait),
                                             intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(pickUp2),
+                                            new SleepAction(fraudSmallWait),
                                             intakeArm.armTransfer(),
                                             intakeElbow.elbowTransfer(),
-                                            new SleepAction(transferPart1),
+                                            new SleepAction(fraudMediumWait),
                                             hSlides.hSlidesInside(),
-                                            new SleepAction(transferPart2),
+                                            new SleepAction(fraudMediumWait - 0.09),
                                             depositArm.depositArmTransfer(),
                                             depositWrist.depositWristTransfer(),
-                                            new SleepAction(transferPart3),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawClose(),
-                                            new SleepAction(transferPart4),
+                                            new SleepAction(fraudSmallWait),
                                             intakeClaw.openIntakeClaw()
                                     )
                             ),
@@ -587,9 +601,10 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(),
                                     s3,
                                     new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait + fraudMediumWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawOpen(),//SCORE YAYY SECOND SAMPLE
                                             new SleepAction(fraudMediumWait)
                                     )
@@ -600,26 +615,27 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     new SequentialAction(
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
-                                            // GO TO SECOND SAMPLE
+                                            // GO TO THIRD SAMPLE
                                             hSlides.hSlidesOutside(),
                                             intakeArm.armHover(),
                                             intakeElbow.elbowHover(),
-                                            new SleepAction(fraudMediumWait),
-                                            intakeArm.armIntake(),
+                                            intakeWrist.neutralPos(),
+                                            new SleepAction(fraudWait),
                                             intakeElbow.elbowIntake(),
-                                            new SleepAction(pickUp1),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudSmallWait),
                                             intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(pickUp2),
+                                            new SleepAction(fraudSmallWait),
                                             intakeArm.armTransfer(),
                                             intakeElbow.elbowTransfer(),
-                                            new SleepAction(transferPart1),
+                                            new SleepAction(fraudMediumWait),
                                             hSlides.hSlidesInside(),
-                                            new SleepAction(transferPart2),
+                                            new SleepAction(fraudMediumWait - 0.09),
                                             depositArm.depositArmTransfer(),
                                             depositWrist.depositWristTransfer(),
-                                            new SleepAction(transferPart3),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawClose(),
-                                            new SleepAction(transferPart4),
+                                            new SleepAction(fraudSmallWait),
                                             intakeClaw.openIntakeClaw()
                                     )
                             ),
@@ -627,9 +643,10 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(),
                                     s5,
                                     new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait + fraudMediumWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawOpen(),//SCORE YAYY THIRD SAMPLE
                                             new SleepAction(fraudMediumWait)
                                     )
@@ -640,26 +657,28 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     new SequentialAction(
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
-                                            // GO TO SECOND SAMPLE
+                                            // GO TO LAST SAMPLE
                                             hSlides.hSlidesOutside(),
                                             intakeArm.armHover(),
                                             intakeElbow.elbowHover(),
-                                            new SleepAction(fraudMediumWait),
-                                            intakeArm.armIntake(),
+                                            intakeWrist.intakeWristClockwise(),
+                                            new SleepAction(fraudWait),
                                             intakeElbow.elbowIntake(),
-                                            new SleepAction(pickUp1),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudSmallWait + 0.1),
                                             intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(pickUp2),
+                                            new SleepAction(fraudSmallWait),
+                                            intakeWrist.neutralPos(),
                                             intakeArm.armTransfer(),
                                             intakeElbow.elbowTransfer(),
-                                            new SleepAction(transferPart1),
+                                            new SleepAction(fraudMediumWait),
                                             hSlides.hSlidesInside(),
-                                            new SleepAction(transferPart2),
+                                            new SleepAction(fraudMediumWait - 0.09),
                                             depositArm.depositArmTransfer(),
                                             depositWrist.depositWristTransfer(),
-                                            new SleepAction(transferPart3),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawClose(),
-                                            new SleepAction(transferPart4),
+                                            new SleepAction(fraudSmallWait),
                                             intakeClaw.openIntakeClaw()
                                     )
                             ),
@@ -667,12 +686,16 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(),
                                     s7,
                                     new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait + fraudMediumWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudSmallWait),
                                             depositClaw.depositClawOpen(),//SCORE YAYY FOURTH SAMPLE
-                                            new SleepAction(fraudMediumWait)
-                                    )
+                                            new SleepAction(fraudMediumWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                            )
                             ),
                             new ParallelAction(
                                     vSlides.slidesDown(),

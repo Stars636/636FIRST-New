@@ -505,13 +505,13 @@ public class CalvinTele extends LinearOpMode {
 
             if (gamepad1.x && !changedDX && !hookExtended) {
                 calvin.servHangRight.setPosition(Calvin.hookExtend);
-                calvin.servHangLeft.setPosition(Calvin.hookExtend - 0.2);
+                calvin.servHangLeft.setPosition(Calvin.hookExtend + 0.01);
                 hookExtended = true;
                 changedDX = true;
             }
             else if (gamepad1.x && !changedDX && hookExtended) {
                 calvin.servHangRight.setPosition(Calvin.hookRetract);
-                calvin.servHangLeft.setPosition(Calvin.hookRetract - 0.2);
+                calvin.servHangLeft.setPosition(Calvin.hookRetract);
                 hookExtended = false;
                 changedDX = true;
             }
@@ -522,11 +522,11 @@ public class CalvinTele extends LinearOpMode {
             //TODO: Test both codes, if both work, use the more streamlined one
 
             if (gamepad1.y) {
-                calvin.hangRight.setPower(1);
+                calvin.hangRight.setPower(-1);
                 calvin.hangLeft.setPower(1);
             }
             else if (gamepad1.b) {
-                calvin.hangRight.setPower(-1);
+                calvin.hangRight.setPower(1);
                 calvin.hangLeft.setPower(-1);
             }
             else {

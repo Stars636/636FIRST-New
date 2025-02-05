@@ -42,7 +42,7 @@ public class Calvin {
 
     public static int highBucket = 3000;
 
-    public static double hookExtend = 0.58;
+    public static double hookExtend = 0.6;
     public static double hookRetract = 0;
 
     public static double depositClawOpen = 0;
@@ -51,9 +51,9 @@ public class Calvin {
 
     public static double depositClawPassiveRot = 0.3;
 
-    public static double depositClawTransferPos = 0.89;
+    public static double depositClawTransferPos = 0.86;
 
-    public static double depositClawTransferRot = 0.15;
+    public static double depositClawTransferRot = 0.10;
 
     public static double depositClawScorePos = 0.5;
 
@@ -73,7 +73,7 @@ public class Calvin {
     public static double hSlidesInside = 1;
     public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0.0;
-    public static double intakeClawClosed = 0.4;
+    public static double intakeClawClosed = 0.37;
     public static double intakeClawTransferPos = 0.6;
     public static double intakeClawTransferRot = 0.29;
     public static double intakeClawPassivePos = 0.3;
@@ -122,6 +122,8 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
@@ -134,6 +136,8 @@ public class Calvin {
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         vSlidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
 
 
 
@@ -155,6 +159,7 @@ public class Calvin {
         servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
         hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
         hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
+
 
         servHangLeft.setDirection(Servo.Direction.REVERSE);
         hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//

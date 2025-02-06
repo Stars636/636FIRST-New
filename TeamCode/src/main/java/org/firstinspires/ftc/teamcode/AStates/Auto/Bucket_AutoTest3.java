@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 
-import static org.firstinspires.ftc.teamcode.AStates.Auto.PIDController.Kd;
-import static org.firstinspires.ftc.teamcode.AStates.Auto.PIDController.Ki;
-import static org.firstinspires.ftc.teamcode.AStates.Auto.PIDController.Kp;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
@@ -27,12 +24,6 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransf
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp1;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp2;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart1;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart2;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart3;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart4;
 
 import androidx.annotation.NonNull;
 
@@ -57,9 +48,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous (name = "Bucket_Auto_Official 2/5/2025", group = "Autonomous")
+@Autonomous (name = "Bucket_Auto_Test 2/5/2025", group = "Autonomous")
 
-public class Bucket_AutoTest2 extends LinearOpMode {
+public class Bucket_AutoTest3 extends LinearOpMode {
 
     //Todo: have hang open before auto
     public static double FOREVER = 30;
@@ -450,7 +441,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         }
 
     }
-
+    public static  double fraudTurn = 50;
     PinpointDrive drive;
 
     @Override
@@ -486,6 +477,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         double fraudMediumWait = 0.5;
         double fraudSmallWait = 0.25;
 
+
         drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
 
         // Define the starting pose (e.g., starting point on the field)
@@ -519,6 +511,8 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(xInitial + 15.5, yInitial + 17, Math.toRadians(25)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial - 23, Math.toRadians(90)), Math.toRadians(fraudTurn));
 
 
 
@@ -529,6 +523,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
+        Action s8 = a8.build();
 
 
 
@@ -606,7 +601,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(),
                                     s3,
                                     new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait + fraudMediumWait),
+                                            new SleepAction(fraudWait + fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudSmallWait),
@@ -653,7 +648,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(),
                                     s5,
                                     new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait + fraudMediumWait),
+                                            new SleepAction(fraudWait + fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudSmallWait),
@@ -701,7 +696,7 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                                     vSlides.slidesUp(),
                                     s7,
                                     new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait + fraudMediumWait),
+                                            new SleepAction(fraudWait + fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudSmallWait),
@@ -714,7 +709,13 @@ public class Bucket_AutoTest2 extends LinearOpMode {
                             ),
                             new ParallelAction(
                                     vSlides.slidesDown(),
-                                    new SleepAction(FOREVER)
+                                    s8,
+                                    new SequentialAction(
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(FOREVER)
+                                    )
+
                             )
 
                     )

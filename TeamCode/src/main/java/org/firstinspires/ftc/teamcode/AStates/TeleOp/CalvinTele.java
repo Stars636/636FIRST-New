@@ -62,10 +62,10 @@ public class CalvinTele extends LinearOpMode {
     //Transfer and the timers
     public ElapsedTime transferTime = new ElapsedTime();
     public static double transferPart1 = 0.3;
-    public static double transferPart2 = 0.7;
+    public static double transferPart2 = 0.5;
     public static double transferPart3 = 0.1;
     public static double transferPart4 = 0.1;
-    public static double transferPart5 = 0.7;
+    public static double transferPart5 = 0.2;
 
     //Pickup timers
     public ElapsedTime pickUpTime = new ElapsedTime();
@@ -78,7 +78,7 @@ public class CalvinTele extends LinearOpMode {
 
 
     //Hopeful fix
-    double intakeClawPos = 0.4;
+
     @Override
     public void runOpMode() throws InterruptedException {
         //Initializing the bot
@@ -95,7 +95,6 @@ public class CalvinTele extends LinearOpMode {
 
         while (opModeIsActive()) {
             //Just checking
-            intakeClawPos = calvin.intakeClaw.getPosition();
 
             //Todo: Transfer Macro
             switch(transferStep) {
@@ -109,7 +108,6 @@ public class CalvinTele extends LinearOpMode {
                         calvin.intakeWrist.setPosition(intakeWristFlat);
                         calvin.intakeElbow.setPosition(intakeClawTransferRot);
                         calvin.intakeArm.setPosition(intakeClawTransferPos);
-                        intakeClawPos = calvin.intakeClaw.getPosition();
                         isMajorMacroing = true;
                         transferTime.reset();
                         changedRB = true;
@@ -123,7 +121,8 @@ public class CalvinTele extends LinearOpMode {
                             changedRB = false;
                         }
                         if (transferTime.seconds() > transferPart1) {
-
+                            calvin.depositClaw.setPosition(depositClawOpen);
+                            depositClawMacro = DepositClawMacro.OPENED;
                             calvin.hSlidesLeft.setPosition(hSlidesInside);
                             calvin.hSlidesRight.setPosition(hSlidesInside);
                             transferTime.reset();
@@ -133,12 +132,8 @@ public class CalvinTele extends LinearOpMode {
                     break;
                 case TWICE:
                     if (transferTime.seconds() >= transferPart2){
-
-
-                       calvin.depositClaw.setPosition(depositClawOpen);
-                       depositClawMacro = DepositClawMacro.OPENED;
-                       calvin.depositWrist.setPosition(depositClawTransferRot);
-                       calvin.depositArm.setPosition(depositClawTransferPos);
+                        calvin.depositWrist.setPosition(depositClawTransferRot);
+                        calvin.depositArm.setPosition(depositClawTransferPos);
 
                        transferTime.reset();
                        transferStep = TransferSteps.GRAB;
@@ -168,8 +163,6 @@ public class CalvinTele extends LinearOpMode {
                         calvin.intakeWrist.setPosition(intakeWristFlat);
                         calvin.intakeElbow.setPosition(intakeClawPassiveRot);
                         calvin.intakeArm.setPosition(intakeClawPassivePos);
-
-
                         calvin.depositWrist.setPosition(depositClawPassiveRot);
                         calvin.depositArm.setPosition(depositClawPassivePos);
                         armMacro = ArmMacro.PASSIVE;
@@ -549,6 +542,8 @@ public class CalvinTele extends LinearOpMode {
             telemetry.addData("Deposit Claw", depositClawMacro);
             telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
             telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
+            telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
+
 
             telemetry.update();
 

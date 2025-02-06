@@ -51,15 +51,15 @@ public class Calvin {
 
     public static double depositClawPassiveRot = 0.3;
 
-    public static double depositClawTransferPos = 0.86;
+    public static double depositClawTransferPos = 0.89;
 
-    public static double depositClawTransferRot = 0.10;
+    public static double depositClawTransferRot = 0.16;
 
     public static double depositClawScorePos = 0.5;
 
     public static double depositClawScoreRot = 0.8;
 
-    public static double depositClawSpeciPosStart = 0.2;
+    public static double depositClawSpeciPosStart = 0.15;
 
     public static double depositClawSpeciRotStart = 1;
 
@@ -73,16 +73,16 @@ public class Calvin {
     public static double hSlidesInside = 1;
     public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0.0;
-    public static double intakeClawClosed = 0.37;
-    public static double intakeClawTransferPos = 0.6;
-    public static double intakeClawTransferRot = 0.29;
+    public static double intakeClawClosed = 0.43;
+    public static double intakeClawTransferPos = 0.5;
+    public static double intakeClawTransferRot = 0.31;
     public static double intakeClawPassivePos = 0.3;
     public static double intakeClawPassiveRot = 0.3;
     public static double intakeClawHoverPos = 0.4;
-    public static double intakeClawHoverRot = 0.9;
+    public static double intakeClawHoverRot = 0.96;
     public static double intakeClawGrabPos = 0.35;
     public static double intakeClawGrabRot = 0.95;
-    public static double intakeWristFlat = 0.55;
+    public static double intakeWristFlat = 0.53;
     public static double intakeWristTiltRight = 0.4;
     public static double intakeWristNormalLeft = 0.85;
     public static double intakeWristNormalRight = 0.2; //as in perpendicular

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 
+import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.fraudTurn;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -80,6 +82,10 @@ public class Bucket_Paths extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(25)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial - 23, Math.toRadians(90)), Math.toRadians(fraudTurn));
+
+
 
 
 
@@ -90,6 +96,7 @@ public class Bucket_Paths extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
+        Action s8 = a8.build();
 
 
 
@@ -121,7 +128,10 @@ public class Bucket_Paths extends LinearOpMode {
                             new SleepAction(fraudWait ),
                             s6,
                             new SleepAction(fraudWait),
-                            s7
+                            s7,
+                            new SleepAction(fraudWait),
+                            s8
+
                     )
 
                             //sPickup

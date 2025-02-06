@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 public class Specimen_PathsTwo extends LinearOpMode {
     
     PinpointDrive drive;
-    public static int fraudOffset = 25;
+    public static double fraudOffset = 26.5;
     
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,18 +33,11 @@ public class Specimen_PathsTwo extends LinearOpMode {
         Calvin calvin = new Calvin(hardwareMap);
         //Zhang we need using encode for auto but in teleop we need run without encoder
         // so im putting this here for you
-        calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
 
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
-        Pose2d startPose = new Pose2d(0, 0, Math.PI/2);
         //if you are coming from meep meep, define your initial here
         double xStart = 0;
         double yStart = 0;
@@ -56,7 +49,7 @@ public class Specimen_PathsTwo extends LinearOpMode {
 
         //If  a Pose2d is repetitive, define it here:
 
-        Pose2d pickup = new Pose2d(xStart - 2, yStart + 38, Math.toRadians(180));
+        Pose2d pickup = new Pose2d(xStart - 8, yStart + 38, Math.toRadians(180));
         Pose2d deposit = new Pose2d(xStart - 34, yStart, Math.toRadians(0));
 
         TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, 0))

@@ -37,6 +37,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -48,7 +49,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Config
 @Autonomous
-
+@Disabled
 
 
 public class KpTester extends LinearOpMode {

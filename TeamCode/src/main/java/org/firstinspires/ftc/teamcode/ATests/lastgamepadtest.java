@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ATests;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
+@Disabled
 @TeleOp
 public class lastgamepadtest extends LinearOpMode {
 

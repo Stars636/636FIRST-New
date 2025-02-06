@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 @Config
+@Disabled
 @TeleOp
 public class PIDController extends LinearOpMode {
 

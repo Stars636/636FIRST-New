@@ -75,7 +75,7 @@ public class Calvin {
     public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.43;
     public static double intakeClawTransferPos = 0.5;
-    public static double intakeClawTransferRot = 0.31;
+    public static double intakeClawTransferRot = 0.29;
     public static double intakeClawPassivePos = 0.3;
     public static double intakeClawPassiveRot = 0.3;
     public static double intakeClawHoverPos = 0.4;

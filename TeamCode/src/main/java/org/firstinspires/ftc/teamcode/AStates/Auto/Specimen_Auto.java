@@ -555,7 +555,7 @@ public class Specimen_Auto extends LinearOpMode {
         double fraudMediumWait = 0.75;
         double fraudSmallWait = 0.5;
 
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
 
         // Define the starting pose (e.g., starting point on the field)
         //if you are coming from meep meep, define your initial here

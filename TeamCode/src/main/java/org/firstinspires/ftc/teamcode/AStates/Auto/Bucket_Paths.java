@@ -116,16 +116,16 @@ public class Bucket_Paths extends LinearOpMode {
             Actions.runBlocking(
                     new SequentialAction(
                             s1,
-                            new SleepAction(fraudWait ),
+                            new SleepAction(fraudWait),
                             s2,
-                            new SleepAction(fraudWait ),
+                            new SleepAction(fraudWait),
                             s3,
-                            new SleepAction(fraudWait ),
+                            new SleepAction(fraudWait),
 
                             s4,
-                            new SleepAction(fraudWait ),
+                            new SleepAction(fraudWait),
                             s5,
-                            new SleepAction(fraudWait ),
+                            new SleepAction(fraudWait),
                             s6,
                             new SleepAction(fraudWait),
                             s7,

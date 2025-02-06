@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous (name = "Bucket_Auto_Test 2/5/2025", group = "Autonomous")
+@Autonomous (name = "Bucket_Auto 2/6/2025", group = "Autonomous")
 
 public class Bucket_AutoTest3 extends LinearOpMode {
 
@@ -441,7 +441,7 @@ public class Bucket_AutoTest3 extends LinearOpMode {
         }
 
     }
-    public static  double fraudTurn = 50;
+    public static  double fraudTurn = 130;
     PinpointDrive drive;
 
     @Override
@@ -463,13 +463,6 @@ public class Bucket_AutoTest3 extends LinearOpMode {
         DepositArm depositArm = new DepositArm(hardwareMap);
         HorizontalSlides hSlides = new HorizontalSlides(hardwareMap);
 
-        //where hslides cynthia? where hslides
-        //please add idk how to do ur thing LOL
-        //Zhang we need using encode for auto but in teleop we need run without encoder
-        // so im putting this here for you
-        //Calvin.Claw claw = new Calvin.Claw();
-
-
         double xInitial = 0;
         double yInitial = 0;
         double fraudOffset = 12.5;
@@ -477,24 +470,8 @@ public class Bucket_AutoTest3 extends LinearOpMode {
         double fraudMediumWait = 0.5;
         double fraudSmallWait = 0.25;
 
-
         drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
 
-        // Define the starting pose (e.g., starting point on the field)
-        //if you are coming from meep meep, define your initial here
-
-
-        // Set the initial pose of the robot
-
-        // Define the trajectories for moving forward
-
-        //If  a Pose2d is repetitive, define it here:
-
-
-        // Set the initial pose of the robot
-        //drive.setPoseEstimate(startPose);
-
-        // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 8.5, yInitial + 15, Math.toRadians(-45)); //(9, 15)
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)

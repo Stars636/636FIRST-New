@@ -52,9 +52,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous (name = "Specimen_Auto", group = "Autonomous")
+@Autonomous (name = "Specimen_Auto_Two", group = "Autonomous")
 
-public class Specimen_Auto extends LinearOpMode {
+public class Specimen_AutoTwo extends LinearOpMode {
 
 
 
@@ -578,45 +578,39 @@ public class Specimen_Auto extends LinearOpMode {
 
         TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, 0))
                 .splineToLinearHeading(new Pose2d(xStart - fraudOffset, yStart , Math.toRadians(0)), Math.toRadians(0));
-
         TrajectoryActionBuilder b2 = b1.endTrajectory().fresh()
+                .splineToLinearHeading(pickup, Math.toRadians(90));
+        TrajectoryActionBuilder b3 = b2.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xStart - fraudOffset, yStart , Math.toRadians(0)), Math.toRadians(0));
+        TrajectoryActionBuilder b4 = b3.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xStart - 26, yStart + 32, Math.toRadians(0)), Math.toRadians(0));
 
-        TrajectoryActionBuilder b3 = b2.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 40, Math.toRadians(180)), Math.toRadians(0));
-
-        TrajectoryActionBuilder b4 = b3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
-
         TrajectoryActionBuilder b5 = b4.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 40, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b6 = b5.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b7 = b6.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b8 = b7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 48, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b9 = b8.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b10 = b9.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 64, Math.toRadians(180)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b11 = b10.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 64, Math.toRadians(180)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 58, Math.toRadians(180)), Math.toRadians(0));
 
         TrajectoryActionBuilder b12 = b11.endTrajectory().fresh()
-                .splineToLinearHeading(pickup, Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(xStart - 50, yStart + 64, Math.toRadians(180)), Math.toRadians(0));
 
-        TrajectoryActionBuilder bDeposit = b12.endTrajectory().fresh()
-                .splineToLinearHeading(deposit, Math.toRadians(90));
-
-        TrajectoryActionBuilder bPickup = bDeposit.endTrajectory().fresh()
-                .splineToLinearHeading(pickup, Math.toRadians(90));
+        TrajectoryActionBuilder b13 = b12.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xStart - 10, yStart + 64, Math.toRadians(180)), Math.toRadians(0));
 
 
         Action s1 = b1.build();
@@ -631,8 +625,7 @@ public class Specimen_Auto extends LinearOpMode {
         Action s10 = b10.build();
         Action s11 = b11.build();
         Action s12 = b12.build();
-        Action sDeposit = bDeposit.build();
-        Action sPickup = bPickup.build();
+        Action s13 = b13.build();
 
 
         waitForStart();
@@ -697,8 +690,11 @@ public class Specimen_Auto extends LinearOpMode {
                                     new SleepAction(fraudSmallWait),
                                     s11,
                                     new SleepAction(fraudSmallWait),
-                                    //s12,
+                                    s12,
                                     new SleepAction(fraudSmallWait),
+                                    s13,
+                                    new SleepAction(fraudSmallWait),
+
                                     new SleepAction(FOREVER)
 
 

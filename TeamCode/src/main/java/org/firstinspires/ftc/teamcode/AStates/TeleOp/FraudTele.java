@@ -30,6 +30,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltL
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,6 +40,7 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
 @TeleOp (group = "States", name = "DOESN'T WORK")
+@Disabled
 public class FraudTele extends LinearOpMode {
 //Tele
     public static boolean isSpecimen = false;

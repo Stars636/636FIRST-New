@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous (name = "Bucket_Auto 2/6/2025", group = "Autonomous")
+@Autonomous (name = "Bucket_Auto 2/6/2025", group = "STATES")
 
 public class Bucket_AutoTest3 extends LinearOpMode {
 

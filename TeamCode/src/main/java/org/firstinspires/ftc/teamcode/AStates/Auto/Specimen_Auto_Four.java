@@ -56,7 +56,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Config
-@Autonomous(name = "Specimen Auto 2/6/2025")
+@Autonomous(name = "Specimen Auto 2/6/2025", group = "STATES")
 
 public class Specimen_Auto_Four extends LinearOpMode {
 

@@ -44,6 +44,8 @@ public class Calvin {
 
     public static double hookExtend = 0.53;
     public static double hookRetract = 0;
+    public static int reelIn;
+    public static int reelOut;
 
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
@@ -125,7 +127,7 @@ public class Calvin {
         hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//

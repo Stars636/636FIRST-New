@@ -543,6 +543,8 @@ public class CalvinTele extends LinearOpMode {
             telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
             telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
             telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
+            telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
+            telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());
 
 
             telemetry.update();

@@ -31,17 +31,18 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltR
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "STATES", name = "BEST TELEOP - 1/31/24")
-public class CalvinTele extends LinearOpMode {
+@TeleOp (group = "STATES", name = "DO NOT RUN")
+public class CalvinTeleTest extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
     Calvin calvin;
-
+    boolean check = false;
     //Debouncers
     boolean changedX = false;
     boolean changedY = false;
@@ -56,6 +57,7 @@ public class CalvinTele extends LinearOpMode {
     boolean changedDY = false;
     boolean changedDX = false;
     boolean hookExtended = false;
+    boolean Hanging = false;
 
     boolean driverLB = false;
 
@@ -513,22 +515,52 @@ public class CalvinTele extends LinearOpMode {
             }
 
             //TODO: Test both codes, if both work, use the more streamlined one
-
-            if (gamepad1.y) {
+            if(gamepad1.left_bumper){
+                if (gamepad1.y) {
+                    check = true;
+                }
+            }
+            if (check){
                 calvin.hangRight.setPower(-1);
                 calvin.hangLeft.setPower(1);
-            }
-            else if (gamepad1.b) {
-                calvin.hangRight.setPower(1);
-                calvin.hangLeft.setPower(-1);
-            }
-            else {
-                calvin.hangRight.setPower(0);
-                calvin.hangLeft.setPower(0);
+                if (gamepad1.b) {
+                    calvin.hangRight.setPower(1);
+                    calvin.hangLeft.setPower(-1);
+                }
             }
 
-            // Conrad kindly mention that x and y should move the servos and
-            // a and b should move the motors? i think
+
+
+
+            /*if (gamepad1.y && !changedDY && !Hanging) {
+                calvin.hangRight.setTargetPosition(Calvin.reelIn);
+                calvin.hangRight.setPower(1);
+                calvin.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                calvin.hangLeft.setTargetPosition(-Calvin.reelIn);
+                calvin.hangLeft.setPower(-1);
+                calvin.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                Hanging = true;
+                changedDY = true;
+            }
+            else if (gamepad1.y && !changedDY && Hanging) {
+                calvin.hangRight.setTargetPosition(Calvin.reelOut);
+                calvin.hangRight.setPower(-1);
+                calvin.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                calvin.hangLeft.setTargetPosition(-Calvin.reelOut);
+                calvin.hangLeft.setPower(1);
+                calvin.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                Hanging = false;
+                changedDY = true;
+            }
+            else if (gamepad1.b) {
+                calvin.hangRight.setPower(0);
+                calvin.hangLeft.setPower(0);
+            }*/
+
 
 
             telemetry.addData("isMacroing", isMajorMacroing);

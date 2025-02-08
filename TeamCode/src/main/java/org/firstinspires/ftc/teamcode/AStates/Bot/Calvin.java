@@ -44,6 +44,8 @@ public class Calvin {
 
     public static double hookExtend = 0.53;
     public static double hookRetract = 0;
+    public static int reelIn;
+    public static int reelOut;
 
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
@@ -122,6 +124,10 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
@@ -166,6 +172,7 @@ public class Calvin {
         hSlidesRight = hardwareMap.get(ServoImplEx.class, "hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
+
 
         depositArm.setPwmRange(new PwmControl.PwmRange(500, 2500));
         depositWrist.setPwmRange(new PwmControl.PwmRange(500, 2500));

@@ -31,18 +31,18 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltR
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "STATES", name = "DO NOT RUN")
-public class CalvinTeleTest extends LinearOpMode {
+@TeleOp (group = "STATES", name = "BEST TELEOP - 2/8/24")
+public class CalvinTrue extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
     Calvin calvin;
     boolean check = false;
+
     //Debouncers
     boolean changedX = false;
     boolean changedY = false;
@@ -57,14 +57,13 @@ public class CalvinTeleTest extends LinearOpMode {
     boolean changedDY = false;
     boolean changedDX = false;
     boolean hookExtended = false;
-    boolean Hanging = false;
 
     boolean driverLB = false;
 
     //Transfer and the timers
     public ElapsedTime transferTime = new ElapsedTime();
     public static double transferPart1 = 0.3;
-    public static double transferPart2 = 0.5;
+    public static double transferPart2 = 0.55;
     public static double transferPart3 = 0.1;
     public static double transferPart4 = 0.1;
     public static double transferPart5 = 0.2;
@@ -515,46 +514,17 @@ public class CalvinTeleTest extends LinearOpMode {
             }
 
             //TODO: Test both codes, if both work, use the more streamlined one
+
+//TODO: Test both codes, if both work, use the more streamlined one
             if (gamepad1.y) {
-                    check = true;
+                check = true;
             }
             if (check) {
                 calvin.hangRight.setPower(-1);
                 calvin.hangLeft.setPower(1);
             }
-
-
-
-
-            /*if (gamepad1.y && !changedDY && !Hanging) {
-                calvin.hangRight.setTargetPosition(Calvin.reelIn);
-                calvin.hangRight.setPower(1);
-                calvin.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                calvin.hangLeft.setTargetPosition(-Calvin.reelIn);
-                calvin.hangLeft.setPower(-1);
-                calvin.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                Hanging = true;
-                changedDY = true;
-            }
-            else if (gamepad1.y && !changedDY && Hanging) {
-                calvin.hangRight.setTargetPosition(Calvin.reelOut);
-                calvin.hangRight.setPower(-1);
-                calvin.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                calvin.hangLeft.setTargetPosition(-Calvin.reelOut);
-                calvin.hangLeft.setPower(1);
-                calvin.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                Hanging = false;
-                changedDY = true;
-            }
-            else if (gamepad1.b) {
-                calvin.hangRight.setPower(0);
-                calvin.hangLeft.setPower(0);
-            }*/
-
+            // Conrad kindly mention that x and y should move the servos and
+            // a and b should move the motors? i think
 
 
             telemetry.addData("isMacroing", isMajorMacroing);
@@ -572,7 +542,6 @@ public class CalvinTeleTest extends LinearOpMode {
             telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
             telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());
             telemetry.addData("check", check);
-
 
             telemetry.update();
 

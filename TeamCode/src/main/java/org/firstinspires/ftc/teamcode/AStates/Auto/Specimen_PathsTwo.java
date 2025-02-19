@@ -24,11 +24,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 public class Specimen_PathsTwo extends LinearOpMode {
     
     PinpointDrive drive;
-    public static double fraudOffset = 26.5;
+    public static double fraudOffset = 27.5;
     
     @Override
     public void runOpMode() throws InterruptedException {
-        ElapsedTime et = new ElapsedTime();
+        ElapsedTime  et = new ElapsedTime();
 
 
 

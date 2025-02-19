@@ -36,7 +36,7 @@ public class Calvin {
 
     public static int lowBucket = 1400; //todo: test this
 
-    public static int highSpecimen = 779; //todo: test this
+    public static int highSpecimen = 550; //todo: test this
 
     public static int lowSpecimen = 1000; //todo: test this(low priority)
 
@@ -49,7 +49,7 @@ public class Calvin {
 
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
-    public static double depositClawPassivePos = 0.78;   //0.78
+    public static double depositClawPassivePos = 0.7;   //0.78
 
     public static double depositClawPassiveRot = 0.3;
 
@@ -57,7 +57,7 @@ public class Calvin {
 
     public static double depositClawTransferRot = 0.18;  //0.18
 
-    public static double depositClawScorePos = 0.4;
+    public static double depositClawScorePos = 0.3;
 
     public static double depositClawScoreRot = 0.9;
 
@@ -124,10 +124,10 @@ public class Calvin {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
 
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//

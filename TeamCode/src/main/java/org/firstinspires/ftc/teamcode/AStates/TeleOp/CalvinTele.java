@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "STATES", name = "BEST TELEOP - 1/31/24")
+@TeleOp (group = "STATES", name = "OLD TELEOP - 1/31/25 - DONT RUN ")
 public class CalvinTele extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder

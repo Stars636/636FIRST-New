@@ -537,7 +537,7 @@ public class Specimen_Auto_Four extends LinearOpMode {
 
 
 
-        Pose2d pickup = new Pose2d(xStart - 8.2, yStart + 38, Math.toRadians(180));
+        Pose2d pickup = new Pose2d(xStart - 8.2, yStart + 40, Math.toRadians(180));
         Pose2d deposit = new Pose2d(xStart - 34, yStart, Math.toRadians(0));
 
         TrajectoryActionBuilder b1 = drive.actionBuilder(new Pose2d(0, 0, 0))

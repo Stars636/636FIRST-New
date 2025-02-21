@@ -60,7 +60,6 @@ public class Calvin {
     public static double depositClawScorePos = 0.3;
 
     public static double depositClawScoreRot = 0.9;
-
     public static double depositClawSpeciPosStart = 0.03;
 
     public static double depositClawSpeciRotStart = 1;
@@ -76,13 +75,13 @@ public class Calvin {
     public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.43;
-    public static double intakeClawTransferPos = 0.5;
+    public static double intakeClawTransferPos = 0.6;
     public static double intakeClawTransferRot = 0.29;
-    public static double intakeClawPassivePos = 0.3;
+    public static double intakeClawPassivePos = 0.4;
     public static double intakeClawPassiveRot = 0.3;
-    public static double intakeClawHoverPos = 0.4;
-    public static double intakeClawHoverRot = 0.96;
-    public static double intakeClawGrabPos = 0.35;
+    public static double intakeClawHoverPos = 0.5;
+    public static double intakeClawHoverRot = 0.99;
+    public static double intakeClawGrabPos = 0.45;
     public static double intakeClawGrabRot = 0.95;
     public static double intakeWristFlat = 0.53;
     public static double intakeWristTiltRight = 0.4;

@@ -62,16 +62,16 @@ public class CalvinTrue extends LinearOpMode {
 
     //Transfer and the timers
     public ElapsedTime transferTime = new ElapsedTime();
-    public static double transferPart1 = 0.3;
-    public static double transferPart2 = 0.55;
-    public static double transferPart3 = 0.1;
-    public static double transferPart4 = 0.1;
-    public static double transferPart5 = 0.2;
+    public static double transferPart1 = 0.28;
+    public static double transferPart2 = 0.45;
+    public static double transferPart3 = 0.08;
+    public static double transferPart4 = 0.08;
+    public static double transferPart5 = 0.1;
 
     //Pickup timers
     public ElapsedTime pickUpTime = new ElapsedTime();
-    public static double pickUp1 = 0.1;//lower this over time LOL
-    public static double pickUp2 = 0.1;
+    public static double pickUp1 = 0.06;//lower this over time LOL
+    public static double pickUp2 = 0.06;
 
 
     public static boolean isMajorMacroing = false;

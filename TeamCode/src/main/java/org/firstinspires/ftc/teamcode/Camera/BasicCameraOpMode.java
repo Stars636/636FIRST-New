@@ -20,13 +20,11 @@ public class BasicCameraOpMode extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()
         );
-
         // Initialize webcam
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
                 hardwareMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName.class, "Webcam 1"),
                 cameraMonitorViewId
         );
-
         // Attach an OpenCV pipeline (Custom pipeline will process frames)
         webcam.setPipeline(new SamplePipeline());
 

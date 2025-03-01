@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.Camera;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -97,6 +98,7 @@ public class OpenCV extends LinearOpMode
                  * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                  * away from the user.
                  */
+
                 webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
 
@@ -128,6 +130,7 @@ public class OpenCV extends LinearOpMode
             telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+            FtcDashboard.getInstance().startCameraStream(webcam,10);
             telemetry.update();
 
             /*

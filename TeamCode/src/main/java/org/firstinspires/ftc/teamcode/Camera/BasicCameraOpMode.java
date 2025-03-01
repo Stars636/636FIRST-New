@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Camera;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -49,6 +50,7 @@ public class BasicCameraOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addLine("Camera Streaming...");
             telemetry.update();
+            FtcDashboard.getInstance().startCameraStream(webcam,10);
             sleep(100);
         }
 

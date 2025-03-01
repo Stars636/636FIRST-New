@@ -66,6 +66,10 @@ public class TeleOpSampleDetection extends LinearOpMode {
         while(opModeIsActive()){
 
             FtcDashboard.getInstance().startCameraStream(webcam, 30);
+            telemetry.addData("angle", rPipeline.getDetectedAngle());
+            telemetry.addData("xOffset", rPipeline.getXOffset());
+            telemetry.addData("yOffset", rPipeline.getYOffset());
+            telemetry.addData("area", rPipeline.getArea());
             //let cpu rest or something
             sleep(100);
         }
@@ -75,6 +79,7 @@ public class TeleOpSampleDetection extends LinearOpMode {
         private volatile double detectedAngle = 0; // Stores the detected angle
         private volatile double xOffset = 0;
         private volatile double yOffset = 0;
+        private volatile double area = 0;
         //other example code has volatile here
         //volatile seems to make remove errors?
         // https://stackoverflow.com/questions/106591/what-is-the-volatile-keyword-useful-for
@@ -82,22 +87,23 @@ public class TeleOpSampleDetection extends LinearOpMode {
         @Override
         public Mat processFrame(Mat input) {
             detectedAngle = detector.estimateRedSampleOrientation(input);
+            xOffset = detector.estimateRedXDistance(input);
+            yOffset = detector.estimateRedYDistance(input);
+            area = detector.estimateRedArea(input);
             return input; // Return the drawings
         }
 
-        public double getDetectedAngle(Mat input) {
-            detectedAngle = detector.estimateRedSampleOrientation(input);
+        public double getDetectedAngle() {
             return detectedAngle;
         }
-        public double getXOffset(Mat input) {
-            xOffset = detector.estimateRedXDistance(input);
+        public double getXOffset() {
             return xOffset;
-
         }
-        public double getYOffset(Mat input) {
-            yOffset = detector.estimateRedYDistance(input);
+        public double getYOffset() {
             return yOffset;
-
+        }
+        public double getArea(){
+            return area;
         }
     }
 }

@@ -390,5 +390,102 @@ public class SampleOrientation {
 
     }
 
+    public double estimateRedArea(Mat input) {
+
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //helpful person detected
+        //suggests filtering noise before changed to hsv
+        Imgproc.medianBlur(input,input,3);
+
+
+
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
+        //Translation to HSV. Light work no reaction
+
+        Mat lowRedRange = new Mat();
+        Mat highRedRange = new Mat();
+
+
+        // Red has two ranges in HSV (lower and upper) for some reason ¯\_(ツ)_/¯ look
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //Source is in python but nicely translatable
+        Core.inRange(hsv, LOW_RED_RANGE_LOW, LOW_RED_RANGE_HIGH, lowRedRange); // Lower red range
+        Core.inRange(hsv, HIGH_RED_RANGE_LOW, HIGH_RED_RANGE_HIGH, highRedRange); // Upper red range
+
+        //Combine them :)
+        Mat redMask = new Mat();
+        Core.addWeighted(lowRedRange, lowRedWeight, highRedRange, highRedWeight, 0.0, redMask);
+        //hard press addWeighted to look at it but its hard to know why it works other then it combines them and
+        //you can choose how much each mask is weighted
+        //like maybe if the highredrange works better you can weigh the other one less
+
+        Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
+        //gaussian blur reduces error with false positives according to some internet guy
+
+        Mat edges = new Mat();
+
+        //Imgproc.Canny(redMask, edges, 50, 150);
+        //hard press and look at canny
+        //basically it finds edges in grayscale images
+        //since we made a mask we don't need this though
+
+        List<MatOfPoint> contours = new ArrayList<>();
+        //creates the list of all contours found
+
+        Mat hierarchy = new Mat();
+
+        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        double area = 0.0;
+
+        // Camera center
+        int frameWidth = input.width();
+        int frameHeight = input.height();
+        Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);
+        double minDistance = 1000; //when we find a new contour center distance, mindistance will be changed to
+        //the center distance until we find the closest
+        RotatedRect closestRect = null; //null until we find our rect
+        // largest double is 1.7976931348623157E308
+        // pretty big number LOL
+
+        for (MatOfPoint contour : contours) {
+            //you get this
+            if (Imgproc.contourArea(contour) > smallestContour) {
+
+                RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
+                Point objectCenter = rect.center;
+
+                //the points/corners of the rotatedrect
+                //the 4 is saying the size
+
+                double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
+                        Math.pow(objectCenter.y - cameraCenter.y, 2));
+                //pythagorean theorem detected
+
+                if (distance < minDistance) { // Keep track of the closest object
+                    minDistance = distance;
+                    closestRect = rect; //
+                    area = Imgproc.contourArea(contour);
+
+                }
+
+
+            }
+
+            break;
+
+        }
+        if (closestRect == null) {
+            return notFound; // No object was found
+            //the notFound solulu might be trash ngl
+            //if code crashes delete this first
+        }
+
+        return area;
+
+
+    }
+
 
 } 

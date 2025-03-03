@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Camera.SampleCode.SkystoneDeterminationExample;
+import org.firstinspires.ftc.teamcode.Camera.BorrowedSampleCode.SkystoneDeterminationExample;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;

@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode.Camera;
 
 import static org.firstinspires.ftc.teamcode.Camera.SampleOrientation.notFound;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Camera.SampleCode.SkystoneDeterminationExample;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -15,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@Autonomous(name="FtcDashboard Camera", group="Linear")
+@TeleOp(group = "Camera", name = "RedSampleDetection")
 public class TeleOpSampleDetection extends LinearOpMode {
     //Todo:
     //  All sources used:
@@ -50,7 +48,7 @@ public class TeleOpSampleDetection extends LinearOpMode {
             public void onOpened()
             {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-                FtcDashboard.getInstance().startCameraStream(webcam, 30);
+                //FtcDashboard.getInstance().startCameraStream(webcam, 30);
                 //idk choose one
 
             }
@@ -72,8 +70,8 @@ public class TeleOpSampleDetection extends LinearOpMode {
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
             telemetry.addData("area", rPipeline.getArea());
-            if (rPipeline.getDetectedAngle() == notFound) {
-                telemetry.addData("Object Not Found",notFound);
+            if (rPipeline.getDetectedAngle() == notFound[0]) {
+                telemetry.addData("Object Not Found", notFound[0]);
                 telemetry.update();
             } else {
                 telemetry.addData("Object Found", "yay");
@@ -91,16 +89,19 @@ public class TeleOpSampleDetection extends LinearOpMode {
         private volatile double xOffset = 0;
         private volatile double yOffset = 0;
         private volatile double area = 0;
+        private volatile double[] dataRed = new double[4];
+
         //other example code has volatile here
         //volatile seems to make remove errors?
         // https://stackoverflow.com/questions/106591/what-is-the-volatile-keyword-useful-for
 
         @Override
         public Mat processFrame(Mat input) {
-            detectedAngle = detector.estimateRedSampleOrientation(input);
-            xOffset = detector.estimateRedXDistance(input);
-            yOffset = detector.estimateRedYDistance(input);
-            area = detector.estimateRedArea(input);
+            dataRed = detector.estimateRedSampleOrientation(input);
+            detectedAngle = dataRed[3];
+            xOffset = dataRed[0];
+            yOffset = dataRed[1];
+            area = dataRed[2];
             return input; // Return the drawings
         }
 

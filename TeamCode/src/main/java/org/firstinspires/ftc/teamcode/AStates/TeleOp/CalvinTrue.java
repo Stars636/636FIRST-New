@@ -196,11 +196,11 @@ public class CalvinTrue extends LinearOpMode {
                     }
                     break;
                 case DECIDE:
-                    if (calvin.intakeClaw.getPosition() == intakeClawClosed) {
+                    if (intakeClawMacro == IntakeClawMacro.CLOSED) {
                         calvin.intakeClaw.setPosition(intakeClawOpen);
                         intakeClawMacro = IntakeClawMacro.OPENED;
                         pickUpStep = PickUpSteps.GRAB;
-                    } else if (calvin.intakeClaw.getPosition() == intakeClawOpen) {
+                    } else if (intakeClawMacro == IntakeClawMacro.OPENED) {
                         calvin.intakeClaw.setPosition(intakeClawClosed);
                         intakeClawMacro = IntakeClawMacro.CLOSED;
                         pickUpStep = PickUpSteps.GRAB;

@@ -29,14 +29,16 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltL
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
-@Config
+
 @TeleOp (group = "STATES", name = "OLD TELEOP - 1/31/25 - DONT RUN ")
+@Disabled
 public class CalvinTele extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder

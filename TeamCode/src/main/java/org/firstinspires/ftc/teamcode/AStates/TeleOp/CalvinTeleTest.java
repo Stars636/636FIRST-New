@@ -29,6 +29,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltL
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,6 +39,7 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
 @TeleOp (group = "STATES", name = "DO NOT RUN")
+@Disabled
 public class CalvinTeleTest extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
@@ -609,9 +611,6 @@ public class CalvinTeleTest extends LinearOpMode {
     }
     DepositClawMacro depositClawMacro = DepositClawMacro.CLOSED;
 
-    public enum hang {
-        EXTENDED, RETRACTED
-    }
 
 }
 

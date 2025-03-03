@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Camera;
 
 
+import static org.firstinspires.ftc.teamcode.Camera.SampleOrientation.notFound;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -47,8 +49,8 @@ public class TeleOpSampleDetection extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-                //FtcDashboard.getInstance().startCameraStream(webcam, 30);
+                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                FtcDashboard.getInstance().startCameraStream(webcam, 30);
                 //idk choose one
 
             }
@@ -65,11 +67,20 @@ public class TeleOpSampleDetection extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            FtcDashboard.getInstance().startCameraStream(webcam, 30);
+            //FtcDashboard.getInstance().startCameraStream(webcam, 30);
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
             telemetry.addData("area", rPipeline.getArea());
+            if (rPipeline.getDetectedAngle() == notFound) {
+                telemetry.addData("Object Not Found",notFound);
+                telemetry.update();
+            } else {
+                telemetry.addData("Object Found", "yay");
+                telemetry.update();
+            }
+
+            telemetry.update(); 
             //let cpu rest or something
             sleep(100);
         }

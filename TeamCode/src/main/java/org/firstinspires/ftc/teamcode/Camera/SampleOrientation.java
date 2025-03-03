@@ -48,7 +48,7 @@ public class SampleOrientation {
     public static double highRedWeight = 1.0;
     public static double lowRedWeight = 1.0;
 
-    public static double notFound = 31415926;
+    public static double notFound = Double.NaN;
     //basically i don't want the function to crash if an object isn't found
     //so rn we will check for this number
 
@@ -103,8 +103,7 @@ public class SampleOrientation {
         Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
         //gaussian blur reduces error with false positives according to some internet guy
 
-        Mat edges = new Mat();
-
+        //Mat edges = new Mat();
         //Imgproc.Canny(redMask, edges, 50, 150);
         //hard press and look at canny
         //basically it finds edges in grayscale images
@@ -116,7 +115,7 @@ public class SampleOrientation {
         Mat hierarchy = new Mat();
         //i couldn't really tell you what this does, it's optional in findContours
 
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(redMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         double angle = 0.0;
 
@@ -152,8 +151,6 @@ public class SampleOrientation {
 
 
             }
-
-            break;
 
         }
         if (closestRect == null) {
@@ -224,7 +221,7 @@ public class SampleOrientation {
         Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
         //gaussian blur reduces error with false positives according to some internet guy
 
-        Mat edges = new Mat();
+        //Mat edges = new Mat();
 
         //Imgproc.Canny(redMask, edges, 50, 150);
         //hard press and look at canny
@@ -236,7 +233,7 @@ public class SampleOrientation {
 
         Mat hierarchy = new Mat();
 
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(redMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         double xDistance = 0.0;
 
@@ -273,7 +270,6 @@ public class SampleOrientation {
 
             }
 
-            break;
 
         }
         if (closestRect == null) {
@@ -323,7 +319,7 @@ public class SampleOrientation {
         Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
         //gaussian blur reduces error with false positives according to some internet guy
 
-        Mat edges = new Mat();
+        //Mat edges = new Mat();
 
         //Imgproc.Canny(redMask, edges, 50, 150);
         //hard press and look at canny
@@ -335,7 +331,7 @@ public class SampleOrientation {
 
         Mat hierarchy = new Mat();
 
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(redMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         double yDistance = 0.0;
 
@@ -371,8 +367,6 @@ public class SampleOrientation {
 
 
             }
-
-            break;
 
         }
         if (closestRect == null) {
@@ -423,7 +417,7 @@ public class SampleOrientation {
         Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
         //gaussian blur reduces error with false positives according to some internet guy
 
-        Mat edges = new Mat();
+        //Mat edges = new Mat();
 
         //Imgproc.Canny(redMask, edges, 50, 150);
         //hard press and look at canny
@@ -435,7 +429,7 @@ public class SampleOrientation {
 
         Mat hierarchy = new Mat();
 
-        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(redMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         double area = 0.0;
 
@@ -473,7 +467,6 @@ public class SampleOrientation {
 
             }
 
-            break;
 
         }
         if (closestRect == null) {

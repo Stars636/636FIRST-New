@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Camera.BorrowedSampleCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -32,6 +33,7 @@ import java.util.List;
  *YES
  */
 @Autonomous(name= "opencvSkystoneDetector", group="Sky autonomous")
+@Disabled
 //courtesy of Bolts of Steel 3939
 public class opencvSkystoneDetector extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();

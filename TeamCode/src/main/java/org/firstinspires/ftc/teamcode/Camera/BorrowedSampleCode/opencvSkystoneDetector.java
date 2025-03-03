@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Camera.SampleCode;
+package org.firstinspires.ftc.teamcode.Camera.BorrowedSampleCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

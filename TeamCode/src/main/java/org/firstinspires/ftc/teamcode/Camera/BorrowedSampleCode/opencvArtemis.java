@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Camera.SampleCode;
+package org.firstinspires.ftc.teamcode.Camera.BorrowedSampleCode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;

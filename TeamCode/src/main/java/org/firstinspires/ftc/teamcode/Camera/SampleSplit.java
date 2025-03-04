@@ -69,21 +69,15 @@ public class SampleSplit extends LinearOpMode {
         while(opModeIsActive()){
 
             //FtcDashboard.getInstance().startCameraStream(webcam, 3);
-            boolean isFound = false;
-            if (rPipeline.getDetectedAngle() == notFound[0]) {
-                isFound = true;
-            } else {
-                isFound = false;
-            }
+
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
             telemetry.addData("area", rPipeline.getArea());
-            telemetry.addData("isFound",isFound);
+            telemetry.addData("isFound",rPipeline.getIsFound());
             telemetry.addData("is Split", rPipeline.getSplitQuestion());
             telemetry.update();
-
-            //FtcDashboard.getInstance().startCameraStream(webcam,10);
+            //let cpu rest or something
             
 
             //let cpu rest or something
@@ -99,6 +93,7 @@ public class SampleSplit extends LinearOpMode {
         private volatile double[] dataRed = new double[5];
 
         private volatile boolean splitQuestion = false;
+        private volatile boolean isFoundQu = false;
 
         //other example code has volatile here
         //volatile seems to make remove errors?
@@ -107,6 +102,7 @@ public class SampleSplit extends LinearOpMode {
         @Override
         public Mat processFrame(Mat input) {
             dataRed = detector.splitRedSample(input);
+            isFoundQu = detector.isFoundQ;
             xOffset = dataRed[0];
             yOffset = dataRed[1];
             area = dataRed[2];
@@ -138,5 +134,6 @@ public class SampleSplit extends LinearOpMode {
         public boolean getSplitQuestion(){
             return splitQuestion;
         }
+        public boolean getIsFound(){ return isFoundQu; }
     }
 }

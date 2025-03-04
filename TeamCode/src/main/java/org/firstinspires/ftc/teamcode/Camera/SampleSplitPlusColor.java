@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.Camera;
 
 
-import static org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions.notFound;
+import android.graphics.Bitmap;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -35,6 +36,9 @@ public class SampleSplitPlusColor extends LinearOpMode {
     OpenCvCamera webcam;
     RedObjectPipeline rPipeline;
 
+    public static int frameWidth = 320;
+    public static int frameHeight = 240;
+
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -53,10 +57,10 @@ public class SampleSplitPlusColor extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-                //FtcDashboard.getInstance().startCameraStream(webcam, 30);
-                //idk choose one
 
+                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
+                //if it doesn't work comment this out
             }
 
             @Override
@@ -73,18 +77,13 @@ public class SampleSplitPlusColor extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            //FtcDashboard.getInstance().startCameraStream(webcam, 3);
-            boolean isFound = false;
-            if (rPipeline.getDetectedAngle() == notFound[0]) {
-                isFound = false;
-            } else {
-                isFound = true;
-            }
+
+            //FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
             telemetry.addData("area", rPipeline.getArea());
-            telemetry.addData("isFound",isFound);
+            telemetry.addData("isFound",rPipeline.getIsFound());
             telemetry.addData("is Split", rPipeline.getSplitQuestion());
             telemetry.addData("average color", rPipeline.getRgb());
             telemetry.update();
@@ -102,6 +101,9 @@ public class SampleSplitPlusColor extends LinearOpMode {
         private volatile Scalar rgb = new Scalar(0,0,0);
         private volatile double[] dataRed = new double[8];
 
+        private volatile boolean isFoundQu = false;
+        private volatile Mat output = new Mat();
+
 
         //other example code has volatile here
         //volatile seems to make remove errors?
@@ -110,7 +112,7 @@ public class SampleSplitPlusColor extends LinearOpMode {
         @Override
         public Mat processFrame(Mat input) {
             dataRed = detector.splitRedSample(input);
-
+            isFoundQu = detector.isFoundQ;
             xOffset = dataRed[0];
             yOffset = dataRed[1];
             area = dataRed[2];
@@ -121,9 +123,15 @@ public class SampleSplitPlusColor extends LinearOpMode {
                 splitQuestion = true;
             }
             rgb = new Scalar(dataRed[5],dataRed[6], dataRed[7]);
+            output = input;
             return input; // Return the drawings
         }
 
+       public Bitmap getOutput() {
+           Bitmap b = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
+           Utils.matToBitmap(output, b);
+            return b;
+        }
         public double getDetectedAngle() {
             return detectedAngle;
         }
@@ -138,5 +146,6 @@ public class SampleSplitPlusColor extends LinearOpMode {
         }
         public boolean getSplitQuestion(){ return splitQuestion; }
         public Scalar getRgb(){ return rgb; }
+        public boolean getIsFound(){ return isFoundQu; }
     }
 }

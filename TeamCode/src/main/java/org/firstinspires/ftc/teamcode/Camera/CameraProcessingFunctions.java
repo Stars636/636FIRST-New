@@ -89,6 +89,7 @@ public class CameraProcessingFunctions {
     //i will only run the hull if the area is suspiciously large
     public static final double depthThreshold = 10.0; // for significant defects
     public static final int smallestValidContour = 4; // minimum number of points for a valid contour
+    boolean isFoundQ = false;
 
     public double[] estimateRedSampleOrientation(Mat input) {
 
@@ -553,11 +554,9 @@ public class CameraProcessingFunctions {
 
         for (MatOfPoint contour : contours) {
             if (Imgproc.contourArea(contour) > smallestContour) {
-
+                isFoundQ = true;
                 MatOfInt4 convexDefects = computeConvexityDefects(contour);
 
-
-                if (Imgproc.contourArea(contour) > largestPossibleArea) {
                     if (shouldSplit(contour, convexDefects)) {
 
                         isSplit = 1;
@@ -600,9 +599,9 @@ public class CameraProcessingFunctions {
                             mask.release(); //release mask to save data
                             // convert the native bgr to rgb
                             averageRGB = new double[] {
-                                    meanColor.val[2], // red
+                                    meanColor.val[0],// red
                                     meanColor.val[1], // green
-                                    meanColor.val[0]  // blue
+                                    meanColor.val[2] // blue
                             };
 
                             if (distance < minDistance) {
@@ -644,10 +643,11 @@ public class CameraProcessingFunctions {
                             //making our variables match the ones of the closest contour
                         }
                     }
-                }
+
             }
         }
         if (closestRect == null) {
+            isFoundQ = false;
             return notFoundSplitVer; // No object was found
             //the notFound solulu might be trash ngl
             //if code crashes delete this first

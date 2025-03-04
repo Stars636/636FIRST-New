@@ -69,18 +69,17 @@ public class SampleSplit extends LinearOpMode {
         while(opModeIsActive()){
 
             //FtcDashboard.getInstance().startCameraStream(webcam, 3);
+            boolean isFound = false;
+            if (rPipeline.getDetectedAngle() == notFound[0]) {
+                isFound = true;
+            } else {
+                isFound = false;
+            }
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
             telemetry.addData("area", rPipeline.getArea());
-            telemetry.update();
-            if (rPipeline.getDetectedAngle() == notFound[0]) {
-                telemetry.addData("Object Not Found", "oh no");
-                telemetry.update();
-            } else {
-                telemetry.addData("Object Found", "yay");
-                telemetry.update();
-            }
+            telemetry.addData("isFound",isFound);
             telemetry.addData("is Split", rPipeline.getSplitQuestion());
             telemetry.update();
 

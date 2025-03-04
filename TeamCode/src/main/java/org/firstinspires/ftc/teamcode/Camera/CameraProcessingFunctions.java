@@ -100,7 +100,7 @@ public class CameraProcessingFunctions {
 
 
         Mat hsv = new Mat();
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         //Translation to HSV. Light work no reaction
         //Todo: look into adaptive threshold to help
 
@@ -347,7 +347,7 @@ public class CameraProcessingFunctions {
 
 
         Mat hsv = new Mat();
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         //Translation to HSV. Light work no reaction
         //Todo: look into adaptive threshold to help
 
@@ -490,7 +490,7 @@ public class CameraProcessingFunctions {
 
 
         Mat hsv = new Mat();
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         //Translation to HSV. Light work no reaction
         //Todo: look into adaptive threshold to help
 
@@ -585,10 +585,25 @@ public class CameraProcessingFunctions {
                             Point objectCenter = rect.center;
 
 
+
                             double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
                                     Math.pow(objectCenter.y - cameraCenter.y, 2));
                             //pythagorean theorem detected
 
+                            // another mask for the object
+                            Mat mask = Mat.zeros(input.size(), CvType.CV_8UC1);
+                            Imgproc.drawContours(mask, Arrays.asList(contour), -1, new Scalar(255), -1);
+
+                            // find the average color
+                            Scalar meanColor = Core.mean(input, mask);
+
+                            mask.release(); //release mask to save data
+                            // convert the native bgr to rgb
+                            averageRGB = new double[] {
+                                    meanColor.val[2], // red
+                                    meanColor.val[1], // green
+                                    meanColor.val[0]  // blue
+                            };
 
                             if (distance < minDistance) {
                                 minDistance = distance;

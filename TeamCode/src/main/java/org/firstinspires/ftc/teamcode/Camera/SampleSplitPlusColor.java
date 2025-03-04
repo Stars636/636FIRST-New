@@ -76,9 +76,9 @@ public class SampleSplitPlusColor extends LinearOpMode {
             //FtcDashboard.getInstance().startCameraStream(webcam, 3);
             boolean isFound = false;
             if (rPipeline.getDetectedAngle() == notFound[0]) {
-                isFound = true;
-            } else {
                 isFound = false;
+            } else {
+                isFound = true;
             }
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());

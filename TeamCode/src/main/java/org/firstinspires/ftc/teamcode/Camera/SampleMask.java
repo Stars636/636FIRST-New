@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp(group = "Camera", name = "SampleSplit")
+@TeleOp(group = "Camera")
 public class SampleMask extends LinearOpMode {
     //Todo:
     //  All sources used:
@@ -34,6 +34,7 @@ public class SampleMask extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         rPipeline = new RedObjectPipeline();
         webcam.setPipeline(rPipeline);
+        FtcDashboard.getInstance().startCameraStream(webcam, 3);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
@@ -66,7 +67,7 @@ public class SampleMask extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            FtcDashboard.getInstance().startCameraStream(webcam, 3);
+            //FtcDashboard.getInstance().startCameraStream(webcam, 3);
 
 
             telemetry.update();

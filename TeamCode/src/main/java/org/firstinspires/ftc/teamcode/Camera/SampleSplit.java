@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp(group = "Camera", name = "SampleSplit")
+@TeleOp(group = "Camera")
 public class SampleSplit extends LinearOpMode {
     //Todo:
     //  All sources used:
@@ -68,7 +68,7 @@ public class SampleSplit extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            FtcDashboard.getInstance().startCameraStream(webcam, 3);
+            //FtcDashboard.getInstance().startCameraStream(webcam, 3);
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
@@ -89,7 +89,7 @@ public class SampleSplit extends LinearOpMode {
             telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
-            FtcDashboard.getInstance().startCameraStream(webcam,10);
+            //FtcDashboard.getInstance().startCameraStream(webcam,10);
             telemetry.update();
 
             //let cpu rest or something

@@ -68,7 +68,7 @@ public class SampleDetection extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            FtcDashboard.getInstance().startCameraStream(webcam, 3);
+            //FtcDashboard.getInstance().startCameraStream(webcam, 3);
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());

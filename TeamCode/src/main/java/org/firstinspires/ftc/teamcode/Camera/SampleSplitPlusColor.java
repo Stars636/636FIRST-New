@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp(group = "Camera", name = "SampleSplit")
+@TeleOp(group = "Camera")
 public class SampleSplitPlusColor extends LinearOpMode {
 
 
@@ -73,7 +73,7 @@ public class SampleSplitPlusColor extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            FtcDashboard.getInstance().startCameraStream(webcam, 3);
+            //FtcDashboard.getInstance().startCameraStream(webcam, 3);
             telemetry.addData("angle", rPipeline.getDetectedAngle());
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());

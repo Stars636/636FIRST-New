@@ -17,6 +17,10 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 @TeleOp(group = "Camera", name = "SampleSplit")
 public class SampleSplitPlusColor extends LinearOpMode {
+
+
+
+
     //Todo:
     //  All sources used:
     //      SkystoneDeterminationExample / StoneOrientationExample
@@ -61,6 +65,8 @@ public class SampleSplitPlusColor extends LinearOpMode {
                 /*
                  * This will be called if the camera could not be opened
                  */
+                telemetry.addData("Error",errorCode);
+                //emo
             }
         });
         waitForStart();

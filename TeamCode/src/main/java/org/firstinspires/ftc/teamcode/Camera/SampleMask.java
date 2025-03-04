@@ -58,6 +58,8 @@ public class SampleMask extends LinearOpMode {
                 /*
                  * This will be called if the camera could not be opened
                  */
+                telemetry.addData("Error",errorCode);
+                //emo
             }
         });
         waitForStart();

@@ -381,6 +381,7 @@ public class CameraProcessingFunctions {
         MatOfInt hullIndices = new MatOfInt();
         Imgproc.convexHull(contour, hullIndices, false);
         //creates the hull that surrounds the full object; the shape is convex
+        //basically the convex polygon with the smallest area that contains the whole shape
 
         MatOfInt4 convexDefects = new MatOfInt4();
         Imgproc.convexityDefects(contour, hullIndices, convexDefects);

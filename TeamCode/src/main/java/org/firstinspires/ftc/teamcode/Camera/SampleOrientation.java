@@ -126,7 +126,7 @@ public class SampleOrientation {
         int frameWidth = input.width();
         int frameHeight = input.height();
         Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);
-        double minDistance = 1000; //when we find a new contour center distance, mindistance will be changed to
+        double minDistance = 1000; //when we find a new contour center distance, min distance will be changed to
         //the center distance until we find the closest
         RotatedRect closestRect = null; //null until we find our rect
         // largest double is 1.7976931348623157E308

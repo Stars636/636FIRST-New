@@ -481,6 +481,7 @@ public class Bucket_Auto extends LinearOpMode {
         int fraudOffset = 15;
         double fraudWait = 2.5;
         double fraudMediumWait = 0.75;
+        //im killing myself <3 - arjun
         double fraudSmallWait = 0.5;
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));

@@ -73,6 +73,7 @@ public class SampleSplit extends LinearOpMode {
             telemetry.addData("xOffset", rPipeline.getXOffset());
             telemetry.addData("yOffset", rPipeline.getYOffset());
             telemetry.addData("area", rPipeline.getArea());
+            telemetry.update();
             if (rPipeline.getDetectedAngle() == notFound[0]) {
                 telemetry.addData("Object Not Found", "oh no");
                 telemetry.update();
@@ -81,16 +82,10 @@ public class SampleSplit extends LinearOpMode {
                 telemetry.update();
             }
             telemetry.addData("is Split", rPipeline.getSplitQuestion());
-
-            telemetry.addLine("Extra Data");
-            telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
-            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
-            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
-            //FtcDashboard.getInstance().startCameraStream(webcam,10);
             telemetry.update();
+
+            //FtcDashboard.getInstance().startCameraStream(webcam,10);
+            
 
             //let cpu rest or something
             sleep(100);

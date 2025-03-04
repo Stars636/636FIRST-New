@@ -38,6 +38,12 @@ public class CameraProcessingFunctions {
     //  https://docs.opencv.org/3.4/d5/d45/tutorial_py_contours_more_functions.html
     //  https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html#gada4437098113fd8683c932e0567f47ba
     // https://stackoverflow.com/questions/31354150/opencv-convexity-defects-drawing
+    // google searchs and helpers
+    //
+
+
+    //TODO: Things to do:
+    //
 
     public static Scalar LOW_RED_RANGE_LOW = new Scalar(0, 100, 100);
     public static Scalar LOW_RED_RANGE_HIGH = new Scalar(10, 255, 255);

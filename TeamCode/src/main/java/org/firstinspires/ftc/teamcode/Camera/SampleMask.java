@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Camera;
 
 
-import static org.firstinspires.ftc.teamcode.Camera.SampleOrientation.notFound;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp(group = "Camera", name = "RedSampleDetection")
-public class TeleOpSampleDetection extends LinearOpMode {
+@TeleOp(group = "Camera", name = "SampleSplit")
+public class SampleMask extends LinearOpMode {
     //Todo:
     //  All sources used:
     //      SkystoneDeterminationExample / StoneOrientationExample
@@ -67,17 +65,7 @@ public class TeleOpSampleDetection extends LinearOpMode {
         while(opModeIsActive()){
 
             FtcDashboard.getInstance().startCameraStream(webcam, 3);
-            telemetry.addData("angle", rPipeline.getDetectedAngle());
-            telemetry.addData("xOffset", rPipeline.getXOffset());
-            telemetry.addData("yOffset", rPipeline.getYOffset());
-            telemetry.addData("area", rPipeline.getArea());
-            if (rPipeline.getDetectedAngle() == notFound[0]) {
-                telemetry.addData("Object Not Found", "oh no");
-                telemetry.update();
-            } else {
-                telemetry.addData("Object Found", "yay");
-                telemetry.update();
-            }
+
 
             telemetry.update();
             //let cpu rest or something
@@ -85,12 +73,7 @@ public class TeleOpSampleDetection extends LinearOpMode {
         }
     }
     public static class RedObjectPipeline extends OpenCvPipeline {
-        private final SampleOrientation detector = new SampleOrientation();
-        private volatile double detectedAngle = 0; // Stores the detected angle
-        private volatile double xOffset = 0;
-        private volatile double yOffset = 0;
-        private volatile double area = 0;
-        private volatile double[] dataRed = new double[4];
+        private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
 
         //other example code has volatile here
         //volatile seems to make remove errors?
@@ -98,25 +81,10 @@ public class TeleOpSampleDetection extends LinearOpMode {
 
         @Override
         public Mat processFrame(Mat input) {
-            dataRed = detector.estimateRedSampleOrientation(input);
-            detectedAngle = dataRed[3];
-            xOffset = dataRed[0];
-            yOffset = dataRed[1];
-            area = dataRed[2];
+            input = detector.redMask(input);
             return input; // Return the drawings
         }
 
-        public double getDetectedAngle() {
-            return detectedAngle;
-        }
-        public double getXOffset() {
-            return xOffset;
-        }
-        public double getYOffset() {
-            return yOffset;
-        }
-        public double getArea(){
-            return area;
-        }
+
     }
 }

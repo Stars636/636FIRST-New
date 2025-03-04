@@ -25,7 +25,7 @@ import org.opencv.core.Scalar;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Config
-@TeleOp(name="FtcDashboard ColorMasking", group="Linear")
+@TeleOp(group="Camera")
 public class FtcDashboard_ColorMasking extends LinearOpMode {
     public static boolean MASK_TOGGLE = false;
     public static Scalar RANGE_LOW = new Scalar(50,50,50,0);

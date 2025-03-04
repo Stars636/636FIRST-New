@@ -307,6 +307,44 @@ public class SampleOrientation {
 
  */
 
+    public Mat mask(Mat input) {
+
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //helpful person detected
+        //suggests filtering noise before changed to hsv
+        Imgproc.medianBlur(input,input,3);
+
+
+
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
+        //Translation to HSV. Light work no reaction
+        //Todo: look into adaptive threshold to help
+
+        Mat lowRedRange = new Mat();
+        Mat highRedRange = new Mat();
+
+
+        // Red has two ranges in HSV (lower and upper) for some reason ¯\_(ツ)_/¯ look
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //Source is in python but nicely translatable
+        Core.inRange(hsv, LOW_RED_RANGE_LOW, LOW_RED_RANGE_HIGH, lowRedRange); // Lower red range
+        Core.inRange(hsv, HIGH_RED_RANGE_LOW, HIGH_RED_RANGE_HIGH, highRedRange); // Upper red range
+
+        //Combine them :)
+        Mat redMask = new Mat();
+        Core.addWeighted(lowRedRange, lowRedWeight, highRedRange, highRedWeight, 0.0, redMask);
+        //hard press addWeighted to look at it but its hard to know why it works other then it combines them and
+        //you can choose how much each mask is weighted
+        //like maybe if the highredrange works better you can weigh the other one less
+
+        Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
+
+
+        return redMask;
+
+    }
+
 
 
 } 

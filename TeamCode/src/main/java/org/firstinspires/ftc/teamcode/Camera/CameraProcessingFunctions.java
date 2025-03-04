@@ -502,7 +502,7 @@ public class CameraProcessingFunctions {
         Core.addWeighted(lowRedRange, lowRedWeight, highRedRange, highRedWeight, 0.0, redMask);
         //hard press addWeighted to look at it but its hard to know why it works other then it combines them and
         //you can choose how much each mask is weighted
-        //like maybe if the highredrange works better you can weigh the other one less
+        //like maybe if the high red range works better you can weigh the other one less
 
         Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
         //gaussian blur reduces error with false positives according to some internet guy
@@ -550,7 +550,7 @@ public class CameraProcessingFunctions {
                 MatOfInt4 convexDefects = computeConvexityDefects(contour);
 
 
-                if (Imgproc.contourArea(contour) > largestContour) {
+                if (Imgproc.contourArea(contour) > largestPossibleArea) {
                     if (shouldSplit(contour, convexDefects)) {
 
                         isSplit = 1;

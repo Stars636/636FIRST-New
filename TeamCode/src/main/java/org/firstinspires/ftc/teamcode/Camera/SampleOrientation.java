@@ -52,7 +52,7 @@ public class SampleOrientation {
     //basically i don't want the function to crash if an object isn't found
     //so rn we will check for this number
 
-//int frameWidth = input.width();
+    //int frameWidth = input.width();
 //        int frameHeight = input.height();
 //
 //        Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);

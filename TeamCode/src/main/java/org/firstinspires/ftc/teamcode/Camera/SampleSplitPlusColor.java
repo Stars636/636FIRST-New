@@ -30,7 +30,8 @@ public class SampleSplitPlusColor extends LinearOpMode {
     //      https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
     //      random google searches :)
     //      hard press opencv stuff
-    //      random person on reddit / omg thank u sm / https://www.reddit.com/r/FTC/comments/1fdz49d/comment/lmpfoln/
+    //      random person on reddit / omg thank u sm / https://www.reddit.com/r/FTC/comments
+    //      /1fdz49d/comment/lmpfoln/
     //Todo: look at SampleOrientation
     //
     OpenCvCamera webcam;
@@ -59,7 +60,7 @@ public class SampleSplitPlusColor extends LinearOpMode {
             {
 
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-                FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
+                //FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
                 //if it doesn't work comment this out
             }
 

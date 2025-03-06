@@ -389,12 +389,13 @@ public class CameraProcessingFunctions {
         //now its getting the defects,
         // i.e. the places where the contour significantly deviates from the hull
         //hard press convexitydefects -> matofint4 is (start_index, end_index, farthest_pt_index, fixpt_depth)
+        hullIndices.release();
 
         return convexDefects;
     }
 
     //function for splitting or not
-    public static boolean shouldSplit(MatOfPoint contour, MatOfInt4 convexDefects) {
+    public static boolean shouldSplit(MatOfInt4 convexDefects) {
         List<Integer> defectsList = convexDefects.toList();
         //matofint4 is a matrix kind thing of (start_index, end_index, farthest_pt_index, fixpt_depth)
         //so we are making it into a list so it can be iterated through
@@ -468,7 +469,6 @@ public class CameraProcessingFunctions {
         part2.add(part2.get(0));
 
         // make sure the contours are proper
-        // not sure why its five magic number detected
         if (part1.size() >= smallestValidContour && part2.size() >= smallestValidContour) {
             return Arrays.asList(
                     new MatOfPoint(part1.toArray(new Point[0])),
@@ -539,7 +539,7 @@ public class CameraProcessingFunctions {
         int frameWidth = input.width();
         int frameHeight = input.height();
         Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);
-        double minDistance = 1000; //when we find a new contour center distance, min distance will be changed to
+        double minDistance = 10000; //when we find a new contour center distance, min distance will be changed to
         //the center distance until we find the closest
         RotatedRect closestRect = null; //null until we find our rect
         // largest double is 1.7976931348623157E308
@@ -553,11 +553,12 @@ public class CameraProcessingFunctions {
 
 
         for (MatOfPoint contour : contours) {
+
             if (Imgproc.contourArea(contour) > smallestContour) {
-                isFoundQ = true;
+                isFoundQ = true; //telemetry purposes
                 MatOfInt4 convexDefects = computeConvexityDefects(contour);
 
-                    if (shouldSplit(contour, convexDefects)) {
+                    if (shouldSplit(convexDefects)) {
 
                         isSplit = 1;
 
@@ -582,8 +583,6 @@ public class CameraProcessingFunctions {
                         for (MatOfPoint splitContour : splitContours) {
                             RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(splitContour.toArray()));
                             Point objectCenter = rect.center;
-
-
 
                             double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
                                     Math.pow(objectCenter.y - cameraCenter.y, 2));

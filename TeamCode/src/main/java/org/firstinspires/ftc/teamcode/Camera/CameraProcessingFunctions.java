@@ -549,6 +549,7 @@ public class CameraProcessingFunctions {
         int isSplit = 0;
 
         double[] averageRGB = new double[3];
+        MatOfInt4 convexDefects = new MatOfInt4();
         //for testing what color its seeing
 
 
@@ -556,7 +557,7 @@ public class CameraProcessingFunctions {
 
             if (Imgproc.contourArea(contour) > smallestContour) {
                 isFoundQ = true; //telemetry purposes
-                MatOfInt4 convexDefects = computeConvexityDefects(contour);
+                convexDefects = computeConvexityDefects(contour);
 
                     if (shouldSplit(convexDefects)) {
 
@@ -692,6 +693,7 @@ public class CameraProcessingFunctions {
         hierarchy.release();
         lowRedRange.release();
         highRedRange.release();
+        convexDefects.release();
         hsv.release();
 
         //release them to stay

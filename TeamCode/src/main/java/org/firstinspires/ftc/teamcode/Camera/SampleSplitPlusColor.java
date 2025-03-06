@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode.Camera;
 
 
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -39,12 +42,26 @@ public class SampleSplitPlusColor extends LinearOpMode {
     public static int frameWidth = 320;
     public static int frameHeight = 240;
 
+    static FtcDashboard dashboard;
+    static Handler backgroundHandler;
+
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         rPipeline = new RedObjectPipeline();
         webcam.setPipeline(rPipeline);
+
+
+        // Todo:
+        //  this stuff is all for sending the ftcdashboard stuff to a different thread
+        // i don't know why we need this and other teams don't, i looked at exmaple code and they didn't need this
+        // and i feel like ethan and daniel would mention if they needed this too
+        dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        HandlerThread handlerThread = new HandlerThread("FrameStreamThread");
+        handlerThread.start();
+        backgroundHandler = new Handler(handlerThread.getLooper());
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
@@ -59,7 +76,7 @@ public class SampleSplitPlusColor extends LinearOpMode {
             {
 
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-                FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
+                //FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
                 //if it doesn't work comment this out
             }
 
@@ -102,7 +119,7 @@ public class SampleSplitPlusColor extends LinearOpMode {
         private volatile double[] dataRed = new double[8];
 
         private volatile boolean isFoundQu = false;
-        private volatile Mat output = new Mat();
+
 
 
         //other example code has volatile here
@@ -123,15 +140,29 @@ public class SampleSplitPlusColor extends LinearOpMode {
                 splitQuestion = true;
             }
             rgb = new Scalar(dataRed[5],dataRed[6], dataRed[7]);
-            output = input;
+
+            //Todo: Bitmap conversion is like the same as in the og ftcdahsboard color mask
+            //this is not our own and we should look into why
+            Mat processedFrame = input.clone();
+            // Convert to Bitmap and send to FTC Dashboard on a background thread
+            final Bitmap bitmap = Bitmap.createBitmap(processedFrame.cols(), processedFrame.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(processedFrame, bitmap);
+
+            backgroundHandler.post(() -> {
+                if (dashboard != null) {
+                    // Use the FTC Dashboard's image API (example)
+                    dashboard.sendImage(bitmap);
+                    bitmap.recycle(); // Avoid memory leaks
+                }
+            });
+            //release for memory
+            processedFrame.release();
+
+
             return input; // Return the drawings
         }
 
-       public Bitmap getOutput() {
-           Bitmap b = Bitmap.createBitmap(frameWidth, frameHeight, Bitmap.Config.ARGB_8888);
-           Utils.matToBitmap(output, b);
-            return b;
-        }
+
         public double getDetectedAngle() {
             return detectedAngle;
         }

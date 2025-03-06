@@ -3,16 +3,24 @@ package org.firstinspires.ftc.teamcode.Camera;
 
 import static org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions.notFound;
 
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
+
+
 
 @TeleOp(group = "Camera")
 public class SampleSplit extends LinearOpMode {
@@ -29,6 +37,8 @@ public class SampleSplit extends LinearOpMode {
     //
     OpenCvCamera webcam;
     RedObjectPipeline rPipeline;
+    static FtcDashboard dashboard;
+    static Handler backgroundHandler;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,6 +46,17 @@ public class SampleSplit extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         rPipeline = new RedObjectPipeline();
         webcam.setPipeline(rPipeline);
+
+        // Todo:
+        //  this stuff is all for sending the ftcdashboard stuff to a different thread
+        // i don't know why we need this and other teams don't, i looked at exmaple code and they didn't need this
+        // and i feel like ethan and daniel would mention if they needed this too
+        dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        HandlerThread handlerThread = new HandlerThread("FrameStreamThread");
+        handlerThread.start();
+        backgroundHandler = new Handler(handlerThread.getLooper());
+
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
@@ -64,6 +85,8 @@ public class SampleSplit extends LinearOpMode {
                 //emo
             }
         });
+
+
         waitForStart();
 
         while(opModeIsActive()){
@@ -114,7 +137,25 @@ public class SampleSplit extends LinearOpMode {
             }
 
 
-            return input; // Return the drawings
+            //Todo: Bitmap conversion is like the same as in the og ftcdahsboard color mask
+            //this is not our own and we should look into why
+            Mat processedFrame = input.clone();
+            // Convert to Bitmap and send to FTC Dashboard on a background thread
+            final Bitmap bitmap = Bitmap.createBitmap(processedFrame.cols(), processedFrame.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(processedFrame, bitmap);
+
+            backgroundHandler.post(() -> {
+                if (dashboard != null) {
+                    // Use the FTC Dashboard's image API (example)
+                    dashboard.sendImage(bitmap);
+                    bitmap.recycle(); // Avoid memory leaks
+                }
+            });
+            //release for memory
+            processedFrame.release();
+
+
+            return input; // return the drawings
         }
 
 

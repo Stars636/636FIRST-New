@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.NewEnglands;
+package org.firstinspires.ftc.teamcode.AStates.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
@@ -28,20 +28,20 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNorma
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
-
-@TeleOp (group = "STATES", name = "OLD TELEOP - 1/31/25 - DONT RUN ")
-@Disabled
-public class CalvinTeleNE extends LinearOpMode {
+@Config
+@TeleOp (group = "STATES", name = "BEST TELEOP - 2/8/24")
+public class CalvinTeleFinal extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
     Calvin calvin;
+    boolean check = false;
 
     //Debouncers
     boolean changedX = false;
@@ -62,16 +62,16 @@ public class CalvinTeleNE extends LinearOpMode {
 
     //Transfer and the timers
     public ElapsedTime transferTime = new ElapsedTime();
-    public static double transferPart1 = 0.3;
-    public static double transferPart2 = 0.5;
-    public static double transferPart3 = 0.1;
-    public static double transferPart4 = 0.1;
-    public static double transferPart5 = 0.2;
+    public static double transferPart1 = 0.28;
+    public static double transferPart2 = 0.45;
+    public static double transferPart3 = 0.08;
+    public static double transferPart4 = 0.08;
+    public static double transferPart5 = 0.1;
 
     //Pickup timers
     public ElapsedTime pickUpTime = new ElapsedTime();
-    public static double pickUp1 = 0.1;//lower this over time LOL
-    public static double pickUp2 = 0.1;
+    public static double pickUp1 = 0.06;//lower this over time LOL
+    public static double pickUp2 = 0.06;
 
 
     public static boolean isMajorMacroing = false;
@@ -196,11 +196,11 @@ public class CalvinTeleNE extends LinearOpMode {
                     }
                     break;
                 case DECIDE:
-                    if (calvin.intakeClaw.getPosition() == intakeClawClosed) {
+                    if (intakeClawMacro == IntakeClawMacro.CLOSED) {
                         calvin.intakeClaw.setPosition(intakeClawOpen);
                         intakeClawMacro = IntakeClawMacro.OPENED;
                         pickUpStep = PickUpSteps.GRAB;
-                    } else if (calvin.intakeClaw.getPosition() == intakeClawOpen) {
+                    } else if (intakeClawMacro == IntakeClawMacro.OPENED) {
                         calvin.intakeClaw.setPosition(intakeClawClosed);
                         intakeClawMacro = IntakeClawMacro.CLOSED;
                         pickUpStep = PickUpSteps.GRAB;
@@ -515,19 +515,14 @@ public class CalvinTeleNE extends LinearOpMode {
 
             //TODO: Test both codes, if both work, use the more streamlined one
 
+//TODO: Test both codes, if both work, use the more streamlined one
             if (gamepad1.y) {
+                check = true;
+            }
+            if (check) {
                 calvin.hangRight.setPower(-1);
                 calvin.hangLeft.setPower(1);
             }
-            else if (gamepad1.b) {
-                calvin.hangRight.setPower(1);
-                calvin.hangLeft.setPower(-1);
-            }
-            else {
-                calvin.hangRight.setPower(0);
-                calvin.hangLeft.setPower(0);
-            }
-
             // Conrad kindly mention that x and y should move the servos and
             // a and b should move the motors? i think
 
@@ -546,7 +541,7 @@ public class CalvinTeleNE extends LinearOpMode {
             telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
             telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
             telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());
-
+            telemetry.addData("check", check);
 
             telemetry.update();
 

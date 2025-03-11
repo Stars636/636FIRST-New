@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AStates.TeleOp;
+package org.firstinspires.ftc.teamcode.ANewEngland;
 
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
@@ -36,8 +36,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 
 @Config
-@TeleOp (group = "STATES", name = "BEST TELEOP - 2/8/24")
-public class CalvinTrue extends LinearOpMode {
+@TeleOp (group = "STATES", name = "RUN THIS TELEOP")
+public class CalvinTeleNE extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
     Calvin calvin;

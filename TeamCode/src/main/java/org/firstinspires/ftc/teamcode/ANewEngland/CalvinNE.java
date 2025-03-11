@@ -27,61 +27,61 @@ public class CalvinNE {
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
 
-    public static int lowBucket = 1400; //todo: test this
+    public static int lowBucket; //todo: test
 
-    public static int highSpecimen = 550; //todo: test this
+    public static int highSpecimen; //todo: test
 
-    public static int lowSpecimen = 1000; //todo: test this(low priority)
+    public static int lowSpecimen; //todo: test(low priority)
 
-    public static int highBucket = 2944;
+    public static int highBucket; //todo: test
 
-    public static double hookExtend = 0.53;
-    public static double hookRetract = 0;
+    public static double hookExtend; //todo: test
+    public static double hookRetract; //todo: test
     public static int reelIn;
     public static int reelOut;
 
-    public static double depositClawOpen = 0;
-    public static double depositClawClosed = 0.38;
-    public static double depositClawPassivePos = 0.7;   //0.78
+    public static double depositClawOpen;  //todo: test
+    public static double depositClawClosed;  //todo: test
+    public static double depositClawPassivePos;    //todo: test
 
-    public static double depositClawPassiveRot = 0.3;
+    public static double depositClawPassiveRot; //todo: test
 
-    public static double depositClawTransferPos = 0.80;   //0.80
+    public static double depositClawTransferPos;  //todo: test
 
-    public static double depositClawTransferRot = 0.18;  //0.18
+    public static double depositClawTransferRot;   //todo: test
 
-    public static double depositClawScorePos = 0.3;
+    public static double depositClawScorePos;  //todo: test
 
-    public static double depositClawScoreRot = 0.9;
-    public static double depositClawSpeciPosStart = 0.03;
+    public static double depositClawScoreRot;  //todo: test
+    public static double depositClawSpeciPosStart;  //todo: test
 
-    public static double depositClawSpeciRotStart = 1;
+    public static double depositClawSpeciRotStart;  //todo: test
 
-    public static double depositClawSpeciPosFinish = 0.22;
-    public static double depositClawSpeciRotFinish = 0.7;
+    public static double depositClawSpeciPosFinish;  //todo: test
+    public static double depositClawSpeciRotFinish ;  //todo: test
 
-    public static double increment = 0.01;
-    public static double floatPosition = 0.9;
+    public static double increment;  //todo: test
+    public static double floatPosition;  //todo: test
 
 
-    public static double hSlidesInside = 1;
-    public static double hSlidesOutside = 0.74;
-    public static double intakeClawOpen = 0.0;
-    public static double intakeClawClosed = 0.43;
-    public static double intakeClawTransferPos = 0.6;
-    public static double intakeClawTransferRot = 0.29;
-    public static double intakeClawPassivePos = 0.4;
-    public static double intakeClawPassiveRot = 0.3;
-    public static double intakeClawHoverPos = 0.5;
-    public static double intakeClawHoverRot = 0.99;
-    public static double intakeClawGrabPos = 0.45;
-    public static double intakeClawGrabRot = 0.95;
-    public static double intakeWristFlat = 0.53;
-    public static double intakeWristTiltRight = 0.4;
-    public static double intakeWristNormalLeft = 0.85;
-    public static double intakeWristNormalRight = 0.2; //as in perpendicular
+    public static double hSlidesInside;  //todo: test
+    public static double hSlidesOutside;  //todo: test
+    public static double intakeClawOpen;  //todo: test
+    public static double intakeClawClosed;  //todo: test
+    public static double intakeClawTransferPos;  //todo: test
+    public static double intakeClawTransferRot;  //todo: test
+    public static double intakeClawPassivePos;  //todo: test
+    public static double intakeClawPassiveRot;  //todo: test
+    public static double intakeClawHoverPos;  //todo: test
+    public static double intakeClawHoverRot;  //todo: test
+    public static double intakeClawGrabPos;  //todo: test
+    public static double intakeClawGrabRot;  //todo: test
+    public static double intakeWristFlat;  //todo: test
+    public static double intakeWristTiltRight;  //todo: test
+    public static double intakeWristNormalLeft;  //todo: test
+    public static double intakeWristNormalRight; //as in perpendicular  //todo: test
     //Todo: refactor this to a better name
-    public static double intakeWristTiltLeft = 0.72;
+    public static double intakeWristTiltLeft;  //todo: test
 
 
     public ElapsedTime transferTime = new ElapsedTime();

@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 public class CalvinTeleNE extends LinearOpMode {
     //The robot.
     //"Isn't she lovely" - Stevie Wonder
-    Calvin calvin;
+    CalvinNE calvin;
     boolean check = false;
 
     //Debouncers
@@ -83,7 +83,7 @@ public class CalvinTeleNE extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Initializing the bot
-        calvin = new Calvin(hardwareMap);
+        calvin = new CalvinNE(hardwareMap);
         waitForStart();
 
         //Initial Positions
@@ -493,38 +493,6 @@ public class CalvinTeleNE extends LinearOpMode {
             }
             //
 
-            //TODO: Hang
-
-            //Todo: test both codes, if both work, then use the more streamlined one
-
-            if (gamepad1.x && !changedDX && !hookExtended) {
-                calvin.servHangRight.setPosition(Calvin.hookExtend);
-                calvin.servHangLeft.setPosition(Calvin.hookExtend + 0.01);
-                hookExtended = true;
-                changedDX = true;
-            }
-            else if (gamepad1.x && !changedDX && hookExtended) {
-                calvin.servHangRight.setPosition(Calvin.hookRetract);
-                calvin.servHangLeft.setPosition(Calvin.hookRetract);
-                hookExtended = false;
-                changedDX = true;
-            }
-            else if  (!gamepad1.x) {
-                changedDX = false;
-            }
-
-            //TODO: Test both codes, if both work, use the more streamlined one
-
-//TODO: Test both codes, if both work, use the more streamlined one
-            if (gamepad1.y) {
-                check = true;
-            }
-            if (check) {
-                calvin.hangRight.setPower(-1);
-                calvin.hangLeft.setPower(1);
-            }
-            // Conrad kindly mention that x and y should move the servos and
-            // a and b should move the motors? i think
 
 
             telemetry.addData("isMacroing", isMajorMacroing);
@@ -536,11 +504,7 @@ public class CalvinTeleNE extends LinearOpMode {
             telemetry.addData("Intake Claw", intakeClawMacro);
             telemetry.addData("Intake Claw Pos", calvin.intakeClaw.getPosition());
             telemetry.addData("Deposit Claw", depositClawMacro);
-            telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
-            telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
             telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
-            telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
-            telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());
             telemetry.addData("check", check);
 
             telemetry.update();

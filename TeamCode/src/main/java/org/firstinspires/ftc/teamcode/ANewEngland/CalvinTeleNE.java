@@ -542,9 +542,5 @@ public class CalvinTeleNE extends LinearOpMode {
     }
     DepositClawMacro depositClawMacro = DepositClawMacro.CLOSED;
 
-    public enum hang {
-        EXTENDED, RETRACTED
-    }
-
 }
 

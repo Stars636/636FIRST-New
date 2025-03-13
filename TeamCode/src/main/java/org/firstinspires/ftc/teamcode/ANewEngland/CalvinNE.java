@@ -16,8 +16,8 @@ public class CalvinNE {
     public DcMotorEx leftFront, rightFront, leftBack, rightBack;
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
 
-    public DcMotorImplEx hangRight, hangLeft;
-    public ServoImplEx servHangRight, servHangLeft;
+
+
 
 
     public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
@@ -85,17 +85,17 @@ public class CalvinNE {
 
 
     public ElapsedTime transferTime = new ElapsedTime();
-    public static double transferPart1 = 3;
-    public static double transferPart2 = 2.6;
-    public static double transferPart3 = 2.5;
-    public static double transferPart4 = 3;
+    public static double transferPart1; //todo: test
+    public static double transferPart2; //todo: test
+    public static double transferPart3; //todo: test
+    public static double transferPart4; //todo: test
 
     public ElapsedTime pickUpTime = new ElapsedTime();
 
-    public static double pickUp1 = 3;//lower this over time LOL
-    public static double pickUp2 = 3;
+    public static double pickUp1;//lower this over time LOL //todo: test
+    public static double pickUp2; //todo: test
     public ElapsedTime specimenTime = new ElapsedTime();
-    public static double specimenPart1 = 3;
+    public static double specimenPart1; //todo: test
 
     public static boolean isMacroing = false;
 
@@ -115,11 +115,6 @@ public class CalvinNE {
         leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        /*hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
 
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
@@ -153,13 +148,7 @@ public class CalvinNE {
         depositArm = hardwareMap.get(ServoImplEx.class, "depositArm");//
         depositWrist = hardwareMap.get(ServoImplEx.class, "depositWrist");//
 
-        servHangRight = hardwareMap.get(ServoImplEx.class, "servHangRight");//
-        servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
-        hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
-        hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
 
-
-        servHangLeft.setDirection(Servo.Direction.REVERSE);
         hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//
         hSlidesRight = hardwareMap.get(ServoImplEx.class, "hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
@@ -184,7 +173,7 @@ public class CalvinNE {
         depositClaw.setPosition(depositClawOpen);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        //hangServo.setPosition(hangServoInitial);
+
     }
 
     public void initialSpecimen() {
@@ -197,7 +186,6 @@ public class CalvinNE {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        // hangServo.setPosition(hangServoInitial);
     }
 
     public void initialBucket() {
@@ -210,7 +198,6 @@ public class CalvinNE {
         depositClaw.setPosition(depositClawClosed);
         depositWrist.setPosition(depositClawPassiveRot);
         depositArm.setPosition(depositClawPassivePos);
-        //hangServo.setPosition(hangServoInitial);
     }
 
 

@@ -35,10 +35,6 @@ public class CalvinNE {
 
     public static int highBucket; //todo: test
 
-    public static double hookExtend; //todo: test
-    public static double hookRetract; //todo: test
-    public static int reelIn;
-    public static int reelOut;
 
     public static double depositClawOpen;  //todo: test
     public static double depositClawClosed;  //todo: test

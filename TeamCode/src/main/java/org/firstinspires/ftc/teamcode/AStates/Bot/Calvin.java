@@ -33,9 +33,6 @@ public class Calvin {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
-    public DcMotorImplEx pullUpRight, pullUpLeft;
-    public ServoImplEx hookRight, hookLeft;
-
 
     public static int lowBucket = 1400; //todo: test this
 
@@ -86,6 +83,7 @@ public class Calvin {
     public static double intakeWristNormalLeft = 0.85;
     public static double intakeWristNormalRight = 0.2; //as in perpendicular
     //Todo: refactor this to a better name
+    // fr ^
     public static double intakeWristTiltLeft = 0.72;
 
 

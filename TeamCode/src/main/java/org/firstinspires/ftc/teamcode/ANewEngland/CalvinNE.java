@@ -26,6 +26,9 @@ public class CalvinNE {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
+    //tentative hang code
+    public DcMotorImplEx pullUpRight, pullUpLeft;
+    public ServoImplEx hookRight, hookLeft;
 
     public static int lowBucket; //todo: test
 

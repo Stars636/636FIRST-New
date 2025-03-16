@@ -33,6 +33,9 @@ public class Calvin {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
+    public DcMotorImplEx pullUpRight, pullUpLeft;
+    public ServoImplEx hookRight, hookLeft;
+
 
     public static int lowBucket = 1400; //todo: test this
 
@@ -41,11 +44,6 @@ public class Calvin {
     public static int lowSpecimen = 1000; //todo: test this(low priority)
 
     public static int highBucket = 2944;
-
-    public static double hookExtend = 0.53;
-    public static double hookRetract = 0;
-    public static int reelIn;
-    public static int reelOut;
 
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;

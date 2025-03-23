@@ -42,6 +42,9 @@ public class Calvin {
 
     public static int highBucket = 2944;
 
+    public static double hookExtend = 0.53;
+    public static double hookRetract = 0;
+
     public static double depositClawOpen = 0;
     public static double depositClawClosed = 0.38;
     public static double depositClawPassivePos = 0.7;   //0.78
@@ -70,8 +73,8 @@ public class Calvin {
     public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.43;
-    public static double intakeClawTransferPos = 0.6;
-    public static double intakeClawTransferRot = 0.29;
+    public static double intakeClawTransferPos = 0.7;
+    public static double intakeClawTransferRot = 0.12;
     public static double intakeClawPassivePos = 0.4;
     public static double intakeClawPassiveRot = 0.3;
     public static double intakeClawHoverPos = 0.5;
@@ -167,6 +170,9 @@ public class Calvin {
         hSlidesRight = hardwareMap.get(ServoImplEx.class, "hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
+
+        intakeArm.setDirection(Servo.Direction.REVERSE);
+        intakeElbow.setDirection(Servo.Direction.REVERSE);
 
 
         depositArm.setPwmRange(new PwmControl.PwmRange(500, 2500));

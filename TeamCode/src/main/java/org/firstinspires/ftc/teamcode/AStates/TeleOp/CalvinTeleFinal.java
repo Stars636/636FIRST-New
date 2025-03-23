@@ -498,14 +498,14 @@ public class CalvinTeleFinal extends LinearOpMode {
             //Todo: test both codes, if both work, then use the more streamlined one
 
             if (gamepad1.x && !changedDX && !hookExtended) {
-                calvin.servHangRight.setPosition(Calvin.hookExtend);
-                calvin.servHangLeft.setPosition(Calvin.hookExtend + 0.01);
+                //calvin.servHangRight.setPosition(hookExtend);
+                //calvin.servHangLeft.setPosition(calvin.hookExtend + 0.01);
                 hookExtended = true;
                 changedDX = true;
             }
             else if (gamepad1.x && !changedDX && hookExtended) {
-                calvin.servHangRight.setPosition(Calvin.hookRetract);
-                calvin.servHangLeft.setPosition(Calvin.hookRetract);
+                //calvin.servHangRight.setPosition(calvin.hookRetract);
+                //calvin.servHangLeft.setPosition(calvin.hookRetract);
                 hookExtended = false;
                 changedDX = true;
             }

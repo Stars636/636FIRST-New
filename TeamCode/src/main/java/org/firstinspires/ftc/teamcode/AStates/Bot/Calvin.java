@@ -171,6 +171,7 @@ public class Calvin {
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
 
+        //We switched the arm and elbow
         intakeArm.setDirection(Servo.Direction.REVERSE);
         intakeElbow.setDirection(Servo.Direction.REVERSE);
 

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,9 +19,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
-
+@Config
 @TeleOp(group = "Camera")
-public class SampleSplitPlusColor extends LinearOpMode {
+public class SampleSplitPlusColorQuestion extends LinearOpMode {
 
 
 
@@ -110,13 +111,34 @@ public class SampleSplitPlusColor extends LinearOpMode {
             }
 
             //FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
-            telemetry.addData("angle", rPipeline.getDetectedAngle());
-            telemetry.addData("xOffset", rPipeline.getXOffset());
-            telemetry.addData("yOffset", rPipeline.getYOffset());
-            telemetry.addData("area", rPipeline.getArea());
-            telemetry.addData("isFound",rPipeline.getIsFound());
-            telemetry.addData("is Split", rPipeline.getSplitQuestion());
-            telemetry.addData("average color", rPipeline.getRgb());
+            if (pipeline == 0) {
+                telemetry.addData("angle", rPipeline.getDetectedAngle());
+                telemetry.addData("xOffset", rPipeline.getXOffset());
+                telemetry.addData("yOffset", rPipeline.getYOffset());
+                telemetry.addData("area", rPipeline.getArea());
+                telemetry.addData("isFound",rPipeline.getIsFound());
+                telemetry.addData("is Split", rPipeline.getSplitQuestion());
+                telemetry.addData("average color", rPipeline.getRgb());
+
+            } else if (pipeline == 1) {
+                telemetry.addData("angle", yPipeline.getDetectedAngle());
+                telemetry.addData("xOffset", yPipeline.getXOffset());
+                telemetry.addData("yOffset", yPipeline.getYOffset());
+                telemetry.addData("area",yPipeline.getArea());
+                telemetry.addData("isFound",yPipeline.getIsFound());
+                telemetry.addData("is Split", yPipeline.getSplitQuestion());
+                telemetry.addData("average color", yPipeline.getRgb());
+            } else if (pipeline == 2) {
+                telemetry.addData("angle", bPipeline.getDetectedAngle());
+                telemetry.addData("xOffset", bPipeline.getXOffset());
+                telemetry.addData("yOffset", bPipeline.getYOffset());
+                telemetry.addData("area", bPipeline.getArea());
+                telemetry.addData("isFound",bPipeline.getIsFound());
+                telemetry.addData("is Split", bPipeline.getSplitQuestion());
+                telemetry.addData("average color", bPipeline.getRgb());
+            }
+
+
             telemetry.update();
             //let cpu rest or something
             sleep(100);

@@ -14,6 +14,11 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import static java.lang.Math.PI;
+
+import android.os.Handler;
+import android.os.HandlerThread;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +69,7 @@ public class CameraProcessingFunctions {
     public static double highRedWeight = 1.0;
     public static double lowRedWeight = 1.0;
 
-    public static double[] notFound = {1000, 11, 11E2, 1158};
+    public static double[] notFound = {100000, 100000, 100000, 100000};
     public static double[] notFoundSplitVer = {1000, 11, 11E2, 1158, 1200, 12000, 1839, 1990};
     //basically i don't want the function to crash if an object isn't found
     //so rn we will check for this number

@@ -226,117 +226,7 @@ public class CameraProcessingFunctions {
     // which will be MUCH better for road runner
     // and maybe a double check function too :)
 
-/*
-    public double[] estimateBlueSampleOrientation(Mat input) {
 
-        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
-        //helpful person detected
-        //suggests filtering noise before changed to hsv
-        Imgproc.medianBlur(input,input,3);
-
-
-
-        Mat hsv = new Mat();
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
-        //Translation to HSV. Light work no reaction
-        //Todo: look into adaptive threshold to help
-
-        Mat blueRange = new Mat();
-
-
-        // Red has two ranges in HSV (lower and upper) for some reason ¯\_(ツ)_/¯ look
-        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
-        //Source is in python but nicely translatable
-        Core.inRange(hsv, lowerBlue, upperBlue, blueRange); // Lower red range
-
-
-        Imgproc.GaussianBlur(lowerB, redMask, new Size(5, 5), 0);
-        //gaussian blur reduces error with false positives according to some internet guy
-
-        //Mat edges = new Mat();
-        //Imgproc.Canny(redMask, edges, 50, 150);
-        //hard press and look at canny
-        //basically it finds edges in grayscale images
-        //since we made a mask we don't need this though
-
-        List<MatOfPoint> contours = new ArrayList<>();
-        //creates the list of all contours found
-
-        Mat hierarchy = new Mat();
-        //i couldn't really tell you what this does, it's optional in findContours
-
-        Imgproc.findContours(redMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-
-        double angle = 0.0;
-        double xDistance = 0.0;
-        double yDistance = 0.0;
-        double area = 0.0;
-
-        // Camera center
-        int frameWidth = input.width();
-        int frameHeight = input.height();
-        Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);
-        double minDistance = 1000; //when we find a new contour center distance, mindistance will be changed to
-        //the center distance until we find the closest
-        RotatedRect closestRect = null; //null until we find our rect
-        // largest double is 1.7976931348623157E308
-        // pretty big number LOL
-
-        for (MatOfPoint contour : contours) {
-            //you get this
-            if (Imgproc.contourArea(contour) > smallestContour) {
-
-                RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
-                Point objectCenter = rect.center;
-
-                //the points/corners of the rotatedrect
-                //the 4 is saying the size
-
-                double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
-                        Math.pow(objectCenter.y - cameraCenter.y, 2));
-                //pythagorean theorem detected
-
-                if (distance < minDistance) { // Keep track of the closest object
-                    minDistance = distance;
-                    closestRect = rect; //
-                    area = Imgproc.contourArea(contour);
-
-                }
-
-
-            }
-
-        }
-        if (closestRect == null) {
-            return notFound; // No object was found
-            //the notFound solulu might be trash ngl
-            //if code crashes delete this first
-        }
-
-
-        angle = closestRect.angle;
-        if (closestRect.size.width < closestRect.size.height) {
-            angle += 90;
-        }
-
-        Point[] boxPoints = new Point[4];
-        //the points/corners of the rotatedrect
-
-        closestRect.points(boxPoints);
-
-        for (int i = 0; i < 4; i++) {
-            Imgproc.line(input, boxPoints[i], boxPoints[(i + 1) % 4], new Scalar(0, 255, 0), 2);
-            //draws the rectangle from the points made by the rotated rect
-        }
-        xDistance = (closestRect.center.x - cameraCenter.x);
-        yDistance = (closestRect.center.y - cameraCenter.y);
-
-
-        return new double[]{xDistance, yDistance, area, angle};
-
-    }
-
- */
     //Todo: this is for returning the mask so we can see what it looks like
     public Mat redMask(Mat input) {
 
@@ -708,23 +598,451 @@ public class CameraProcessingFunctions {
 
 
 
-}
+    public double[] splitYellowSample(Mat input) {
+
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //helpful person detected
+        //suggests filtering noise before changed to hsv
+        Imgproc.medianBlur(input,input,3);
 
 
- /*if (farIdx1 != -1 && farIdx2 != -1) {
-            int splitStart = Math.min(farIdx1, farIdx2);
-            int splitEnd = Math.max(farIdx1, farIdx2);
 
-            List<Point> part1 = contourPoints.subList(0, splitStart);
-            List<Point> part2 = contourPoints.subList(splitEnd, contourPoints.size());
-            part2.addAll(contourPoints.subList(0, splitStart));
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+        //Translation to HSV. Light work no reaction
+        //Todo: look into adaptive threshold to help
+
+        Mat yellowRange = new Mat();
 
 
-            return Arrays.asList(
-                    new MatOfPoint(part1.toArray(new Point[0])),
-                    new MatOfPoint(part2.toArray(new Point[0]))
-            );
+        // Red has two ranges in HSV (lower and upper) for some reason ¯\_(ツ)_/¯ look
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //Source is in python but nicely translatable
+        Core.inRange(hsv, lowerYellow, upperYellow, yellowRange);
+
+        //Combine them :)
+        //hard press addWeighted to look at it but its hard to know why it works other then it combines them and
+        //you can choose how much each mask is weighted
+        //like maybe if the high red range works better you can weigh the other one less
+
+        Imgproc.GaussianBlur(yellowRange, yellowRange, new Size(5, 5), 0);
+        //gaussian blur reduces error with false positives according to some internet guy
+
+        //Mat edges = new Mat();
+        //Imgproc.Canny(redMask, edges, 50, 150);
+        //hard press and look at canny
+        //basically it finds edges in grayscale images
+        //since we made a mask we don't need this though
+
+        List<MatOfPoint> contours = new ArrayList<>();
+        List<MatOfPoint> hullList = new ArrayList<>();
+        //creates the list of all contours and hulls found
+
+        Mat hierarchy = new Mat();
+        //i couldn't really tell you what this does, it's optional in findContours
+
+        Imgproc.findContours(yellowRange, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        double angle = 0.0;
+        double xDistance = 0.0;
+        double yDistance = 0.0;
+        double area = 0.0;
+
+        // Camera center
+        int frameWidth = input.width();
+        int frameHeight = input.height();
+        Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);
+        double minDistance = 10000; //when we find a new contour center distance, min distance will be changed to
+        //the center distance until we find the closest
+        RotatedRect closestRect = null; //null until we find our rect
+        // largest double is 1.7976931348623157E308
+        // pretty big number LOL
+        MatOfInt hull = new MatOfInt();
+        //https://docs.opencv.org/4.x/d7/d1d/tutorial_hull.html
+        int isSplit = 0;
+
+        double[] averageRGB = new double[3];
+        MatOfInt4 convexDefects = new MatOfInt4();
+        //for testing what color its seeing
+
+
+        for (MatOfPoint contour : contours) {
+
+            if (Imgproc.contourArea(contour) > smallestContour) {
+                isFoundQ = true; //telemetry purposes
+                convexDefects = computeConvexityDefects(contour);
+
+                if (shouldSplit(convexDefects)) {
+
+                    isSplit = 1;
+
+                    //only make the hull if its worth splitting
+                    List<MatOfPoint> splitContours = splitContour(contour, convexDefects);
+
+                    //Todo: look here
+                    // https://docs.opencv.org/4.x/d7/d1d/tutorial_hull.html
+                    //Todo: this part is for drawing, so if it doesn't work it's fine
+                    Imgproc.convexHull(contour, hull);
+                    //creates the hull that surrounds the full object; the shape is convex
+
+                    Point[] contourArray = contour.toArray();
+                    Point[] hullPoints = new Point[hull.rows()];
+                    List<Integer> hullContourIdxList = hull.toList();
+                    for (int i = 0; i < hullContourIdxList.size(); i++) {
+                        hullPoints[i] = contourArray[hullContourIdxList.get(i)];
+                    }
+                    hullList.add(new MatOfPoint(hullPoints));
+
+
+                    for (MatOfPoint splitContour : splitContours) {
+                        RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(splitContour.toArray()));
+                        Point objectCenter = rect.center;
+
+                        double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
+                                Math.pow(objectCenter.y - cameraCenter.y, 2));
+                        //pythagorean theorem detected
+
+                        // another mask for the object
+                        Mat mask = Mat.zeros(input.size(), CvType.CV_8UC1);
+                        Imgproc.drawContours(mask, Arrays.asList(contour), -1, new Scalar(255), -1);
+
+                        // find the average color
+                        Scalar meanColor = Core.mean(input, mask);
+
+                        mask.release(); //release mask to save data
+                        // convert the native bgr to rgb
+                        averageRGB = new double[] {
+                                meanColor.val[0],// red
+                                meanColor.val[1], // green
+                                meanColor.val[2] // blue
+                        };
+
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestRect = rect;
+                            area = Imgproc.contourArea(splitContour);
+                        }
+                    }
+                } else {
+                    isSplit = 0;
+                    RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
+                    Point objectCenter = rect.center;
+
+
+                    double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
+                            Math.pow(objectCenter.y - cameraCenter.y, 2));
+                    //pythagorean theorem detected
+
+                    // another mask for the object
+                    Mat mask = Mat.zeros(input.size(), CvType.CV_8UC1);
+                    Imgproc.drawContours(mask, Arrays.asList(contour), -1, new Scalar(255), -1);
+
+                    // find the average color
+                    Scalar meanColor = Core.mean(input, mask);
+
+                    mask.release(); //release mask to save data
+                    // convert the native bgr to rgb
+                    averageRGB = new double[] {
+                            meanColor.val[2], // red
+                            meanColor.val[1], // green
+                            meanColor.val[0]  // blue
+                    };
+
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestRect = rect;
+                        area = Imgproc.contourArea(contour);
+                        //making our variables match the ones of the closest contour
+                    }
+                }
+
+            }
+        }
+        if (closestRect == null) {
+            isFoundQ = false;
+            return notFoundSplitVer; // No object was found
+            //the notFound solulu might be trash ngl
+            //if code crashes delete this first
         }
 
 
-        return Arrays.asList(contour);*/
+        angle = closestRect.angle;
+        if (closestRect.size.width < closestRect.size.height) {
+            angle += 90;
+        }
+        //correcting for rotation
+        if (angle > 178 || angle < 2) {
+            //angle is never great than 180 or less than zero, and they are the same thing, so i'm flattening
+
+            angle = 180;
+        }
+
+        Point[] boxPoints = new Point[4];
+        //the points/corners of the rotatedrect
+
+        closestRect.points(boxPoints);
+
+
+        Scalar color = new Scalar(0, 255, 0);
+        // the rectangle and hull are drawn in green
+        for (int i = 0; i < 4; i++) {
+            Imgproc.line(input, boxPoints[i], boxPoints[(i + 1) % 4], new Scalar(0, 255, 0), 2);
+            //draws the rectangle from the points made by the rotated rect
+            //old
+            // Imgproc.drawContours(input, hullList, (int)i, color);
+        }
+        for (MatOfPoint hullPoints : hullList) {
+
+            Imgproc.drawContours(input, Arrays.asList(hullPoints), -1, color, 2);
+            //Todo: if it doesn't work use this
+            //Imgproc.drawContours(input, hullList, (int)i, color);
+            //draws the rectangle from the points made by the rotated rect
+        }
+        xDistance = (closestRect.center.x - cameraCenter.x);
+        yDistance = (closestRect.center.y - cameraCenter.y);
+
+
+        hierarchy.release();
+        yellowRange.release();
+        convexDefects.release();
+        hsv.release();
+
+        //release them to stay
+
+
+        return new double[] {
+                xDistance, yDistance, area, angle, isSplit,
+                averageRGB[0], averageRGB[1], averageRGB[2] // Append average RGB values
+        };
+
+    }
+
+    public double[] splitBlueSample(Mat input) {
+
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //helpful person detected
+        //suggests filtering noise before changed to hsv
+        Imgproc.medianBlur(input,input,3);
+
+
+
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
+        //Translation to HSV. Light work no reaction
+        //Todo: look into adaptive threshold to help
+
+        Mat lowRedRange = new Mat();
+        Mat highRedRange = new Mat();
+
+
+        // Red has two ranges in HSV (lower and upper) for some reason ¯\_(ツ)_/¯ look
+        // https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+        //Source is in python but nicely translatable
+        Core.inRange(hsv, LOW_RED_RANGE_LOW, LOW_RED_RANGE_HIGH, lowRedRange); // Lower red range
+        Core.inRange(hsv, HIGH_RED_RANGE_LOW, HIGH_RED_RANGE_HIGH, highRedRange); // Upper red range
+
+        //Combine them :)
+        Mat redMask = new Mat();
+        Core.addWeighted(lowRedRange, lowRedWeight, highRedRange, highRedWeight, 0.0, redMask);
+        //hard press addWeighted to look at it but its hard to know why it works other then it combines them and
+        //you can choose how much each mask is weighted
+        //like maybe if the high red range works better you can weigh the other one less
+
+        Imgproc.GaussianBlur(redMask, redMask, new Size(5, 5), 0);
+        //gaussian blur reduces error with false positives according to some internet guy
+
+        //Mat edges = new Mat();
+        //Imgproc.Canny(redMask, edges, 50, 150);
+        //hard press and look at canny
+        //basically it finds edges in grayscale images
+        //since we made a mask we don't need this though
+
+        List<MatOfPoint> contours = new ArrayList<>();
+        List<MatOfPoint> hullList = new ArrayList<>();
+        //creates the list of all contours and hulls found
+
+        Mat hierarchy = new Mat();
+        //i couldn't really tell you what this does, it's optional in findContours
+
+        Imgproc.findContours(redMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        double angle = 0.0;
+        double xDistance = 0.0;
+        double yDistance = 0.0;
+        double area = 0.0;
+
+        // Camera center
+        int frameWidth = input.width();
+        int frameHeight = input.height();
+        Point cameraCenter = new Point(frameWidth / 2.0, frameHeight / 2.0);
+        double minDistance = 10000; //when we find a new contour center distance, min distance will be changed to
+        //the center distance until we find the closest
+        RotatedRect closestRect = null; //null until we find our rect
+        // largest double is 1.7976931348623157E308
+        // pretty big number LOL
+        MatOfInt hull = new MatOfInt();
+        //https://docs.opencv.org/4.x/d7/d1d/tutorial_hull.html
+        int isSplit = 0;
+
+        double[] averageRGB = new double[3];
+        MatOfInt4 convexDefects = new MatOfInt4();
+        //for testing what color its seeing
+
+
+        for (MatOfPoint contour : contours) {
+
+            if (Imgproc.contourArea(contour) > smallestContour) {
+                isFoundQ = true; //telemetry purposes
+                convexDefects = computeConvexityDefects(contour);
+
+                if (shouldSplit(convexDefects)) {
+
+                    isSplit = 1;
+
+                    //only make the hull if its worth splitting
+                    List<MatOfPoint> splitContours = splitContour(contour, convexDefects);
+
+                    //Todo: look here
+                    // https://docs.opencv.org/4.x/d7/d1d/tutorial_hull.html
+                    //Todo: this part is for drawing, so if it doesn't work it's fine
+                    Imgproc.convexHull(contour, hull);
+                    //creates the hull that surrounds the full object; the shape is convex
+
+                    Point[] contourArray = contour.toArray();
+                    Point[] hullPoints = new Point[hull.rows()];
+                    List<Integer> hullContourIdxList = hull.toList();
+                    for (int i = 0; i < hullContourIdxList.size(); i++) {
+                        hullPoints[i] = contourArray[hullContourIdxList.get(i)];
+                    }
+                    hullList.add(new MatOfPoint(hullPoints));
+
+
+                    for (MatOfPoint splitContour : splitContours) {
+                        RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(splitContour.toArray()));
+                        Point objectCenter = rect.center;
+
+                        double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
+                                Math.pow(objectCenter.y - cameraCenter.y, 2));
+                        //pythagorean theorem detected
+
+                        // another mask for the object
+                        Mat mask = Mat.zeros(input.size(), CvType.CV_8UC1);
+                        Imgproc.drawContours(mask, Arrays.asList(contour), -1, new Scalar(255), -1);
+
+                        // find the average color
+                        Scalar meanColor = Core.mean(input, mask);
+
+                        mask.release(); //release mask to save data
+                        // convert the native bgr to rgb
+                        averageRGB = new double[] {
+                                meanColor.val[0],// red
+                                meanColor.val[1], // green
+                                meanColor.val[2] // blue
+                        };
+
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestRect = rect;
+                            area = Imgproc.contourArea(splitContour);
+                        }
+                    }
+                } else {
+                    isSplit = 0;
+                    RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
+                    Point objectCenter = rect.center;
+
+
+                    double distance = Math.sqrt(Math.pow(objectCenter.x - cameraCenter.x, 2) +
+                            Math.pow(objectCenter.y - cameraCenter.y, 2));
+                    //pythagorean theorem detected
+
+                    // another mask for the object
+                    Mat mask = Mat.zeros(input.size(), CvType.CV_8UC1);
+                    Imgproc.drawContours(mask, Arrays.asList(contour), -1, new Scalar(255), -1);
+
+                    // find the average color
+                    Scalar meanColor = Core.mean(input, mask);
+
+                    mask.release(); //release mask to save data
+                    // convert the native bgr to rgb
+                    averageRGB = new double[] {
+                            meanColor.val[2], // red
+                            meanColor.val[1], // green
+                            meanColor.val[0]  // blue
+                    };
+
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestRect = rect;
+                        area = Imgproc.contourArea(contour);
+                        //making our variables match the ones of the closest contour
+                    }
+                }
+
+            }
+        }
+        if (closestRect == null) {
+            isFoundQ = false;
+            return notFoundSplitVer; // No object was found
+            //the notFound solulu might be trash ngl
+            //if code crashes delete this first
+        }
+
+
+        angle = closestRect.angle;
+        if (closestRect.size.width < closestRect.size.height) {
+            angle += 90;
+        }
+        //correcting for rotation
+        if (angle > 178 || angle < 2) {
+            //angle is never great than 180 or less than zero, and they are the same thing, so i'm flattening
+
+            angle = 180;
+        }
+
+        Point[] boxPoints = new Point[4];
+        //the points/corners of the rotatedrect
+
+        closestRect.points(boxPoints);
+
+
+        Scalar color = new Scalar(0, 255, 0);
+        // the rectangle and hull are drawn in green
+        for (int i = 0; i < 4; i++) {
+            Imgproc.line(input, boxPoints[i], boxPoints[(i + 1) % 4], new Scalar(0, 255, 0), 2);
+            //draws the rectangle from the points made by the rotated rect
+            //old
+            // Imgproc.drawContours(input, hullList, (int)i, color);
+        }
+        for (MatOfPoint hullPoints : hullList) {
+
+            Imgproc.drawContours(input, Arrays.asList(hullPoints), -1, color, 2);
+            //Todo: if it doesn't work use this
+            //Imgproc.drawContours(input, hullList, (int)i, color);
+            //draws the rectangle from the points made by the rotated rect
+        }
+        xDistance = (closestRect.center.x - cameraCenter.x);
+        yDistance = (closestRect.center.y - cameraCenter.y);
+
+        redMask.release();
+        hierarchy.release();
+        lowRedRange.release();
+        highRedRange.release();
+        convexDefects.release();
+        hsv.release();
+
+        //release them to stay
+
+
+        return new double[] {
+                xDistance, yDistance, area, angle, isSplit,
+                averageRGB[0], averageRGB[1], averageRGB[2] // Append average RGB values
+        };
+
+    }
+
+
+}
+

@@ -34,7 +34,7 @@ public class TeleOpTester extends LinearOpMode {
 
 
 
-    public static double hSlidesTest = 1;
+    public static double hSlidesTest = 0;
     public static double intakeClawTest = 0;
     public static double intakeWristTest = 0;
     public static double intakeElbowTest = 0;
@@ -73,6 +73,8 @@ public class TeleOpTester extends LinearOpMode {
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
         servHangLeft.setDirection(Servo.Direction.REVERSE);
+        intakeArm.setDirection(Servo.Direction.REVERSE);
+        intakeElbow.setDirection(Servo.Direction.REVERSE);
 
         depositArm.setPwmRange(new PwmControl.PwmRange(500,2500));
         depositWrist.setPwmRange(new PwmControl.PwmRange(500,2500));

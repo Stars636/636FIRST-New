@@ -70,7 +70,7 @@ public class CameraProcessingFunctions {
     public static double lowRedWeight = 1.0;
 
     public static double[] notFound = {100000, 100000, 100000, 100000};
-    public static double[] notFoundSplitVer = {1000, 11, 11E2, 1158, 1200, 12000, 1839, 1990};
+    public static double[] notFoundSplitVer = {100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000 };
     //basically i don't want the function to crash if an object isn't found
     //so rn we will check for this number
 

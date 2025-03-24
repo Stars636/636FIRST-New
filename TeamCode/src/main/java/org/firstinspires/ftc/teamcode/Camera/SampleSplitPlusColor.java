@@ -84,6 +84,7 @@ public class SampleSplitPlusColor extends LinearOpMode {
             {
 
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+
                 //FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
                 //if it doesn't work comment this out
             }

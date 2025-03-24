@@ -11,7 +11,6 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -23,10 +22,10 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous
 @Config
-public class Bucket_Paths extends LinearOpMode {
+public class Bucket_Paths2 extends LinearOpMode {
     
     PinpointDrive drive;
-    public static int fraudOffset = 15;
+    double fraudOffset = 12.5;
     public static int fraudWait = 2;
     
     @Override
@@ -83,11 +82,6 @@ public class Bucket_Paths extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(25)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
-        TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial - 23, Math.toRadians(90)), Math.toRadians(fraudTurn));
-
-
-
 
 
         Action s1 = a1.build();
@@ -97,7 +91,7 @@ public class Bucket_Paths extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
-        Action s8 = a8.build();
+
 
 
 
@@ -130,8 +124,7 @@ public class Bucket_Paths extends LinearOpMode {
                             s6,
                             new SleepAction(fraudWait),
                             s7,
-                            new SleepAction(fraudWait),
-                            s8
+                            new SleepAction(fraudWait)
 
                     )
 

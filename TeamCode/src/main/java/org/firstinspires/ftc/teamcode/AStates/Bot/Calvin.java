@@ -174,6 +174,7 @@ public class Calvin {
         //We switched the arm and elbow
         intakeArm.setDirection(Servo.Direction.REVERSE);
         intakeElbow.setDirection(Servo.Direction.REVERSE);
+        depositArm.setDirection(Servo.Direction.REVERSE);
 
 
         depositArm.setPwmRange(new PwmControl.PwmRange(500, 2500));

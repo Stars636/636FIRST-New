@@ -27,9 +27,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -37,7 +34,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @TeleOp
-public class OpenCV extends LinearOpMode
+public class SampleDetection3 extends LinearOpMode
 {
     OpenCvWebcam webcam;
 
@@ -199,38 +196,41 @@ public class OpenCV extends LinearOpMode
          * by forgetting to call mat.release(), and it also reduces memory pressure by not
          * constantly allocating and freeing large chunks of memory.
          */
+        private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
+        private volatile double detectedAngle = 0; // Stores the detected angle
+        private volatile double xOffset = 0;
+        private volatile double yOffset = 0;
+        private volatile double area = 0;
+        private volatile double[] dataRed = new double[4];
+
+        //other example code has volatile here
+        //volatile seems to make remove errors?
+        // https://stackoverflow.com/questions/106591/what-is-the-volatile-keyword-useful-for
 
         @Override
-        public Mat processFrame(Mat input)
-        {
-            /*
-             * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
-             * will only dereference to the same image for the duration of this particular
-             * invocation of this method. That is, if for some reason you'd like to save a copy
-             * of this particular frame for later use, you will need to either clone it or copy
-             * it to another Mat.
-             */
-            /*
-             * Draw a simple box around the middle 1/2 of the entire frame
-             */
-            Imgproc.rectangle(
-                    input,
-                    new Point(
-                            input.cols()/4,
-                            input.rows()/4),
-                    new Point(
-                            input.cols()*(3f/4f),
-                            input.rows()*(3f/4f)),
-                    new Scalar(0, 255, 0), 4);
-
-            /**
-             * NOTE: to see how to get data from your pipeline to your OpMode as well as how
-             * to change which stage of the pipeline is rendered to the viewport when it is
-             * tapped, please see {@link PipelineStageSwitchingExample}
-             */
-
-            return input;
+        public Mat processFrame(Mat input) {
+            dataRed = detector.estimateRedSampleOrientation(input);
+            detectedAngle = dataRed[3];
+            xOffset = dataRed[0];
+            yOffset = dataRed[1];
+            area = dataRed[2];
+            return input; // Return the drawings
         }
+
+        public double getDetectedAngle() {
+            return detectedAngle;
+        }
+        public double getXOffset() {
+            return xOffset;
+        }
+        public double getYOffset() {
+            return yOffset;
+        }
+        public double getArea(){
+            return area;
+        }
+
+       
 
         @Override
         public void onViewportTapped()

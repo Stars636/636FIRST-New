@@ -25,14 +25,9 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
-
-
 @Config
 @Autonomous
-
-
 public class CameraReactionsSupreme extends LinearOpMode {
-
     @Config
     public static class Offset {
         Calvin calvin;
@@ -184,18 +179,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 return true;
             }
 
-
             double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
             double adjustedPower = Math.max(minPower, power * powerScale);
 
             if (xOffset > 0) {
-
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, adjustedPower),
                         0
                 ));
             } else {
-
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, -adjustedPower),
                         0
@@ -230,8 +222,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 return true;
             }
 
-
-
             double currentPos = calvin.hSlidesLeft.getPosition();
             double targetPos = currentPos;
 
@@ -254,12 +244,9 @@ public class CameraReactionsSupreme extends LinearOpMode {
             telemetryPacket.put("Y Offset", yOffset);
             telemetryPacket.put("Slide Position", targetPos);
 
-
             tickerY = 0;
             return true;
         }
-
-
         public class YOffsetRedSide implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -270,7 +257,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
                         pipeline = 0; // 0 is red, 1 is yellow, 2 is blue
                     }
                 }
-
                 double yOffset = rPipeline.getYOffset(); //
                 return YOffsetAction(telemetryPacket,yOffset);
             }
@@ -310,8 +296,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public Action YOffsetYellow() {
             return new YOffsetYellow();
         }
-
-
         public class XOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -325,7 +309,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 return XOffsetAction(telemetryPacket,xOffset);
             }
         }
-
         public Action XOffsetYellow() {
             return new XOffsetYellow();
         }
@@ -347,8 +330,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public Action XOffsetRed() {
             return new XOffsetRed();
         }
-
-
         public class XOffsetBlue implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -366,10 +347,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public Action XOffsetBlue() {
             return new XOffsetBlue();
         }
-
-
     }
-
     Offset offset;
 
     @Override
@@ -383,21 +361,10 @@ public class CameraReactionsSupreme extends LinearOpMode {
                         offset.YOffsetYellow(),
                         offset.XOffsetYellow()
                 )
-
         );
 
-
-
-
-
-
-
     }
-
-
 }
-
-
 // if (yOffset > 10) {
 //                    targetPos = Math.min(maxPosition, currentPos + step);
 //                } else if (yOffset < -10) {

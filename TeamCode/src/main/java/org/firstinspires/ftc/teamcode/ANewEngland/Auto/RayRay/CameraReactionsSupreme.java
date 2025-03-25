@@ -51,7 +51,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public double minPosition = 0.74;
         public double maxPosition = 1;
         public double step = 0.01;
-        public static double deadzone = 5;
+        public static double deadzone = 10;
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
@@ -74,7 +74,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
             rPipeline = new RedObjectPipeline(webcam);
             yPipeline = new YellowObjectPipeline(webcam);
             bPipeline = new BlueObjectPipeline(webcam);
-            webcam.setPipeline(rPipeline);
+            webcam.setPipeline(yPipeline);
 
             /*
              * Open the connection to the camera device. New in v1.4.0 is the ability
@@ -212,7 +212,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
             }
             notFoundTickerY = 0;
 
-            if (Math.abs(yOffset) < 10) { //if its in range, don't move
+            if (Math.abs(yOffset) < deadzone) { //if its in range, don't move
                 tickerY++;
                 if (tickerY >= checker) { //only consider it done when its been in range for 5 calculations
                     //this is so it doesn't stop immediately if it sweeps past it

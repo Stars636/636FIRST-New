@@ -271,7 +271,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     }
                 }
 
-
                 double yOffset = rPipeline.getYOffset(); //
                 return YOffsetAction(telemetryPacket,yOffset);
             }
@@ -279,8 +278,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public Action YOffsetRed() {
             return new YOffsetRedSide();
         }
-
-
         public class YOffsetBlueSide implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {

@@ -11,7 +11,7 @@ public class YellowObjectPipeline extends OpenCvPipeline
         boolean viewportPaused;
 
         private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
-        private volatile double detectedAngle = 0; // Stores the detected angle
+        private volatile double detectedAngle = 0;
         private volatile double xOffset = 0;
         private volatile double yOffset = 0;
         private volatile double area = 0;
@@ -52,7 +52,7 @@ public class YellowObjectPipeline extends OpenCvPipeline
             //this is not our own and we should look into why
 
 
-            return input; // Return the drawings
+            return input;
         }
 
 

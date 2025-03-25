@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Camera;
+package org.firstinspires.ftc.teamcode.Camera.OldNonFunctional;
 
 
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;

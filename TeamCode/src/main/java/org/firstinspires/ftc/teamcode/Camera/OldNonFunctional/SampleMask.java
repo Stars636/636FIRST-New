@@ -1,18 +1,17 @@
-package org.firstinspires.ftc.teamcode.Camera;
+package org.firstinspires.ftc.teamcode.Camera.OldNonFunctional;
 
-
-import static org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions.notFound;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.HandlerThread;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -20,11 +19,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
-
-
 @Disabled
 @TeleOp(group = "Camera")
-public class SampleSplit extends LinearOpMode {
+public class SampleMask extends LinearOpMode {
     //Todo:
     //  All sources used:
     //      SkystoneDeterminationExample / StoneOrientationExample
@@ -38,6 +35,7 @@ public class SampleSplit extends LinearOpMode {
     //
     OpenCvCamera webcam;
     RedObjectPipeline rPipeline;
+
     static FtcDashboard dashboard;
     static Handler backgroundHandler;
 
@@ -47,6 +45,7 @@ public class SampleSplit extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         rPipeline = new RedObjectPipeline();
         webcam.setPipeline(rPipeline);
+
 
         // Todo:
         //  this stuff is all for sending the ftcdashboard stuff to a different thread
@@ -71,7 +70,7 @@ public class SampleSplit extends LinearOpMode {
             public void onOpened()
             {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-                //FtcDashboard.getInstance().startCameraStream(webcam, 30);
+
                 //idk choose one
 
             }
@@ -92,32 +91,15 @@ public class SampleSplit extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            //FtcDashboard.getInstance().startCameraStream(webcam, 3);
 
-            telemetry.addData("angle", rPipeline.getDetectedAngle());
-            telemetry.addData("xOffset", rPipeline.getXOffset());
-            telemetry.addData("yOffset", rPipeline.getYOffset());
-            telemetry.addData("area", rPipeline.getArea());
-            telemetry.addData("isFound",rPipeline.getIsFound());
-            telemetry.addData("is Split", rPipeline.getSplitQuestion());
+
             telemetry.update();
-            //let cpu rest or something
-            
-
             //let cpu rest or something
             sleep(100);
         }
     }
     public static class RedObjectPipeline extends OpenCvPipeline {
         private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
-        private volatile double detectedAngle = 0; // Stores the detected angle
-        private volatile double xOffset = 0;
-        private volatile double yOffset = 0;
-        private volatile double area = 0;
-        private volatile double[] dataRed = new double[5];
-
-        private volatile boolean splitQuestion = false;
-        private volatile boolean isFoundQu = false;
 
         //other example code has volatile here
         //volatile seems to make remove errors?
@@ -125,17 +107,7 @@ public class SampleSplit extends LinearOpMode {
 
         @Override
         public Mat processFrame(Mat input) {
-            dataRed = detector.splitRedSample(input);
-            isFoundQu = detector.isFoundQ;
-            xOffset = dataRed[0];
-            yOffset = dataRed[1];
-            area = dataRed[2];
-            detectedAngle = dataRed[3];
-            if (dataRed[4] == 0)  {
-                splitQuestion = false;
-            } else if (dataRed[4] == 1) {
-                splitQuestion = true;
-            }
+            input = detector.redMask(input);
 
 
             //Todo: Bitmap conversion is like the same as in the og ftcdahsboard color mask
@@ -155,27 +127,9 @@ public class SampleSplit extends LinearOpMode {
             //release for memory
             processedFrame.release();
 
-
-            return input; // return the drawings
+            return input; // Return the drawings
         }
 
 
-        public double getDetectedAngle() {
-            return detectedAngle;
-        }
-        public double getXOffset() {
-            return xOffset;
-        }
-        public double getYOffset() {
-            return yOffset;
-        }
-
-        public double getArea(){
-            return area;
-        }
-        public boolean getSplitQuestion(){
-            return splitQuestion;
-        }
-        public boolean getIsFound(){ return isFoundQu; }
     }
 }

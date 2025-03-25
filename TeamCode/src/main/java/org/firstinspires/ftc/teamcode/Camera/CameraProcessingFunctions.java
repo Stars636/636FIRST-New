@@ -94,7 +94,7 @@ public class CameraProcessingFunctions {
     //i will only run the hull if the area is suspiciously large
     public static final double depthThreshold = 10.0; // for significant defects
     public static final int smallestValidContour = 4; // minimum number of points for a valid contour
-    boolean isFoundQ = false;
+    public boolean isFoundQ = false;
 
     public double[] estimateRedSampleOrientation(Mat input) {
 

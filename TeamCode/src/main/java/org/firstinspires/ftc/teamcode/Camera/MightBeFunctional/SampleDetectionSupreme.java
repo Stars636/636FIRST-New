@@ -19,29 +19,33 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.Camera;
+package org.firstinspires.ftc.teamcode.Camera.MightBeFunctional;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
-@Disabled
+
+@Config
 @TeleOp
-public class SampleDetection2 extends LinearOpMode
+public class SampleDetectionSupreme extends LinearOpMode
 {
     OpenCvWebcam webcam;
+    RedObjectPipeline rPipeline;
+    YellowObjectPipeline yPipeline;
+    BlueObjectPipeline bPipeline;
 
+    public static int pipeline = 0;
     @Override
     public void runOpMode()
     {
@@ -66,7 +70,10 @@ public class SampleDetection2 extends LinearOpMode
          * of a frame from the camera. Note that switching pipelines on-the-fly
          * (while a streaming session is in flight) *IS* supported.
          */
-        webcam.setPipeline(new SamplePipeline());
+        rPipeline = new RedObjectPipeline();
+        yPipeline = new YellowObjectPipeline();
+        bPipeline = new BlueObjectPipeline();
+        webcam.setPipeline(rPipeline);
 
         /*
          * Open the connection to the camera device. New in v1.4.0 is the ability
@@ -125,12 +132,57 @@ public class SampleDetection2 extends LinearOpMode
             /*
              * Send some stats to the telemetry
              */
-            telemetry.addData("Frame Count", webcam.getFrameCount());
+            double angle = 0;
+            double xOffset = 0;
+            double yOffset = 0;
+            double area = 0;
+            boolean found = false;
+            boolean split = false;
+            Scalar color = new Scalar(0,0,0);
+
+
             telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
-            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
-            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+            if (pipeline == 0){
+                webcam.setPipeline(rPipeline);
+                angle =  rPipeline.getDetectedAngle();
+                xOffset = rPipeline.getXOffset();
+                yOffset = rPipeline.getYOffset();
+                area = rPipeline.getArea();
+                found = rPipeline.getIsFound();
+                split = rPipeline.getSplitQuestion();
+                color = rPipeline.getRgb();
+            } else if (pipeline == 1) {
+                webcam.setPipeline(yPipeline);
+                angle =  yPipeline.getDetectedAngle();
+                xOffset = yPipeline.getXOffset();
+                yOffset = yPipeline.getYOffset();
+                area = yPipeline.getArea();
+                found = yPipeline.getIsFound();
+                split = yPipeline.getSplitQuestion();
+                color = yPipeline.getRgb();
+            } else if (pipeline == 2) {
+                webcam.setPipeline(bPipeline);
+                angle =  bPipeline.getDetectedAngle();
+                xOffset = bPipeline.getXOffset();
+                yOffset = bPipeline.getYOffset();
+                area = bPipeline.getArea();
+                found = bPipeline.getIsFound();
+                split = bPipeline.getSplitQuestion();
+                color = bPipeline.getRgb();
+            }
+
+
+
+            //FtcDashboard.getInstance().sendImage(rPipeline.getOutput());
+            telemetry.addData("angle", angle);
+            telemetry.addData("xOffset", xOffset);
+            telemetry.addData("yOffset", yOffset);
+            telemetry.addData("area", area);
+            telemetry.addData("isFound", found);
+            telemetry.addData("is Split", split);
+            telemetry.addData("average color", color);
+            telemetry.update();
+
             FtcDashboard.getInstance().startCameraStream(webcam,10);
             telemetry.update();
 
@@ -139,30 +191,7 @@ public class SampleDetection2 extends LinearOpMode
              * when it will be automatically stopped for you) *IS* supported. The "if" statement
              * below will stop streaming from the camera when the "A" button on gamepad 1 is pressed.
              */
-            if(gamepad1.a)
-            {
-                /*
-                 * IMPORTANT NOTE: calling stopStreaming() will indeed stop the stream of images
-                 * from the camera (and, by extension, stop calling your vision pipeline). HOWEVER,
-                 * if the reason you wish to stop the stream early is to switch use of the camera
-                 * over to, say, Vuforia or TFOD, you will also need to call closeCameraDevice()
-                 * (commented out below), because according to the Android Camera API documentation:
-                 *         "Your application should only have one Camera object active at a time for
-                 *          a particular hardware camera."
-                 *
-                 * NB: calling closeCameraDevice() will internally call stopStreaming() if applicable,
-                 * but it doesn't hurt to call it anyway, if for no other reason than clarity.
-                 *
-                 * NB2: if you are stopping the camera stream to simply save some processing power
-                 * (or battery power) for a short while when you do not need your vision pipeline,
-                 * it is recommended to NOT call closeCameraDevice() as you will then need to re-open
-                 * it the next time you wish to activate your vision pipeline, which can take a bit of
-                 * time. Of course, this comment is irrelevant in light of the use case described in
-                 * the above "important note".
-                 */
-                webcam.stopStreaming();
-                //webcam.closeCameraDevice();
-            }
+
 
             /*
              * For the purposes of this sample, throttle ourselves to 10Hz loop to avoid burning
@@ -188,24 +217,22 @@ public class SampleDetection2 extends LinearOpMode
      * if you're doing something weird where you do need it synchronized with your OpMode thread,
      * then you will need to account for that accordingly.
      */
-    class SamplePipeline extends OpenCvPipeline
+    public class RedObjectPipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
 
-        /*
-         * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is
-         * highly recommended to declare them here as instance variables and re-use them for
-         * each invocation of processFrame(), rather than declaring them as new local variables
-         * each time through processFrame(). This removes the danger of causing a memory leak
-         * by forgetting to call mat.release(), and it also reduces memory pressure by not
-         * constantly allocating and freeing large chunks of memory.
-         */
         private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
         private volatile double detectedAngle = 0; // Stores the detected angle
         private volatile double xOffset = 0;
         private volatile double yOffset = 0;
         private volatile double area = 0;
-        private volatile double[] dataRed = new double[4];
+        private volatile boolean splitQuestion = false;
+        private volatile Scalar rgb = new Scalar(0,0,0);
+        private volatile double[] dataRed = new double[8];
+
+        private volatile boolean isFoundQu = false;
+
+
 
         //other example code has volatile here
         //volatile seems to make remove errors?
@@ -213,13 +240,26 @@ public class SampleDetection2 extends LinearOpMode
 
         @Override
         public Mat processFrame(Mat input) {
-            dataRed = detector.estimateRedSampleOrientation(input);
-            detectedAngle = dataRed[3];
+            dataRed = detector.splitRedSample(input);
+            isFoundQu = detector.isFoundQ;
             xOffset = dataRed[0];
             yOffset = dataRed[1];
             area = dataRed[2];
+            detectedAngle = dataRed[3];
+            if (dataRed[4] == 0)  {
+                splitQuestion = false;
+            } else if (dataRed[4] == 1) {
+                splitQuestion = true;
+            }
+            rgb = new Scalar(dataRed[5],dataRed[6], dataRed[7]);
+
+            //Todo: Bitmap conversion is like the same as in the og ftcdahsboard color mask
+            //this is not our own and we should look into why
+
+
             return input; // Return the drawings
         }
+
 
         public double getDetectedAngle() {
             return detectedAngle;
@@ -233,23 +273,13 @@ public class SampleDetection2 extends LinearOpMode
         public double getArea(){
             return area;
         }
-
-       
+        public boolean getSplitQuestion(){ return splitQuestion; }
+        public Scalar getRgb(){ return rgb; }
+        public boolean getIsFound(){ return isFoundQu; }
 
         @Override
         public void onViewportTapped()
         {
-            /*
-             * The viewport (if one was specified in the constructor) can also be dynamically "paused"
-             * and "resumed". The primary use case of this is to reduce CPU, memory, and power load
-             * when you need your vision pipeline running, but do not require a live preview on the
-             * robot controller screen. For instance, this could be useful if you wish to see the live
-             * camera preview as you are initializing your robot, but you no longer require the live
-             * preview after you have finished your initialization process; pausing the viewport does
-             * not stop running your pipeline.
-             *
-             * Here we demonstrate dynamically pausing/resuming the viewport when the user taps it
-             */
 
             viewportPaused = !viewportPaused;
 
@@ -263,4 +293,159 @@ public class SampleDetection2 extends LinearOpMode
             }
         }
     }
+
+    public class YellowObjectPipeline extends OpenCvPipeline
+    {
+        boolean viewportPaused;
+
+        private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
+        private volatile double detectedAngle = 0; // Stores the detected angle
+        private volatile double xOffset = 0;
+        private volatile double yOffset = 0;
+        private volatile double area = 0;
+        private volatile boolean splitQuestion = false;
+        private volatile Scalar rgb = new Scalar(0,0,0);
+        private volatile double[] dataRed = new double[8];
+
+        private volatile boolean isFoundQu = false;
+
+
+
+        //other example code has volatile here
+        //volatile seems to make remove errors?
+        // https://stackoverflow.com/questions/106591/what-is-the-volatile-keyword-useful-for
+
+        @Override
+        public Mat processFrame(Mat input) {
+            dataRed = detector.splitYellowSample(input);
+            isFoundQu = detector.isFoundQ;
+            xOffset = dataRed[0];
+            yOffset = dataRed[1];
+            area = dataRed[2];
+            detectedAngle = dataRed[3];
+            if (dataRed[4] == 0)  {
+                splitQuestion = false;
+            } else if (dataRed[4] == 1) {
+                splitQuestion = true;
+            }
+            rgb = new Scalar(dataRed[5],dataRed[6], dataRed[7]);
+
+            //Todo: Bitmap conversion is like the same as in the og ftcdahsboard color mask
+            //this is not our own and we should look into why
+
+
+            return input; // Return the drawings
+        }
+
+
+        public double getDetectedAngle() {
+            return detectedAngle;
+        }
+        public double getXOffset() {
+            return xOffset;
+        }
+        public double getYOffset() {
+            return yOffset;
+        }
+        public double getArea(){
+            return area;
+        }
+        public boolean getSplitQuestion(){ return splitQuestion; }
+        public Scalar getRgb(){ return rgb; }
+        public boolean getIsFound(){ return isFoundQu; }
+
+        @Override
+        public void onViewportTapped()
+        {
+
+            viewportPaused = !viewportPaused;
+
+            if(viewportPaused)
+            {
+                webcam.pauseViewport();
+            }
+            else
+            {
+                webcam.resumeViewport();
+            }
+        }
+    }
+
+    public class BlueObjectPipeline extends OpenCvPipeline
+    {
+        boolean viewportPaused;
+
+        private final CameraProcessingFunctions detector = new CameraProcessingFunctions();
+        private volatile double detectedAngle = 0; // Stores the detected angle
+        private volatile double xOffset = 0;
+        private volatile double yOffset = 0;
+        private volatile double area = 0;
+        private volatile boolean splitQuestion = false;
+        private volatile Scalar rgb = new Scalar(0,0,0);
+        private volatile double[] dataRed = new double[8];
+
+        private volatile boolean isFoundQu = false;
+
+
+
+        //other example code has volatile here
+        //volatile seems to make remove errors?
+        // https://stackoverflow.com/questions/106591/what-is-the-volatile-keyword-useful-for
+
+        @Override
+        public Mat processFrame(Mat input) {
+            dataRed = detector.splitBlueSample(input);
+            isFoundQu = detector.isFoundQ;
+            xOffset = dataRed[0];
+            yOffset = dataRed[1];
+            area = dataRed[2];
+            detectedAngle = dataRed[3];
+            if (dataRed[4] == 0)  {
+                splitQuestion = false;
+            } else if (dataRed[4] == 1) {
+                splitQuestion = true;
+            }
+            rgb = new Scalar(dataRed[5],dataRed[6], dataRed[7]);
+
+            //Todo: Bitmap conversion is like the same as in the og ftcdahsboard color mask
+            //this is not our own and we should look into why
+
+
+            return input; // Return the drawings
+        }
+
+
+        public double getDetectedAngle() {
+            return detectedAngle;
+        }
+        public double getXOffset() {
+            return xOffset;
+        }
+        public double getYOffset() {
+            return yOffset;
+        }
+        public double getArea(){
+            return area;
+        }
+        public boolean getSplitQuestion(){ return splitQuestion; }
+        public Scalar getRgb(){ return rgb; }
+        public boolean getIsFound(){ return isFoundQu; }
+
+        @Override
+        public void onViewportTapped()
+        {
+
+            viewportPaused = !viewportPaused;
+
+            if(viewportPaused)
+            {
+                webcam.pauseViewport();
+            }
+            else
+            {
+                webcam.resumeViewport();
+            }
+        }
+    }
+
 }

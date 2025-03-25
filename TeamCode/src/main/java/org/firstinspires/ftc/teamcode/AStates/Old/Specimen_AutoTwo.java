@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode.AStates.Auto;
+package org.firstinspires.ftc.teamcode.AStates.Old;
 
 
+import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.fraudSmallWait;
 import static org.firstinspires.ftc.teamcode.AStates.Old.Specimen_PathsTwo.fraudOffset;
+import static org.firstinspires.ftc.teamcode.AStates.Old.Bucket_Paths.fraudWait;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
@@ -35,8 +37,10 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -46,14 +50,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AStates.Old.Specimen_AutoTwo;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Disabled
+
 @Config
-@Autonomous (name = "Specimen_Auto_Three", group = "Autonomous")
-public class Specimen_PathsThree extends LinearOpMode {
+@Autonomous (name = "Specimen_Auto_Two", group = "Autonomous")
+@Disabled
+public class Specimen_AutoTwo extends LinearOpMode {
+
+
+
 
     public static double FOREVER = 30;
 
@@ -75,7 +82,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action hSlidesOutside() {
-            return new HorizontalSlides.HSlidesOutside();
+            return new HSlidesOutside();
         }
 
         public class HSlidesInside implements Action {
@@ -88,7 +95,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action hSlidesInside() {
-            return new HorizontalSlides.HSlidesInside();
+            return new HSlidesInside();
         }
 
     }
@@ -109,7 +116,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action closeIntakeClaw() {
-            return new IntakeClaw.CloseIntakeClaw();
+            return new CloseIntakeClaw();
         }
 
         public class OpenIntakeClaw implements Action {
@@ -121,7 +128,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action openIntakeClaw() {
-            return new IntakeClaw.OpenIntakeClaw();
+            return new OpenIntakeClaw();
         }
     }
 
@@ -154,7 +161,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action slidesHighBasket() {
-            return new VerticalSlides.SlidesHighBasket();
+            return new SlidesHighBasket();
         }
 
         public class SlidesHighChamber implements Action {
@@ -168,7 +175,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action slidesHighChamber() {
-            return new VerticalSlides.SlidesHighChamber();
+            return new SlidesHighChamber();
         }
 
 
@@ -183,7 +190,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action slidesDown() {
-            return new VerticalSlides.SlidesDown();
+            return new SlidesDown();
         }
     }
 
@@ -203,7 +210,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action neutralPos() {
-            return new IntakeWrist.NeutralPos();
+            return new NeutralPos();
         }
 
     }
@@ -224,7 +231,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action elbowIntake() {
-            return new IntakeElbow.ElbowIntake();
+            return new ElbowIntake();
         }
 
         public class ElbowTransfer implements Action {
@@ -236,7 +243,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action elbowTransfer() {
-            return new IntakeElbow.ElbowTransfer();
+            return new ElbowTransfer();
         }
 
         public class ElbowPassive implements Action {
@@ -248,7 +255,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action elbowPassive() {
-            return new IntakeElbow.ElbowPassive();
+            return new ElbowPassive();
         }
         public class ElbowHover implements Action {
             @Override
@@ -259,7 +266,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action elbowHover() {
-            return new IntakeElbow.ElbowPassive();
+            return new ElbowPassive();
         }
 
     }
@@ -280,7 +287,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action armIntake() {
-            return new IntakeArm.ArmIntake();
+            return new ArmIntake();
         }
 
         public class ArmTransfer implements Action {
@@ -292,7 +299,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action armTransfer() {
-            return new IntakeArm.ArmTransfer();
+            return new ArmTransfer();
         }
 
         public class ArmPassive implements Action {
@@ -304,7 +311,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action armPassive() {
-            return new IntakeArm.ArmPassive();
+            return new ArmPassive();
         }
         public class ArmHover implements Action {
             @Override
@@ -315,7 +322,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action armHover() {
-            return new IntakeArm.ArmPassive();
+            return new ArmPassive();
         }
 
     }
@@ -336,7 +343,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositClawOpen() {
-            return new DepositClaw.DepositClawOpen();
+            return new DepositClawOpen();
         }
 
         public class DepositClawClose implements Action {
@@ -348,7 +355,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositClawClose() {
-            return new DepositClaw.DepositClawClose();
+            return new DepositClawClose();
         }
 
     }
@@ -369,7 +376,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositArmPassive() {
-            return new DepositArm.DepositArmPassive();
+            return new DepositArmPassive();
         }
 
         public class DepositArmSpeciPosStart implements Action {
@@ -381,7 +388,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositArmSpeciPosStart() {
-            return new DepositArm.DepositArmSpeciPosStart();
+            return new DepositArmSpeciPosStart();
         }
 
         public class DepositArmSpeciPosFinish implements Action {
@@ -393,7 +400,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositArmSpeciPosFinish() {
-            return new DepositArm.DepositArmSpeciPosFinish();
+            return new DepositArmSpeciPosFinish();
         }
 
         public class DepositArmTransfer implements Action {
@@ -405,7 +412,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositArmTransfer() {
-            return new DepositArm.DepositArmTransfer();
+            return new DepositArmTransfer();
         }
 
         public class DepositArmScore implements Action {
@@ -417,7 +424,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositArmScore() {
-            return new DepositArm.DepositArmScore();
+            return new DepositArmScore();
         }
 
     }
@@ -439,7 +446,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositWristPassive() {
-            return new DepositWrist.DepositWristPassive();
+            return new DepositWristPassive();
         }
 
         public class DepositWristTransfer implements Action {
@@ -451,7 +458,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositWristTransfer() {
-            return new DepositWrist.DepositWristTransfer();
+            return new DepositWristTransfer();
         }
 
         public class DepositWristSpeciRotStart implements Action {
@@ -463,7 +470,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositWristSpeciRotStart() {
-            return new DepositWrist.DepositWristSpeciRotStart();
+            return new DepositWristSpeciRotStart();
         }
 
         public class DepositWristSpeciRotFinish implements Action {
@@ -475,7 +482,7 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositWristSpeciRotFinish() {
-            return new DepositWrist.DepositWristSpeciRotFinish();
+            return new DepositWristSpeciRotFinish();
         }
 
         public class DepositWristScore implements Action {
@@ -487,44 +494,47 @@ public class Specimen_PathsThree extends LinearOpMode {
         }
 
         public Action depositWristScore() {
-            return new DepositWrist.DepositWristScore();
+            return new DepositWristScore();
         }
 
     }
 
     PinpointDrive drive;
-    
-    
-    
+
     @Override
     public void runOpMode() throws InterruptedException {
+        //Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
+        //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+
         ElapsedTime et = new ElapsedTime();
-
-
-
         Calvin calvin = new Calvin(hardwareMap);
+        IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
+        VerticalSlides vSlides = new VerticalSlides(hardwareMap);
+        IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
+        IntakeElbow intakeElbow = new IntakeElbow(hardwareMap);
+        IntakeArm intakeArm = new IntakeArm(hardwareMap);
+        DepositWrist depositWrist = new DepositWrist(hardwareMap);
+        DepositClaw depositClaw = new DepositClaw(hardwareMap);
+        DepositArm depositArm = new DepositArm(hardwareMap);
+        HorizontalSlides hSlides = new HorizontalSlides(hardwareMap);
+
+        //where hslides cynthia? where hslides
+        //please add idk how to do ur thing LOL
         //Zhang we need using encode for auto but in teleop we need run without encoder
         // so im putting this here for you
+        //Calvin.Claw claw = new Calvin.Claw();
 
 
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        double xStart = 0;
+        double yStart = 0;
 
 
 
-        Specimen_AutoTwo.IntakeClaw intakeClaw = new Specimen_AutoTwo.IntakeClaw(hardwareMap);
-        Specimen_AutoTwo.VerticalSlides vSlides = new Specimen_AutoTwo.VerticalSlides(hardwareMap);
-        Specimen_AutoTwo.IntakeWrist intakeWrist = new Specimen_AutoTwo.IntakeWrist(hardwareMap);
-        Specimen_AutoTwo.IntakeElbow intakeElbow = new Specimen_AutoTwo.IntakeElbow(hardwareMap);
-        Specimen_AutoTwo.IntakeArm intakeArm = new Specimen_AutoTwo.IntakeArm(hardwareMap);
-        Specimen_AutoTwo.DepositWrist depositWrist = new Specimen_AutoTwo.DepositWrist(hardwareMap);
-        Specimen_AutoTwo.DepositClaw depositClaw = new Specimen_AutoTwo.DepositClaw(hardwareMap);
-        Specimen_AutoTwo.DepositArm depositArm = new Specimen_AutoTwo.DepositArm(hardwareMap);
-        Specimen_AutoTwo.HorizontalSlides hSlides = new Specimen_AutoTwo.HorizontalSlides(hardwareMap);
 
         // Define the starting pose (e.g., starting point on the field)
         //if you are coming from meep meep, define your initial here
-        double xStart = 0;
-        double yStart = 0;
 
 
         // Set the initial pose of the robot
@@ -532,6 +542,12 @@ public class Specimen_PathsThree extends LinearOpMode {
         // Define the trajectories for moving forward
 
         //If  a Pose2d is repetitive, define it here:
+
+
+        // Set the initial pose of the robot
+        //drive.setPoseEstimate(startPose);
+
+        // Define the trajectory for moving forward
 
         Pose2d pickup = new Pose2d(xStart - 8, yStart + 38, Math.toRadians(180));
         Pose2d deposit = new Pose2d(xStart - 34, yStart, Math.toRadians(0));
@@ -588,24 +604,18 @@ public class Specimen_PathsThree extends LinearOpMode {
         Action s13 = b13.build();
 
 
-                 
 
-        //we will create macros in the future, to remove room for error
         waitForStart();
-        //calvin.initialPositions();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();
 
-
         while (opModeIsActive()) {
-
             calvin.servHangLeft.setPosition(0);
             calvin.servHangRight.setPosition(0);
             Actions.runBlocking(
                     new SequentialAction(
-                            s1
-                            /*new ParallelAction(
+                            new ParallelAction(
                                     depositArm.depositArmSpeciPosFinish(),
                                     depositWrist.depositWristSpeciRotFinish(),
                                     depositClaw.depositClawClose(),
@@ -613,8 +623,7 @@ public class Specimen_PathsThree extends LinearOpMode {
                                     intakeArm.armPassive(),
                                     intakeElbow.elbowPassive(),
                                     intakeWrist.neutralPos(),
-                                    intakeClaw.openIntakeClaw(),
-                                    vSlides.slidesHighChamber()
+                                    intakeClaw.openIntakeClaw()
                             ),
                             new SequentialAction(
                                     new SleepAction(fraudSmallWait),
@@ -628,8 +637,8 @@ public class Specimen_PathsThree extends LinearOpMode {
                                                     depositClaw.depositClawOpen()
                                             )
                                     )
-                                    // we scored trust
-                            )//,*/
+                            // we scored trust
+                            )//,
 
                             //todo: hello, buenos dias my beautiful people
                             /*new SequentialAction(
@@ -692,4 +701,5 @@ public class Specimen_PathsThree extends LinearOpMode {
 
         }
     }
+
 }

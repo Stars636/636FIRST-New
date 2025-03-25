@@ -47,15 +47,18 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public static int pipeline = 0;
         private int tickerX = 0;
         private int tickerY = 0;
-        int checker = 5;
+        public static final int checker = 5;
 
         private static int notFoundTickerY = 0;
         private static int notFoundTickerX = 0;
 
-        private final static  int moveOn = 15;
+        public final static  int moveOn = 15;
         public double minPosition = 0.74;
         public double maxPosition = 1;
         public double step = 0.01;
+        public static double deadzone = 5;
+        public static double maxOffset = 100;
+        public static double minPower = 0.1;
 
         public Offset(HardwareMap hardwareMap, Pose2d pose) {
             calvin = new Calvin(hardwareMap);
@@ -149,10 +152,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
         }
 
         public boolean XOffsetAction(@NonNull TelemetryPacket telemetryPacket, double xOffset) {
-
-            double deadzone = 5;
-            double maxOffset = 100;
-            double minPower = 0.1;
 
             if (xOffset == INVALID) { //if you don't detect anything, don't move
                 notFoundTickerX++;
@@ -376,27 +375,20 @@ public class CameraReactionsSupreme extends LinearOpMode {
 
     Offset offset;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
 
         offset = new Offset(hardwareMap,new Pose2d(0,0,0));
         waitForStart();
 
-        while (opModeIsActive()) {
-            telemetry.addData("Slide Position", offset.calvin.hSlidesLeft.getPosition());
-            telemetry.addData("X Offset", offset.yPipeline.getXOffset());
-            telemetry.addData("Y Offset", offset.yPipeline.getYOffset());
-            telemetry.update();
+        Actions.runBlocking(
+                new ParallelAction(
+                        offset.YOffsetYellow(),
+                        offset.XOffsetYellow()
+                )
 
-            Actions.runBlocking(
-                    new ParallelAction(
-                            offset.YOffsetYellow(),
-                            offset.XOffsetYellow()
-                    )
+        );
 
-            );
-        }
 
 
 

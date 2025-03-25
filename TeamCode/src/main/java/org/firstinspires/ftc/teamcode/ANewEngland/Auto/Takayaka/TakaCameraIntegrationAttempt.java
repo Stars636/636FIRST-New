@@ -170,9 +170,14 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
         Calvin calvin;
         PinpointDrive drive;
-        public YOffset(HardwareMap hardwareMap){
+
+        //this part here below
+
+        /*public YOffset(HardwareMap hardwareMap){
             calvin = new Calvin(hardwareMap);
-        }
+            drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        }*/
         double margin = 10;
         double moveY = 1;
 

@@ -25,9 +25,6 @@ public class BlueObjectPipeline extends OpenCvPipeline
             this.webcam = webcam;
         }
 
-
-
-
         //other example code has volatile here
         //volatile seems to make remove errors?
         // https://stackoverflow.com/questions/106591/what-is-the-volatile-keyword-useful-for

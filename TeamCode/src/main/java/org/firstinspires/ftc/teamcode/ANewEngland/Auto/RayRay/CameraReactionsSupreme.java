@@ -148,9 +148,11 @@ public class CameraReactionsSupreme extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                  //prevents setting the pipelines at the same time
-                if (pipeline != 0) {
+                synchronized (Offset.this) {
+                    if (pipeline != 0) {
                         webcam.setPipeline(rPipeline);
                         pipeline = 0; // 0 is red, 1 is yellow, 2 is blue
+                    }
                 }
 
 
@@ -208,12 +210,12 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class YOffsetBlueSide implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-               // synchronized (Offset.this) {
+                synchronized (Offset.this) {
                     if (pipeline != 2) {
                         webcam.setPipeline(bPipeline);
                         pipeline = 2;
                     }
-                //}
+                }
                 double yOffset = bPipeline.getYOffset();
 
 
@@ -266,12 +268,12 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class YOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                //synchronized (Offset.this) {
+                synchronized (Offset.this) {
                     if (pipeline != 1) {
                         webcam.setPipeline(yPipeline);
                         pipeline = 1;
                     }
-                //}
+                }
                 double yOffset = yPipeline.getYOffset();
 
 
@@ -327,12 +329,12 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class XOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                //synchronized (Offset.this) {
+                synchronized (Offset.this) {
                     if (pipeline != 1) {
                         webcam.setPipeline(yPipeline);
                         pipeline = 1;
                     }
-               // }
+               }
                 double xOffset = yPipeline.getXOffset();
 
 
@@ -391,12 +393,12 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class XOffsetRed implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                //synchronized (Offset.this) {
+                synchronized (Offset.this) {
                     if (pipeline != 0) {
                         webcam.setPipeline(rPipeline);
                         pipeline = 0;
                     }
-               // }
+               }
                 double xOffset = rPipeline.getXOffset();
 
 
@@ -458,12 +460,12 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class XOffsetBlue implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                //synchronized (Offset.this) {
+                synchronized (Offset.this) {
                     if (pipeline != 2) {
                         webcam.setPipeline(bPipeline);
                         pipeline = 2;
                     }
-                //}
+                }
                 double xOffset = bPipeline.getXOffset();
 
 

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Camera;
 import static org.firstinspires.ftc.teamcode.Camera.CameraProcessingFunctions.notFound;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,7 +14,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
-
+@Disabled
 @TeleOp(group = "Camera", name = "RedSampleDetection")
 public class SampleDetection extends LinearOpMode {
     //Todo:

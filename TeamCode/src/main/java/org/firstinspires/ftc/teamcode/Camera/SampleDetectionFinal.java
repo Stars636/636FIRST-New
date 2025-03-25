@@ -43,7 +43,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @TeleOp
 public class SampleDetectionFinal extends LinearOpMode
 {
-    OpenCvWebcam webcam;
+    static OpenCvWebcam webcam;
     RedObjectPipeline rPipeline;
     YellowObjectPipeline yPipeline;
     BlueObjectPipeline bPipeline;
@@ -220,7 +220,7 @@ public class SampleDetectionFinal extends LinearOpMode
      * if you're doing something weird where you do need it synchronized with your OpMode thread,
      * then you will need to account for that accordingly.
      */
-    class RedObjectPipeline extends OpenCvPipeline
+    public static class RedObjectPipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
 
@@ -297,7 +297,7 @@ public class SampleDetectionFinal extends LinearOpMode
         }
     }
 
-    class YellowObjectPipeline extends OpenCvPipeline
+    public static class YellowObjectPipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
 
@@ -374,7 +374,7 @@ public class SampleDetectionFinal extends LinearOpMode
         }
     }
 
-    class BlueObjectPipeline extends OpenCvPipeline
+    public static class BlueObjectPipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
 

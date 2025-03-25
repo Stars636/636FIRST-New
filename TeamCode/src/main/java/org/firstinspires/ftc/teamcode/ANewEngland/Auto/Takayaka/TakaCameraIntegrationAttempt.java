@@ -251,6 +251,10 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
     }
 
+    public static class AngleOffset{
+
+    }
+
 
 
     @Override

@@ -14,7 +14,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -65,6 +67,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
     public static class XOffset{
 
         Calvin calvin;
+        double margin = 10;
 
         public class RXOffset implements Action{
             @Override
@@ -74,13 +77,13 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 if(rDetection.getYOffset() == 100000){
                     return false;
                 }
-                if(rDetection.getYOffset() < -10 && hSlidesPos > hSlidesOutside){
+                if(rDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
                     hSlidesPos -= increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
                     return true;
                 }
-                if(rDetection.getYOffset() > 10 && hSlidesPos < hSlidesInside){
+                if(rDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
                     hSlidesPos += increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
@@ -105,13 +108,13 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 if(yDetection.getYOffset() == 100000){
                     return false;
                 }
-                if(yDetection.getYOffset() < -10 && hSlidesPos > hSlidesOutside){
+                if(yDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
                     hSlidesPos -= increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
                     return true;
                 }
-                if(yDetection.getYOffset() > 10 && hSlidesPos < hSlidesInside){
+                if(yDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
                     hSlidesPos += increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
@@ -136,13 +139,13 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 if(bDetection.getYOffset() == 100000){
                     return false;
                 }
-                if(bDetection.getYOffset() < -10 && hSlidesPos > hSlidesOutside){
+                if(bDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
                     hSlidesPos -= increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
                     return true;
                 }
-                if(bDetection.getYOffset() > 10 && hSlidesPos < hSlidesInside){
+                if(bDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
                     hSlidesPos += increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
@@ -165,6 +168,82 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
     public static class YOffset{
 
+        Calvin calvin;
+        PinpointDrive drive;
+        public YOffset(HardwareMap hardwareMap){
+            calvin = new Calvin(hardwareMap);
+        }
+        double margin = 10;
+        double moveY = 1;
+
+        public class RYOffset implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket){
+                boolean sampleFound = rDetection.getIsFound();
+                double xOffset = rDetection.getXOffset();
+
+                if(xOffset > margin && sampleFound){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
+                    return true;
+                }
+                if(xOffset < margin && sampleFound){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        public Action rYOffset(){
+            return new RYOffset();
+        }
+
+        public class YYOffset implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket){
+                boolean sampleFound = yDetection.getIsFound();
+                double xOffset = yDetection.getXOffset();
+                if(xOffset > margin && sampleFound){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
+                    return true;
+                }
+                if(xOffset < margin && sampleFound){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        public Action yYOffset(){
+            return new YYOffset();
+        }
+
+        public class BYOffset implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket){
+                boolean sampleFound = bDetection.getIsFound();
+                double xOffset = bDetection.getXOffset();
+                if(xOffset > margin && sampleFound){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
+                    return true;
+                }
+                if(xOffset < margin && sampleFound){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        public Action bYOffset(){
+            return new BYOffset();
+        }
+
+
     }
 
 
@@ -172,7 +251,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
         drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
 
 

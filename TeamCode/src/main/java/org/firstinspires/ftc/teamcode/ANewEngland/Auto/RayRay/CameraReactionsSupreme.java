@@ -148,6 +148,118 @@ public class CameraReactionsSupreme extends LinearOpMode {
             return new stopStreaming();
         }
 
+        public boolean XOffsetAction(@NonNull TelemetryPacket telemetryPacket, double xOffset) {
+
+            double deadzone = 5;
+            double maxOffset = 100;
+            double minPower = 0.1;
+
+            if (xOffset == INVALID) { //if you don't detect anything, don't move
+                notFoundTickerX++;
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(0, 0),
+                        0
+                ));
+                if (notFoundTickerX >= moveOn) {
+                    notFoundTickerX = 0;
+                    drive.setDrivePowers(new PoseVelocity2d(
+                            new Vector2d(0, 0),
+                            0
+                    ));
+                    return false;
+                }
+                return true;
+            }
+            notFoundTickerX = 0;
+
+            if (Math.abs(xOffset) < deadzone) {
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(0, 0),
+                        0
+                ));
+                tickerX++;
+                if (tickerX >= checker) {
+                    tickerX = 0;
+                    return false;
+                }
+                return true;
+            }
+
+
+            double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
+            double adjustedPower = Math.max(minPower, power * powerScale);
+
+            if (xOffset > 0) {
+
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(0, adjustedPower),
+                        0
+                ));
+            } else {
+
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(0, -adjustedPower),
+                        0
+                ));
+            }
+
+            telemetryPacket.put("X Offset", xOffset);
+            telemetryPacket.put("Drive Power", adjustedPower);
+
+            tickerX = 0;
+            return true;
+        }
+
+        public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset) {
+            if (yOffset == INVALID) { //if you don't detect anything, don't move
+                notFoundTickerY++;
+                if (notFoundTickerY >= moveOn) {
+                    notFoundTickerY = 0;
+                    return false;
+                }
+                return true;
+            }
+            notFoundTickerY = 0;
+
+            if (Math.abs(yOffset) < 10) { //if its in range, don't move
+                tickerY++;
+                if (tickerY >= checker) { //only consider it done when its been in range for 5 calculations
+                    //this is so it doesn't stop immediately if it sweeps past it
+                    tickerY = 0;
+                    return false;
+                }
+                return true;
+            }
+
+
+
+            double currentPos = calvin.hSlidesLeft.getPosition();
+            double targetPos = currentPos;
+
+            if (yOffset > 10) {
+                targetPos = Math.max(minPosition, currentPos - step);
+            } else if (yOffset < -10) {
+                targetPos = Math.min(maxPosition, currentPos + step);
+            }
+
+            //i live my life in fear
+            if (targetPos <= minPosition) {
+                targetPos = minPosition; //double checking, i dont want our servos breaking
+            }
+            if (targetPos >= maxPosition) {
+                targetPos = maxPosition;
+            }
+            calvin.hSlidesLeft.setPosition(targetPos);
+            calvin.hSlidesRight.setPosition(targetPos);
+
+            telemetryPacket.put("Y Offset", yOffset);
+            telemetryPacket.put("Slide Position", targetPos);
+
+
+            tickerY = 0;
+            return true;
+        }
+
 
         public class YOffsetRedSide implements Action {
             @Override
@@ -162,54 +274,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
 
 
                 double yOffset = rPipeline.getYOffset(); //
-
-                if (yOffset == INVALID) { //if you don't detect anything, don't move
-                    notFoundTickerY++;
-                    if (notFoundTickerY >= moveOn) {
-                        notFoundTickerY = 0;
-                        return false;
-                    }
-                    return true;
-                }
-                notFoundTickerY = 0;
-
-                if (Math.abs(yOffset) < 10) { //if its in range, don't move
-                    tickerY++;
-                    if (tickerY >= checker) { //only consider it done when its been in range for 5 calculations
-                                            //this is so it doesn't stop immediately if it sweeps past it
-                        tickerY = 0;
-                        return false;
-                    }
-                    return true;
-                }
-
-
-
-                double currentPos = calvin.hSlidesLeft.getPosition();
-                double targetPos = currentPos;
-
-                if (yOffset > 10) {
-                    targetPos = Math.max(minPosition, currentPos - step);
-                } else if (yOffset < -10) {
-                    targetPos = Math.min(maxPosition, currentPos + step);
-                }
-
-                //i live my life in fear
-                if (targetPos <= minPosition) {
-                    targetPos = minPosition; //double checking, i dont want our servos breaking
-                }
-                if (targetPos >= maxPosition) {
-                    targetPos = maxPosition;
-                }
-                calvin.hSlidesLeft.setPosition(targetPos);
-                calvin.hSlidesRight.setPosition(targetPos);
-
-                telemetryPacket.put("Y Offset", yOffset);
-                telemetryPacket.put("Slide Position", targetPos);
-
-
-                tickerY = 0;
-                return true;
+                return YOffsetAction(telemetryPacket,yOffset);
             }
         }
         public Action YOffsetRed() {
@@ -227,56 +292,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     }
                 }
                 double yOffset = bPipeline.getYOffset();
-
-                if (yOffset == INVALID) { //if you don't detect anything, don't move
-                    notFoundTickerY++;
-                    if (notFoundTickerY >= moveOn) {
-                        notFoundTickerY = 0;
-                        return false;
-                    }
-                    return true;
-                }
-                notFoundTickerY = 0;
-
-
-
-                if (Math.abs(yOffset) < 10) {
-                    tickerY++;
-                    if (tickerY >= checker) {
-                        tickerY = 0;
-                        return false;
-                    }
-                    return true;
-                }
-
-
-
-                double currentPos = calvin.hSlidesLeft.getPosition();
-                double targetPos = currentPos;
-
-                if (yOffset > 10) {
-                    targetPos = Math.max(minPosition, currentPos - step);
-                } else if (yOffset < -10) {
-                    targetPos = Math.min(maxPosition, currentPos + step);
-                }
-                //i live my life in fear
-                if (targetPos <= minPosition) {
-                    targetPos = minPosition; //double checking, i dont want our servos breaking
-                }
-                if (targetPos >= maxPosition) {
-                    targetPos = maxPosition;
-                }
-                calvin.hSlidesLeft.setPosition(targetPos);
-                calvin.hSlidesRight.setPosition(targetPos);
-
-
-
-                telemetryPacket.put("Y Offset", yOffset);
-                telemetryPacket.put("Slide Position", targetPos);
-
-
-                tickerY = 0;
-                return true;
+                return YOffsetAction(telemetryPacket,yOffset);
             }
         }
         public Action YOffsetBlue() {
@@ -292,54 +308,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     }
                 }
                 double yOffset = yPipeline.getYOffset();
-
-
-                if (yOffset == INVALID) { //if you don't detect anything, don't move
-                    notFoundTickerY++;
-                    if (notFoundTickerY >= moveOn) {
-                        notFoundTickerY = 0;
-                        return false;
-                    }
-                    return true;
-                }
-                notFoundTickerY = 0;
-
-                if (Math.abs(yOffset) < 10) {
-                    tickerY++;
-                    if (tickerY >= checker) {
-                        tickerY = 0;
-                        return false;
-                    }
-                    return true;
-                }
-
-
-
-                double currentPos = calvin.hSlidesLeft.getPosition();
-                double targetPos = currentPos;
-
-                if (yOffset > 10) {
-                    targetPos = Math.max(minPosition, currentPos - step);
-                } else if (yOffset < -10) {
-                    targetPos = Math.min(maxPosition, currentPos + step);
-                }
-                //i live my life in fear
-                if (targetPos <= minPosition) {
-                    targetPos = minPosition; //double checking, i dont want our servos breaking
-                }
-                if (targetPos >= maxPosition) {
-                    targetPos = maxPosition;
-                }
-
-                calvin.hSlidesLeft.setPosition(targetPos);
-                calvin.hSlidesRight.setPosition(targetPos);
-
-                telemetryPacket.put("Y Offset", yOffset);
-                telemetryPacket.put("Slide Position", targetPos);
-
-
-                tickerY = 0;
-                return true;
+                return YOffsetAction(telemetryPacket,yOffset);
             }
         }
         public Action YOffsetYellow() {
@@ -357,72 +326,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     }
                }
                 double xOffset = yPipeline.getXOffset();
-
-
-                double deadzone = 5;
-                double maxOffset = 100;
-                double minPower = 0.1;
-
-                if (xOffset == INVALID) { //if you don't detect anything, don't move
-                    notFoundTickerX++;
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, 0),
-                            0
-                    ));
-                    if (notFoundTickerX >= moveOn) {
-                        notFoundTickerX = 0;
-                        drive.setDrivePowers(new PoseVelocity2d(
-                                new Vector2d(0, 0),
-                                0
-                        ));
-                        return false;
-                    }
-                    return true;
-                }
-                notFoundTickerX = 0;
-
-
-
-                if (Math.abs(xOffset) < deadzone) {
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, 0),
-                            0
-                    ));
-                    tickerX++;
-                    if (tickerX >= checker) {
-                        tickerX = 0;
-                        return false;
-                    }
-                    return true;
-                }
-
-                double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
-                double adjustedPower = Math.max(minPower, power * powerScale);
-
-                if (xOffset > 0) {
-
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, adjustedPower),
-                            0
-                    ));
-                } else {
-
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, -adjustedPower),
-                            0
-                    ));
-                }
-
-                telemetryPacket.put("X Offset", xOffset);
-                telemetryPacket.put("Drive Power", adjustedPower);
-
-                tickerX = 0;
-                return true;
+                return XOffsetAction(telemetryPacket,xOffset);
             }
         }
+
         public Action XOffsetYellow() {
             return new XOffsetYellow();
         }
+
+
         public class XOffsetRed implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -433,66 +345,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     }
                }
                 double xOffset = rPipeline.getXOffset();
-
-
-                double deadzone = 5;
-                double maxOffset = 100;
-                double minPower = 0.1;
-
-                if (xOffset == INVALID) { //if you don't detect anything, don't move
-                    notFoundTickerX++;
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, 0),
-                            0
-                    ));
-                    if (notFoundTickerX >= moveOn) {
-                        notFoundTickerX = 0;
-                        drive.setDrivePowers(new PoseVelocity2d(
-                                new Vector2d(0, 0),
-                                0
-                        ));
-                        return false;
-                    }
-                    return true;
-                }
-                notFoundTickerX = 0;
-
-                if (Math.abs(xOffset) < deadzone) {
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, 0),
-                            0
-                    ));
-                    tickerX++;
-                    if (tickerX >= checker) {
-                        tickerX = 0;
-                        return false;
-                    }
-                    return true;
-                }
-
-
-                double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
-                double adjustedPower = Math.max(minPower, power * powerScale);
-
-                if (xOffset > 0) {
-
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, adjustedPower),
-                            0
-                    ));
-                } else {
-
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, -adjustedPower),
-                            0
-                    ));
-                }
-
-                telemetryPacket.put("X Offset", xOffset);
-                telemetryPacket.put("Drive Power", adjustedPower);
-
-                tickerX = 0;
-                return true;
+                return XOffsetAction(telemetryPacket,xOffset);
             }
         }
         public Action XOffsetRed() {
@@ -510,75 +363,13 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     }
                 }
                 double xOffset = bPipeline.getXOffset();
+                return XOffsetAction(telemetryPacket,xOffset);
 
-
-                double deadzone = 5;
-                double maxOffset = 100;
-                double minPower = 0.1;
-
-                if (xOffset == INVALID) { //if you don't detect anything, don't move
-                    notFoundTickerX++;
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, 0),
-                            0
-                    ));
-                    if (notFoundTickerX >= moveOn) {
-                        notFoundTickerX = 0;
-                        drive.setDrivePowers(new PoseVelocity2d(
-                                new Vector2d(0, 0),
-                                0
-                        ));
-                        return false;
-                    }
-                    return true;
-                }
-                notFoundTickerX = 0;
-
-                if (Math.abs(xOffset) < deadzone) {
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, 0),
-                            0
-                    ));
-                    tickerX++;
-                    if (tickerX >= checker) {
-                        tickerX = 0;
-                        return false;
-                    }
-                    return true;
-                }
-
-
-                double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
-                double adjustedPower = Math.max(minPower, power * powerScale);
-
-                if (xOffset > 0) {
-
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, adjustedPower),
-                            0
-                    ));
-                } else {
-
-                    drive.setDrivePowers(new PoseVelocity2d(
-                            new Vector2d(0, -adjustedPower),
-                            0
-                    ));
-                }
-
-                telemetryPacket.put("X Offset", xOffset);
-                telemetryPacket.put("Drive Power", adjustedPower);
-
-                tickerX = 0;
-                return true;
             }
         }
         public Action XOffsetBlue() {
             return new XOffsetBlue();
         }
-
-
-
-
 
 
     }

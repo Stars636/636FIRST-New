@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ANewEngland;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.Xyz;
 
 import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.FOREVER;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.SampleDetectionFinal;
-import org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;

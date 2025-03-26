@@ -48,7 +48,7 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
 
         private static int notFoundTickerY = 0;
         private static int notFoundTickerX = 0;
-        public final static int moveOn = 15;
+        public static int moveOn = 5;
         public static double minPosition = 0.74;
         public static double maxPosition = 1;
         public static double step = 0.005;
@@ -203,6 +203,9 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
         }
 
         public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset, boolean found) {
+            double currentPos = calvin.hSlidesLeft.getPosition();
+            telemetryPacket.put("position",currentPos);
+            telemetryPacket.put("Y Offset", yOffset);
             if (!found) { //if you don't detect anything, don't move
                 notFoundTickerY++;
                 if (notFoundTickerY >= moveOn) {
@@ -223,7 +226,7 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
                 return true;
             }
 
-            double currentPos = calvin.hSlidesLeft.getPosition();
+
             double targetPos = currentPos;
 
             if (yOffset > 10) {
@@ -244,7 +247,6 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
             calvin.hSlidesLeft.setPosition(targetPos);
             calvin.hSlidesRight.setPosition(targetPos);
 
-            telemetryPacket.put("Y Offset", yOffset);
             telemetryPacket.put("Slide Position", targetPos);
 
             tickerY = 0;

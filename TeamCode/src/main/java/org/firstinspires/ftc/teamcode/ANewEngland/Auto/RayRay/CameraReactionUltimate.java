@@ -47,10 +47,10 @@ public class CameraReactionUltimate extends LinearOpMode {
 
         private static int notFoundTickerY = 0;
         private static int notFoundTickerX = 0;
-        public final static  int moveOn = 15;
-        public double minPosition = 0.74;
-        public double maxPosition = 1;
-        public double step = 0.005;
+        public final static int moveOn = 15;
+        public static double minPosition = 0.74;
+        public static double maxPosition = 1;
+        public static double step = 0.005;
         public static double deadzone = 10;
         public static double maxOffset = 100;
         public static double minPower = 0.1;

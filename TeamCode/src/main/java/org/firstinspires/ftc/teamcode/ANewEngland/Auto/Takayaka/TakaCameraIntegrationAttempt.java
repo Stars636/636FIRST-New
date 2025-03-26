@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.RedObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.YellowObjectPipeline;
-import org.firstinspires.ftc.teamcode.ANewEngland.Camera.SampleDetectionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -53,32 +52,12 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
     static YellowObjectPipeline yDetection;
     static BlueObjectPipeline bDetection;
 
-
-    /*public static class Stream{
-        OpenCvWebcam webcam;
-
-        public class StartStream{
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-                return false;
-            }
-        }
-
-        public class EndStream{
-
-        }
-    }
-    */
-
     public static class XOffset{
-
         Calvin calvin;
         double margin = 10;
         public XOffset(HardwareMap hardwareMap){
             calvin = new Calvin(hardwareMap);
         }
-
         public class RXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -103,13 +82,10 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                     return false;
                 }
             }
-
         }
-
         public Action rXOffset(){
             return new RXOffset();
         }
-
         public class YXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -134,13 +110,10 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                     return false;
                 }
             }
-
         }
-
         public Action yXOffset(){
             return new YXOffset();
         }
-
         public class BXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -167,17 +140,13 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             }
 
         }
-
         public Action bXOffset(){
             return new BXOffset();
         }
 
-
-
     }
 
     public static class YOffset{
-
         Calvin calvin;
         PinpointDrive drive;
         public YOffset(HardwareMap hardwareMap){
@@ -186,7 +155,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         }
         double margin = 10;
         double moveY = 1;
-
         public class RYOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
@@ -209,7 +177,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public Action rYOffset(){
             return new RYOffset();
         }
-
         public class YYOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
@@ -231,7 +198,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public Action yYOffset(){
             return new YYOffset();
         }
-
         public class BYOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
@@ -253,10 +219,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public Action bYOffset(){
             return new BYOffset();
         }
-
-
     }
-
     public static class AngleOffset{
         Calvin calvin;
         public AngleOffset(HardwareMap hardwareMap){
@@ -285,7 +248,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public Action rAOffset(){
             return new RAOffset();
         }
-
         public class YAOffset implements Action{
             double angle = yDetection.getDetectedAngle();
             boolean sampleFound = yDetection.getIsFound();
@@ -309,7 +271,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public Action yAOffset(){
             return new YAOffset();
         }
-
         public class BAOffset implements Action{
             double angle = bDetection.getDetectedAngle();
             boolean sampleFound = bDetection.getIsFound();
@@ -333,8 +294,6 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public Action bAOffset(){
             return new BAOffset();
         }
-
-
     }
 
 
@@ -374,9 +333,10 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
         waitForStart();
 
+        FtcDashboard.getInstance().startCameraStream(webcam, 10);
+
         while(opModeIsActive()){
             telemetry.update();
-            FtcDashboard.getInstance().startCameraStream(webcam, 10);
             sleep(100);
 
             //hang set stuff idk

@@ -83,7 +83,7 @@ public class AdarshCamera extends LinearOpMode {
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()
         );
         detectionApparatus = OpenCvCameraFactory.getInstance().createWebcam(
-         hardwareMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName.class, "Camera"),
+         hardwareMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName.class, "Webcam 1"),
          camStream
         );
         blueDetect = new SampleDetectionFinal.BlueObjectPipeline();

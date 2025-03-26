@@ -1,19 +1,22 @@
-
 package org.firstinspires.ftc.teamcode.ANewEngland.Auto.Fraudarsh;
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-
+import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.FOREVER;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
-
-
+import androidx.annotation.NonNull;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.SampleDetectionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous (name = "TheBestAuto", group = "NEAuto")
 public class AdarshCamera extends LinearOpMode {
@@ -47,7 +50,9 @@ public class AdarshCamera extends LinearOpMode {
                 }
             }
         }
-        public Action extendoExtender2() { return new extendoExtender(); }
+        public Action extendoExtender2() {
+            return new extendoExtender();
+        }
     }
     public class wrist {
         Calvin calvin;
@@ -72,14 +77,42 @@ public class AdarshCamera extends LinearOpMode {
             return new TurningOfTheWrist();
         }
     }
-
-
-
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-
+        int camStream = hardwareMap.appContext.getResources().getIdentifier(
+                "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()
+        );
+        detectionApparatus = OpenCvCameraFactory.getInstance().createWebcam(
+         hardwareMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName.class, "Camera"),
+         camStream
+        );
+        blueDetect = new SampleDetectionFinal.BlueObjectPipeline();
+        detectionApparatus.setPipeline(blueDetect);
+        detectionApparatus.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                detectionApparatus.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Webcam Fraudulence:", errorCode);
+            }
+        });
+        extendo Extendo = new extendo(hardwareMap);
+        wrist Wrist = new wrist(hardwareMap);
+        waitForStart();
+        while (opModeIsActive()) {
+            telemetry.addLine("Camera On");
+            telemetry.update();
+            FtcDashboard.getInstance().startCameraStream(detectionApparatus, 10);
+            Actions.runBlocking(
+                    new SequentialAction(
+                            Extendo.extendoExtender2(),
+                            Wrist.TurningOfTheWrist2(),
+                            new SleepAction(FOREVER)
+                    )
+            );
+        }
     }
 
 }

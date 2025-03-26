@@ -36,6 +36,7 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.RedObjectPipe
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.YellowObjectPipeline;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
+import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
@@ -326,20 +327,32 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 cameraMonitorViewId
         );
 
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Error:", errorCode);
+            }
+        });
+
         rDetection = new RedObjectPipeline(webcam);
         yDetection = new YellowObjectPipeline(webcam);
         bDetection = new BlueObjectPipeline(webcam);
         webcam.setPipeline(yDetection);
 
         waitForStart();
-
-        FtcDashboard.getInstance().startCameraStream(webcam, 10);
-
+        
         while(opModeIsActive()){
             telemetry.update();
             telemetry.addData("Yellow X Offset", yDetection.getXOffset());
             telemetry.addData("Yellow Y Offset", yDetection.getYOffset());
             telemetry.addData("Yellow Angle", yDetection.getDetectedAngle());
+            FtcDashboard.getInstance().startCameraStream(webcam, 10);
+
 
             sleep(100);
 

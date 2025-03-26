@@ -33,7 +33,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
-@Disabled
+
 
 public class CameraReactions extends LinearOpMode {
 

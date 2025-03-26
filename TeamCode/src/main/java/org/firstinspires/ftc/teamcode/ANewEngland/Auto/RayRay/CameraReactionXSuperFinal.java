@@ -29,9 +29,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
-public class CameraReactionZSuperFinal extends LinearOpMode {
+public class CameraReactionXSuperFinal extends LinearOpMode {
     @Config
-    public static class OffsetFraud {
+    public static class OffsetX {
         Calvin calvin;
         PinpointDrive drive;
         OpenCvWebcam webcam;
@@ -56,7 +56,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
-        public OffsetFraud(HardwareMap hardwareMap, Pose2d pose) {
+        public OffsetX(HardwareMap hardwareMap, Pose2d pose) {
             calvin = new Calvin(hardwareMap);
             //this.drive = new PinpointDrive(hardwareMap, pose);
             drive = new PinpointDrive(hardwareMap, pose);
@@ -193,7 +193,6 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                         0
                 ));
             }
-
 
             telemetryPacket.put("X Offset", xOffset);
             telemetryPacket.put("Drive Power", adjustedPower);
@@ -357,18 +356,17 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
             return new XOffsetBlue();
         }
     }
-    OffsetFraud offset;
+    OffsetX offset;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        offset = new OffsetFraud(hardwareMap,new Pose2d(0,0,0));
+        offset = new OffsetX(hardwareMap,new Pose2d(0,0,0));
         waitForStart();
         while(opModeIsActive()) {
             Actions.runBlocking(
                     new ParallelAction(
-                            offset.XOffsetBlue(),
-                            offset.YOffsetBlue()
+                            offset.XOffsetBlue()
                     )
             );
         }

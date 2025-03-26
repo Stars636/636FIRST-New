@@ -139,7 +139,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         }
 
     }
-
+    @Config
     public static class XOffset{
         Calvin calvin;
         PinpointDrive drive;

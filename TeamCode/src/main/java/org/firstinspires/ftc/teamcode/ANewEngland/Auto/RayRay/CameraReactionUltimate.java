@@ -77,6 +77,7 @@ public class CameraReactionUltimate extends LinearOpMode {
                 {
 
                     webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                    
                 }
 
                 @Override
@@ -95,6 +96,7 @@ public class CameraReactionUltimate extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+
                 return false;
             }
         }
@@ -115,7 +117,7 @@ public class CameraReactionUltimate extends LinearOpMode {
         }
 
         public boolean XOffsetAction(@NonNull TelemetryPacket telemetryPacket, double xOffset, boolean found) {
-            if (found) { //if you don't detect anything, don't move
+            if (!found) { //if you don't detect anything, don't move
                 notFoundTickerX++;
 
                 if (notFoundTickerX >= moveOn) {
@@ -168,7 +170,8 @@ public class CameraReactionUltimate extends LinearOpMode {
         }
 
         public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset, boolean found) {
-            if (found) { //if you don't detect anything, don't move
+            telemetryPacket.put("Found", found);
+            if (!found) { //if you don't detect anything, don't move
                 notFoundTickerY++;
                 if (notFoundTickerY >= moveOn) {
                     notFoundTickerY = 0;

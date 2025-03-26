@@ -51,9 +51,9 @@ public class Calvin {
 
     public static double depositClawPassiveRot = 0.3;
 
-    public static double depositClawTransferPos = 0.80;   //0.80
+    public static double depositClawTransferPos = 0.7;   //0.80
 
-    public static double depositClawTransferRot = 0.18;  //0.18
+    public static double depositClawTransferRot = 0.14;  //0.18
 
     public static double depositClawScorePos = 0.3;
 

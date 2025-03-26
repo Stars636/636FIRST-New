@@ -108,7 +108,7 @@ public class CalvinTeleFinal extends LinearOpMode {
                         depositClawMacro = DepositClawMacro.OPENED;
                         calvin.intakeWrist.setPosition(intakeWristFlat);
                         calvin.intakeElbow.setPosition(intakeClawTransferRot);
-                        calvin.intakeArm.setPosition(intakeClawTransferPos);
+                        //calvin.intakeArm.setPosition(intakeClawTransferPos);
                         isMajorMacroing = true;
                         transferTime.reset();
                         changedRB = true;
@@ -122,6 +122,7 @@ public class CalvinTeleFinal extends LinearOpMode {
                             changedRB = false;
                         }
                         if (transferTime.seconds() > transferPart1) {
+                            calvin.intakeArm.setPosition(intakeClawTransferPos);
                             calvin.depositClaw.setPosition(depositClawOpen);
                             depositClawMacro = DepositClawMacro.OPENED;
                             calvin.hSlidesLeft.setPosition(hSlidesInside);

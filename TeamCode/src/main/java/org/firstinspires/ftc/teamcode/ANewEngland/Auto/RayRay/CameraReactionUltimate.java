@@ -151,10 +151,7 @@ public class CameraReactionUltimate extends LinearOpMode {
 
             if (xOffset == INVALID) { //if you don't detect anything, don't move
                 notFoundTickerX++;
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(0, 0),
-                        0
-                ));
+
                 if (notFoundTickerX >= moveOn) {
                     notFoundTickerX = 0;
                     drive.setDrivePowers(new PoseVelocity2d(
@@ -184,11 +181,13 @@ public class CameraReactionUltimate extends LinearOpMode {
             double adjustedPower = power;
 
             if (xOffset > 0) {
+                tickerX = 0;
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, adjustedPower),
                         0
                 ));
             } else {
+                tickerX = 0;
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, -adjustedPower),
                         0

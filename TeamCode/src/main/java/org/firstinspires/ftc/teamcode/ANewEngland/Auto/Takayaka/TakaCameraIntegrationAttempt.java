@@ -153,8 +153,9 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             calvin = new Calvin(hardwareMap);
             drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
         }
+
         double margin = 10;
-        double moveY = 1;
+        double moveY = 0.1;
         public class RYOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
@@ -162,11 +163,11 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 double xOffset = rDetection.getXOffset();
 
                 if(xOffset > margin && sampleFound){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 1), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
                 if(xOffset < margin && sampleFound){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -1), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
                 else{
@@ -183,11 +184,11 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 boolean sampleFound = yDetection.getIsFound();
                 double xOffset = yDetection.getXOffset();
                 if(xOffset > margin && sampleFound){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 1), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
                 if(xOffset < margin && sampleFound){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -1), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
                 else{
@@ -204,11 +205,11 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 boolean sampleFound = bDetection.getIsFound();
                 double xOffset = bDetection.getXOffset();
                 if(xOffset > margin && sampleFound){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 1), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
                 if(xOffset < margin && sampleFound){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -1), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
                 else{
@@ -341,7 +342,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         rDetection = new RedObjectPipeline(webcam);
         yDetection = new YellowObjectPipeline(webcam);
         bDetection = new BlueObjectPipeline(webcam);
-        webcam.setPipeline(yDetection);
+        webcam.setPipeline(bDetection);
 
         waitForStart();
 
@@ -350,15 +351,18 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             telemetry.addData("Yellow X Offset", yDetection.getXOffset());
             telemetry.addData("Yellow Y Offset", yDetection.getYOffset());
             telemetry.addData("Yellow Angle", yDetection.getDetectedAngle());
+            telemetry.addData("Blue X Offset", bDetection.getXOffset());
+            telemetry.addData("Blue Y Offset", bDetection.getYOffset());
+            telemetry.addData("Blue Angle", bDetection.getDetectedAngle());
             FtcDashboard.getInstance().startCameraStream(webcam, 10);
 
             //hang set stuff idk
 
             Actions.runBlocking(
                     new ParallelAction(
-                            xOffset.yXOffset(),
-                            yOffset.yYOffset(),
-                            angleOffset.yAOffset()
+                            xOffset.bXOffset(),
+                            yOffset.bYOffset(),
+                            angleOffset.bAOffset()
                     )
             );
         }

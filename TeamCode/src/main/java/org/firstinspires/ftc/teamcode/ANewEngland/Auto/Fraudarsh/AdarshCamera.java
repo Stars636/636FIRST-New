@@ -6,23 +6,35 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.acmerobotics.dashboard.config.Config;
+
 
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+
+@Config
 @Autonomous (name = "TheBestAuto", group = "NEAuto")
 public class AdarshCamera extends LinearOpMode {
     private OpenCvWebcam detectionApparatus;
     private BlueObjectPipeline blueDetect;
+    public static double extendoIncrement = 0.0005;
+    public static double drivePower = 0.5;
+    public static int margin = 20;
+
     public class extendo {
         Calvin calvin;
         public double yCoord;
@@ -35,13 +47,13 @@ public class AdarshCamera extends LinearOpMode {
                 yCoord = blueDetect.getYOffset();
                 double currentPosition = calvin.hSlidesRight.getPosition();
                 if (blueDetect.getIsFound()) {
-                    if (yCoord<-20 && hSlidesOutside<currentPosition&&hSlidesInside>currentPosition) {
-                        calvin.hSlidesRight.setPosition(currentPosition - 0.02);
-                        calvin.hSlidesLeft.setPosition(currentPosition - 0.02);
+                    if (yCoord>margin && hSlidesOutside<currentPosition&&hSlidesInside>currentPosition) {
+                        calvin.hSlidesRight.setPosition(currentPosition - extendoIncrement);
+                        calvin.hSlidesLeft.setPosition(currentPosition - extendoIncrement);
                         return true;
-                    } else if (yCoord<20 && hSlidesOutside<currentPosition&&hSlidesInside>currentPosition) {
-                        calvin.hSlidesRight.setPosition(currentPosition + 0.02);
-                        calvin.hSlidesLeft.setPosition(currentPosition + 0.02);
+                    } else if (yCoord<margin && hSlidesOutside<currentPosition&&hSlidesInside>currentPosition) {
+                        calvin.hSlidesRight.setPosition(currentPosition + extendoIncrement);
+                        calvin.hSlidesLeft.setPosition(currentPosition + extendoIncrement);
                         return true;
                     } else {
                         return false;
@@ -76,6 +88,38 @@ public class AdarshCamera extends LinearOpMode {
         }
         public Action TurningOfTheWrist2() {
             return new TurningOfTheWrist();
+        }
+    }
+    public class strafer {
+        Calvin calvin;
+        double xCoord;
+        PinpointDrive drive;
+        public strafer(HardwareMap hardwareMap) {
+            calvin = new Calvin(hardwareMap);
+            drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        }
+        public class strafering implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                xCoord = blueDetect.getXOffset();
+                if (blueDetect.getIsFound()) {
+                    if (xCoord > margin) {
+                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, drivePower), 0));
+                        return true;
+                    }
+                    else if (xCoord < -margin) {
+                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -drivePower), 0));
+                    }
+                    else{
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+        public Action strafering() {
+            return new strafering2();
         }
     }
     @Override

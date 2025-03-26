@@ -7,10 +7,14 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,18 +22,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.SampleDetectionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+@Config
 @Autonomous (name = "CameraAuto1", group = "NEAuto")
-public class CameraAuto1 extends LinearOpMode {
+public class
+
+CameraAuto1 extends LinearOpMode {
 
     private OpenCvWebcam webcam;
-    private SampleDetectionFinal.RedObjectPipeline redObjectPipeline;
-    //private SampleDetectionFinal.BlueObjectPipeline blueObjectPipeline;
+    //private SampleDetectionFinal.RedObjectPipeline redObjectPipeline;
+    private SampleDetectionFinal.BlueObjectPipeline blueObjectPipeline;
     //private SampleSplitPlusColor.YellowObjectPipeline yellowObjectPipeline;
+
+    public static int num = 20;
+    public static double increment = 0.005;
+    public static double power = 0.3;
 
     public class HSlides {
 
@@ -44,16 +56,16 @@ public class CameraAuto1 extends LinearOpMode {
         public class HSlidesMovement implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                yOffset = redObjectPipeline.getYOffset();
+                yOffset = blueObjectPipeline.getYOffset();
                 double currentPos = calvin.hSlidesLeft.getPosition();
-                if (redObjectPipeline.getIsFound()) {
-                    if (yOffset > 15 && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
-                        calvin.hSlidesLeft.setPosition(currentPos - 0.003);
-                        calvin.hSlidesRight.setPosition(currentPos - 0.003);
+                if (blueObjectPipeline.getIsFound()) {
+                    if (yOffset > num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
+                        calvin.hSlidesLeft.setPosition(currentPos - increment);
+                        calvin.hSlidesRight.setPosition(currentPos - increment);
                         return true;
-                    } else if (yOffset < -15 && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
-                        calvin.hSlidesLeft.setPosition(currentPos + 0.003);
-                        calvin.hSlidesRight.setPosition(currentPos + 0.003);
+                    } else if (yOffset < -num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
+                        calvin.hSlidesLeft.setPosition(currentPos + increment);
+                        calvin.hSlidesRight.setPosition(currentPos + increment);
                         return true;
                     } else {
                         return false;
@@ -81,9 +93,9 @@ public class CameraAuto1 extends LinearOpMode {
         public class IntakeWristMovement implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                angle = redObjectPipeline.getDetectedAngle();
+                angle = blueObjectPipeline.getDetectedAngle();
                 double currentAngle = calvin.intakeWrist.getPosition();
-                if (redObjectPipeline.getIsFound()) {
+                if (blueObjectPipeline.getIsFound()) {
                     calvin.intakeWrist.setPosition(angle/180);
                     return false;
                 } else {
@@ -100,8 +112,49 @@ public class CameraAuto1 extends LinearOpMode {
     }
 
 
+    public class XOffsetMovement {
+
+        Calvin calvin;
+        double xOffset;
+        PinpointDrive drive;
+
+        public XOffsetMovement(HardwareMap hardwareMap) {
+            calvin = new Calvin(hardwareMap);
+            drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        }
+
+        public class XOffsetMove implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                xOffset = blueObjectPipeline.getXOffset();
+                if (blueObjectPipeline.getIsFound()) {
+                    if (xOffset > num) {
+                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, power), 0));
+                        return true;
+                    } else if (xOffset < -num) {
+                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -power), 0));
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public Action xOffsetMove() {
+            return new XOffsetMove();
+        }
+
+
+    }
+
+
     @Override
     public void runOpMode() throws InterruptedException {
+
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()
@@ -110,16 +163,16 @@ public class CameraAuto1 extends LinearOpMode {
                 hardwareMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName.class, "Webcam 1"),
                 cameraMonitorViewId
         );
-        redObjectPipeline = new SampleDetectionFinal.RedObjectPipeline();
-        //blueObjectPipeline = new SampleDetectionFinal.BlueObjectPipeline();
+        //redObjectPipeline = new SampleDetectionFinal.RedObjectPipeline();
+        blueObjectPipeline = new SampleDetectionFinal.BlueObjectPipeline();
         //yellowObjectPipeline = new SampleDetectionFinal.YellowObjectPipeline();
 
-        webcam.setPipeline(redObjectPipeline);
+        webcam.setPipeline(blueObjectPipeline);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -131,25 +184,27 @@ public class CameraAuto1 extends LinearOpMode {
         Calvin calvin = new Calvin(hardwareMap);
         HSlides hSlides = new HSlides(hardwareMap);
         IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
+        XOffsetMovement xOffsetMovement = new XOffsetMovement(hardwareMap);
 
         waitForStart();
 
         while (opModeIsActive()) {
             telemetry.addLine("Camera Streaming...");
-            telemetry.addData("angle", redObjectPipeline.getDetectedAngle());
-            telemetry.addData("xOffset", redObjectPipeline.getXOffset());
-            telemetry.addData("yOffset", redObjectPipeline.getYOffset());
-            telemetry.addData("isFound", redObjectPipeline.getIsFound());
-            telemetry.addData("is Split", redObjectPipeline.getSplitQuestion());
-            telemetry.addData("average color", redObjectPipeline.getRgb());
+            telemetry.addData("angle", blueObjectPipeline.getDetectedAngle());
+            telemetry.addData("xOffset", blueObjectPipeline.getXOffset());
+            telemetry.addData("yOffset", blueObjectPipeline.getYOffset());
+            telemetry.addData("isFound", blueObjectPipeline.getIsFound());
+            telemetry.addData("is Split", blueObjectPipeline.getSplitQuestion());
+            telemetry.addData("average color", blueObjectPipeline.getRgb());
             telemetry.update();
             FtcDashboard.getInstance().startCameraStream(webcam,10);
 
             Actions.runBlocking(
                     new SequentialAction(
                             hSlides.hSlidesMovement(),
+                            xOffsetMovement.xOffsetMove()
                             //intakeWrist.intakeWristMovement(),
-                            new SleepAction(FOREVER)
+                            //new SleepAction(FOREVER)
                     )
 
             );

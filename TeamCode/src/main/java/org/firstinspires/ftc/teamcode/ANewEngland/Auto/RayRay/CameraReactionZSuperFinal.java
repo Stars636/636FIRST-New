@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -29,7 +28,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
-public class CameraReactionUltimate extends LinearOpMode {
+public class CameraReactionZSuperFinal extends LinearOpMode {
     @Config
     public static class Offset {
         Calvin calvin;
@@ -253,12 +252,12 @@ public class CameraReactionUltimate extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                  //prevents setting the pipelines at the same time
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 0) {
                         webcam.setPipeline(rPipeline);
                         pipeline = 0; // 0 is red, 1 is yellow, 2 is blue
                     }
-                }
+                //}
                 double yOffset = rPipeline.getYOffset(); //
                 boolean found = rPipeline.getIsFound();
                 return YOffsetAction(telemetryPacket,yOffset, found);
@@ -270,12 +269,12 @@ public class CameraReactionUltimate extends LinearOpMode {
         public class YOffsetBlueSide implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 2) {
                         webcam.setPipeline(bPipeline);
                         pipeline = 2;
                     }
-                }
+                //}
                 double yOffset = bPipeline.getYOffset();
                 boolean found = bPipeline.getIsFound();
                 return YOffsetAction(telemetryPacket,yOffset, found);
@@ -287,12 +286,12 @@ public class CameraReactionUltimate extends LinearOpMode {
         public class YOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+               // synchronized (Offset.this) {
                     if (pipeline != 1) {
                         webcam.setPipeline(yPipeline);
                         pipeline = 1;
                     }
-                }
+                //}
                 double yOffset = yPipeline.getYOffset();
                 boolean found = yPipeline.getIsFound();
                 return YOffsetAction(telemetryPacket,yOffset, found);
@@ -304,12 +303,12 @@ public class CameraReactionUltimate extends LinearOpMode {
         public class XOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+               // synchronized (Offset.this) {
                     if (pipeline != 1) {
                         webcam.setPipeline(yPipeline);
                         pipeline = 1;
                     }
-               }
+               //}
                 double xOffset = yPipeline.getXOffset();
                 boolean found = yPipeline.getIsFound();
                 return XOffsetAction(telemetryPacket,xOffset,found);
@@ -323,12 +322,12 @@ public class CameraReactionUltimate extends LinearOpMode {
         public class XOffsetRed implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 0) {
                         webcam.setPipeline(rPipeline);
                         pipeline = 0;
                     }
-               }
+              // }
                 double xOffset = rPipeline.getXOffset();
                 boolean found = rPipeline.getIsFound();
                 return XOffsetAction(telemetryPacket,xOffset,found);
@@ -340,12 +339,12 @@ public class CameraReactionUltimate extends LinearOpMode {
         public class XOffsetBlue implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 2) {
                         webcam.setPipeline(bPipeline);
                         pipeline = 2;
                     }
-                }
+                //}
                 double xOffset = bPipeline.getXOffset();
                 boolean found = bPipeline.getIsFound();
                 return XOffsetAction(telemetryPacket,xOffset,found);
@@ -366,8 +365,8 @@ public class CameraReactionUltimate extends LinearOpMode {
         while(opModeIsActive()) {
             Actions.runBlocking(
                     new ParallelAction(
-                            offset.YOffsetYellow(),
-                            offset.XOffsetYellow()
+                            offset.XOffsetYellow(),
+                            offset.YOffsetYellow()
                     )
             );
         }

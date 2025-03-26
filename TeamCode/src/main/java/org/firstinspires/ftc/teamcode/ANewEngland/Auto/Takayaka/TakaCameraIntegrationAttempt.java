@@ -352,7 +352,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             telemetry.addData("Yellow Y Offset", yDetection.getYOffset());
             telemetry.addData("Yellow Angle", yDetection.getDetectedAngle());
             FtcDashboard.getInstance().startCameraStream(webcam, 10);
-            
+
             //hang set stuff idk
 
             Actions.runBlocking(

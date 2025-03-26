@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.Xyz;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth;
 
-import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.FOREVER;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
 
@@ -13,17 +12,13 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.fasterxml.jackson.databind.util.PrimitiveArrayBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
-import org.firstinspires.ftc.teamcode.ANewEngland.Camera.SampleDetectionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -32,10 +27,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
-@Autonomous (name = "CameraAuto1", group = "NEAuto")
+@Autonomous (name = "PowerOfConnection", group = "NEAuto")
 public class
 
-CameraAuto1 extends LinearOpMode {
+Cyntakacynth extends LinearOpMode {
 
     private OpenCvWebcam webcam;
     //private SampleDetectionFinal.RedObjectPipeline redObjectPipeline;
@@ -43,8 +38,8 @@ CameraAuto1 extends LinearOpMode {
     //private SampleSplitPlusColor.YellowObjectPipeline yellowObjectPipeline;
 
     public static int num = 20;
-    public static double increment = 0.0005;
-    public static double power = 0.3;
+    public static double increment = 0.0003;
+    public static double power = 0.4;
 
     public class HSlides {
 
@@ -59,23 +54,26 @@ CameraAuto1 extends LinearOpMode {
         public class HSlidesMovement implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                yOffset = blueObjectPipeline.getYOffset();
-                telemetryPacket.put("offset",yOffset);
-                double currentPos = calvin.hSlidesLeft.getPosition();
-                if (blueObjectPipeline.getIsFound()) {
-                    if (yOffset > num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
-                        calvin.hSlidesLeft.setPosition(currentPos + increment);
-                        calvin.hSlidesRight.setPosition(currentPos + increment);
-                        return true;
-                    } else if (yOffset < -num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
-                        calvin.hSlidesLeft.setPosition(currentPos - increment);
-                        calvin.hSlidesRight.setPosition(currentPos - increment);
-                        return true;
-                    } else {
-                        return false;
-                    }
+                double hSlidesPos = calvin.hSlidesLeft.getPosition();
+
+                if(!blueObjectPipeline.getIsFound()){
+                    return false;
                 }
-                return false;
+                if(blueObjectPipeline.getYOffset() < -num && hSlidesPos > hSlidesOutside){
+                    hSlidesPos -= increment;
+                    calvin.hSlidesLeft.setPosition(hSlidesPos);
+                    calvin.hSlidesRight.setPosition(hSlidesPos);
+                    return true;
+                }
+                if(blueObjectPipeline.getYOffset() > num && hSlidesPos < hSlidesInside){
+                    hSlidesPos += increment;
+                    calvin.hSlidesLeft.setPosition(hSlidesPos);
+                    calvin.hSlidesRight.setPosition(hSlidesPos);
+                    return true;
+                }
+                else{
+                    return false;
+                }
 
             }
         }

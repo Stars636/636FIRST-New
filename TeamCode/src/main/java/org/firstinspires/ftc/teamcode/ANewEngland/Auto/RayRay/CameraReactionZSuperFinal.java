@@ -51,8 +51,10 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
         public final static int moveOn = 15;
         public static double minPosition = 0.74;
         public static double maxPosition = 1;
-        public static double step = 0.005;
-        public static double deadzone = 20;
+        public static double step = 0.0003;
+        public static double deadzoneX = 20;
+        public static double deadzoneY = 35;
+
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
@@ -164,7 +166,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
             }
             notFoundTickerX = 0;
 
-            if (Math.abs(xOffset) < deadzone) {
+            if (Math.abs(xOffset) < deadzoneX) {
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, 0),
                         0
@@ -213,7 +215,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
             }
             notFoundTickerY = 0;
 
-            if (Math.abs(yOffset) < deadzone) { //if its in range, don't move
+            if (Math.abs(yOffset) < deadzoneY) { //if its in range, don't move
                 tickerY++;
                 if (tickerY >= checker) { //only consider it done when its been in range for 5 calculations
                     //this is so it doesn't stop immediately if it sweeps past it

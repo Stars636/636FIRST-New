@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 @Config
-@Disabled
 @TeleOp
 public class PIDController extends LinearOpMode {
 
@@ -18,10 +17,9 @@ public class PIDController extends LinearOpMode {
     Calvin calvin;
     public static double target = 2000;
     public  static double Kp = 0.05, Ki = 0.000008, Kd = 0.00007;
-    public static double integralSum = 0;
-    public  static double lastError = 0;
+    public double integralSum = 0;
+    public double lastError = 0;
 
-    public static boolean up = true;
 
 
     ElapsedTime timer = new ElapsedTime();

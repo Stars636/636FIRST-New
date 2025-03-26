@@ -59,21 +59,21 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                 if(!rDetection.getIsFound()){
                     return false;
                 }
-                else if(rDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
+                if(rDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
                     hSlidesPos -= increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
                     return true;
                 }
-                else if(rDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
+                if(rDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
                     hSlidesPos += increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
                     return true;
                 }
-                else{
-                    return false;
-                }
+
+                return false;
+
             }
         }
         public Action rYOffset(){
@@ -158,12 +158,12 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
                     return false;
                 }
-                if(xOffset > margin && rDetection.getIsFound()){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
+                if(xOffset > margin){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
-                if(xOffset < margin && rDetection.getIsFound()){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
+                if(xOffset < margin){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
                 else{
@@ -183,11 +183,11 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
                     return false;
                 }
                 if(xOffset > margin && yDetection.getIsFound()){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
                 if(xOffset < margin && yDetection.getIsFound()){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
                 else{
@@ -202,16 +202,17 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
                 double xOffset = bDetection.getXOffset();
+                telemetryPacket.put("xoffset",xOffset);
                 if(!bDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
                     return false;
                 }
                 if(xOffset > margin && bDetection.getIsFound()){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
                 if(xOffset < margin && bDetection.getIsFound()){
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
                 else{

@@ -22,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiveRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRotHalf;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalRight;
@@ -122,6 +123,7 @@ public class CalvinTeleFinal extends LinearOpMode {
                             changedRB = false;
                         }
                         if (transferTime.seconds() > transferPart1) {
+                            calvin.intakeElbow.setPosition(intakeClawTransferRot);
                             calvin.intakeArm.setPosition(intakeClawTransferPos);
                             calvin.depositClaw.setPosition(depositClawOpen);
                             depositClawMacro = DepositClawMacro.OPENED;
@@ -134,6 +136,7 @@ public class CalvinTeleFinal extends LinearOpMode {
                     break;
                 case TWICE:
                     if (transferTime.seconds() >= transferPart2){
+                        //calvin.intakeElbow.setPosition(intakeClawTransferRot);
                         calvin.depositWrist.setPosition(depositClawTransferRot);
                         calvin.depositArm.setPosition(depositClawTransferPos);
 

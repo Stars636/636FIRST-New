@@ -329,7 +329,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         rDetection = new RedObjectPipeline(webcam);
         yDetection = new YellowObjectPipeline(webcam);
         bDetection = new BlueObjectPipeline(webcam);
-        webcam.setPipeline(rDetection);
+        webcam.setPipeline(yDetection);
 
         waitForStart();
 
@@ -337,6 +337,10 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
         while(opModeIsActive()){
             telemetry.update();
+            telemetry.addData("Yellow X Offset", yDetection.getXOffset());
+            telemetry.addData("Yellow Y Offset", yDetection.getYOffset());
+            telemetry.addData("Yellow Angle", yDetection.getDetectedAngle());
+
             sleep(100);
 
             //hang set stuff idk

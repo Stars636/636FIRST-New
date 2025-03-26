@@ -103,6 +103,12 @@ public class AdarshCamera extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addLine("Camera On");
+            telemetry.addData("angle", blueDetect.getDetectedAngle());
+            telemetry.addData("xOffset", blueDetect.getXOffset());
+            telemetry.addData("yOffset", blueDetect.getYOffset());
+            telemetry.addData("isFound", blueDetect.getIsFound());
+            telemetry.addData("is Split", blueDetect.getSplitQuestion());
+            telemetry.addData("average color", blueDetect.getRgb());
             telemetry.update();
             FtcDashboard.getInstance().startCameraStream(detectionApparatus, 10);
             Actions.runBlocking(

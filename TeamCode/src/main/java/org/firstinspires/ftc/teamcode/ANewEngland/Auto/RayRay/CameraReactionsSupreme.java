@@ -226,11 +226,13 @@ public class CameraReactionsSupreme extends LinearOpMode {
             double targetPos = currentPos;
 
             if (yOffset > 10) {
-                targetPos = Math.max(minPosition, currentPos - step);
-            } else if (yOffset < -10) {
+                //targetPos = Math.max(minPosition, currentPos - step);
                 targetPos = Math.min(maxPosition, currentPos + step);
+            } else if (yOffset < -10) {
+                //targetPos = Math.min(maxPosition, currentPos + step);
+                targetPos = Math.max(minPosition, currentPos - step);
             }
-
+          
             //i live my life in fear
             if (targetPos <= minPosition) {
                 targetPos = minPosition; //double checking, i dont want our servos breaking

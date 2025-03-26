@@ -10,12 +10,14 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.fasterxml.jackson.databind.util.PrimitiveArrayBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,7 +42,7 @@ CameraAuto1 extends LinearOpMode {
     //private SampleSplitPlusColor.YellowObjectPipeline yellowObjectPipeline;
 
     public static int num = 20;
-    public static double increment = 0.005;
+    public static double increment = 0.0005;
     public static double power = 0.3;
 
     public class HSlides {
@@ -60,12 +62,12 @@ CameraAuto1 extends LinearOpMode {
                 double currentPos = calvin.hSlidesLeft.getPosition();
                 if (blueObjectPipeline.getIsFound()) {
                     if (yOffset > num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
-                        calvin.hSlidesLeft.setPosition(currentPos - increment);
-                        calvin.hSlidesRight.setPosition(currentPos - increment);
-                        return true;
-                    } else if (yOffset < -num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
                         calvin.hSlidesLeft.setPosition(currentPos + increment);
                         calvin.hSlidesRight.setPosition(currentPos + increment);
+                        return true;
+                    } else if (yOffset < -num && currentPos > hSlidesOutside && currentPos < hSlidesInside) {
+                        calvin.hSlidesLeft.setPosition(currentPos - increment);
+                        calvin.hSlidesRight.setPosition(currentPos - increment);
                         return true;
                     } else {
                         return false;
@@ -130,10 +132,10 @@ CameraAuto1 extends LinearOpMode {
                 xOffset = blueObjectPipeline.getXOffset();
                 if (blueObjectPipeline.getIsFound()) {
                     if (xOffset > num) {
-                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, power), 0));
+                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -power), 0));
                         return true;
                     } else if (xOffset < -num) {
-                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -power), 0));
+                        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, power), 0));
                         return true;
                     } else {
                         return false;
@@ -200,7 +202,7 @@ CameraAuto1 extends LinearOpMode {
             FtcDashboard.getInstance().startCameraStream(webcam,10);
 
             Actions.runBlocking(
-                    new SequentialAction(
+                    new ParallelAction(
                             hSlides.hSlidesMovement(),
                             xOffsetMovement.xOffsetMove()
                             //intakeWrist.intakeWristMovement(),

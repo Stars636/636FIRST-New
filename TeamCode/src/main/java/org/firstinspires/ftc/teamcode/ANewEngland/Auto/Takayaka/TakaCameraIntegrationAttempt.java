@@ -47,7 +47,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
     static double increment = 0.0001;
     public static class YOffset{
         Calvin calvin;
-        double margin = 10;
+        double margin = 20;
         public YOffset(HardwareMap hardwareMap){
             calvin = new Calvin(hardwareMap);
         }
@@ -147,7 +147,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
         }
 
-        double margin = 10;
+        double margin = 20;
         double moveY = 0.1;
         public class RXOffset implements Action{
             @Override

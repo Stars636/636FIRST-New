@@ -40,7 +40,7 @@ public class CameraReactionUltimate extends LinearOpMode {
         BlueObjectPipeline bPipeline;
 
         public static double INVALID = 100000;
-        public static double power = 0.3;
+        public static double power = 0.35;
         public static int pipeline = 0;
         private int tickerX = 0;
         private int tickerY = 0;

@@ -44,7 +44,8 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
     static RedObjectPipeline rDetection;
     static YellowObjectPipeline yDetection;
     static BlueObjectPipeline bDetection;
-    static double increment = 0.0001;
+    public static double increment = 0.0001;
+    @Config
     public static class YOffset{
         Calvin calvin;
         public static double margin = 20;
@@ -148,7 +149,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         }
 
         public static double margin = 20;
-        public static double moveY = 0.2;
+        public static double moveY = 0.3;
         public class RXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){

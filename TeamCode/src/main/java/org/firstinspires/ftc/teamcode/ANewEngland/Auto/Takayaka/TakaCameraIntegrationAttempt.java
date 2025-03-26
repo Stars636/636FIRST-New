@@ -47,7 +47,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
     static double increment = 0.0001;
     public static class YOffset{
         Calvin calvin;
-        double margin = 20;
+        public static double margin = 20;
         public YOffset(HardwareMap hardwareMap){
             calvin = new Calvin(hardwareMap);
         }
@@ -56,16 +56,16 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 double hSlidesPos = calvin.hSlidesLeft.getPosition();
 
-                if(rDetection.getYOffset() == 100000){
+                if(!rDetection.getIsFound()){
                     return false;
                 }
-                if(rDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
+                else if(rDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
                     hSlidesPos -= increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
                     return true;
                 }
-                if(rDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
+                else if(rDetection.getYOffset() > margin && hSlidesPos < hSlidesInside){
                     hSlidesPos += increment;
                     calvin.hSlidesLeft.setPosition(hSlidesPos);
                     calvin.hSlidesRight.setPosition(hSlidesPos);
@@ -84,7 +84,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 double hSlidesPos = calvin.hSlidesLeft.getPosition();
 
-                if(yDetection.getYOffset() == 100000){
+                if(!yDetection.getIsFound()){
                     return false;
                 }
                 if(yDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
@@ -112,7 +112,7 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 double hSlidesPos = calvin.hSlidesLeft.getPosition();
 
-                if(bDetection.getYOffset() == 100000){
+                if(!bDetection.getIsFound()){
                     return false;
                 }
                 if(bDetection.getYOffset() < -margin && hSlidesPos > hSlidesOutside){
@@ -147,19 +147,22 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
         }
 
-        double margin = 20;
-        double moveY = 0.1;
+        public static double margin = 20;
+        public static double moveY = 0.2;
         public class RXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                boolean sampleFound = rDetection.getIsFound();
                 double xOffset = rDetection.getXOffset();
 
-                if(xOffset > margin && sampleFound){
+                if(!rDetection.getIsFound()){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
+                    return false;
+                }
+                if(xOffset > margin && rDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
-                if(xOffset < margin && sampleFound){
+                if(xOffset < margin && rDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
@@ -174,13 +177,16 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public class YXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                boolean sampleFound = yDetection.getIsFound();
                 double xOffset = yDetection.getXOffset();
-                if(xOffset > margin && sampleFound){
+                if(!yDetection.getIsFound()){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
+                    return false;
+                }
+                if(xOffset > margin && yDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
-                if(xOffset < margin && sampleFound){
+                if(xOffset < margin && yDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
@@ -195,13 +201,16 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
         public class BXOffset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                boolean sampleFound = bDetection.getIsFound();
                 double xOffset = bDetection.getXOffset();
-                if(xOffset > margin && sampleFound){
+                if(!bDetection.getIsFound()){
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
+                    return false;
+                }
+                if(xOffset > margin && bDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, moveY), 0));
                     return true;
                 }
-                if(xOffset < margin && sampleFound){
+                if(xOffset < margin && bDetection.getIsFound()){
                     drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, -moveY), 0));
                     return true;
                 }
@@ -224,16 +233,19 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             boolean sampleFound = rDetection.getIsFound();
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                if(sampleFound && ((angle >= 0 && angle < 30) || (angle <= 180 && angle > 150))){
-                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                }
-                if(sampleFound && angle >= 30 && angle <60){
-                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
-                }
-                if(sampleFound && angle >= 60 && angle <= 120){
+                if(!rDetection.getIsFound()){
                     calvin.intakeWrist.setPosition(intakeWristFlat);
                 }
-                if(sampleFound && angle > 120 && angle <= 150){
+                else if(sampleFound && ((angle >= 0 && angle < 30) || (angle <= 180 && angle > 150))){
+                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
+                }
+                else if(sampleFound && angle >= 30 && angle <60){
+                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
+                }
+                else if(sampleFound && angle >= 60 && angle <= 120){
+                    calvin.intakeWrist.setPosition(intakeWristFlat);
+                }
+                else if(sampleFound && angle > 120 && angle <= 150){
                     calvin.intakeWrist.setPosition(intakeWristTiltRight);
                 }
                 return false;
@@ -247,16 +259,19 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             boolean sampleFound = yDetection.getIsFound();
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                if(sampleFound && ((angle >= 0 && angle < 30) || (angle <= 180 && angle > 150))){
-                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                }
-                if(sampleFound && angle >= 30 && angle <60){
-                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
-                }
-                if(sampleFound && angle >= 60 && angle <= 120){
+                if(!yDetection.getIsFound()){
                     calvin.intakeWrist.setPosition(intakeWristFlat);
                 }
-                if(sampleFound && angle > 120 && angle <= 150){
+                else if(sampleFound && ((angle >= 0 && angle < 30) || (angle <= 180 && angle > 150))){
+                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
+                }
+                else if(sampleFound && angle >= 30 && angle <60){
+                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
+                }
+                else if(sampleFound && angle >= 60 && angle <= 120){
+                    calvin.intakeWrist.setPosition(intakeWristFlat);
+                }
+                else if(sampleFound && angle > 120 && angle <= 150){
                     calvin.intakeWrist.setPosition(intakeWristTiltRight);
                 }
                 return false;
@@ -270,16 +285,19 @@ public class TakaCameraIntegrationAttempt extends LinearOpMode {
             boolean sampleFound = bDetection.getIsFound();
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket){
-                if(sampleFound && ((angle >= 0 && angle < 30) || (angle <= 180 && angle > 150))){
-                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
-                }
-                if(sampleFound && angle >= 30 && angle <60){
-                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
-                }
-                if(sampleFound && angle >= 60 && angle <= 120){
+                if(!bDetection.getIsFound()){
                     calvin.intakeWrist.setPosition(intakeWristFlat);
                 }
-                if(sampleFound && angle > 120 && angle <= 150){
+                else if(sampleFound && ((angle >= 0 && angle < 30) || (angle <= 180 && angle > 150))){
+                    calvin.intakeWrist.setPosition(intakeWristNormalLeft);
+                }
+                else if(sampleFound && angle >= 30 && angle <60){
+                    calvin.intakeWrist.setPosition(intakeWristTiltLeft);
+                }
+                else if(sampleFound && angle >= 60 && angle <= 120){
+                    calvin.intakeWrist.setPosition(intakeWristFlat);
+                }
+                else if(sampleFound && angle > 120 && angle <= 150){
                     calvin.intakeWrist.setPosition(intakeWristTiltRight);
                 }
                 return false;

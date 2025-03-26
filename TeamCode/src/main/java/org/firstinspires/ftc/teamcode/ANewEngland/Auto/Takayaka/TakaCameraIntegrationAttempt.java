@@ -35,7 +35,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
-
 public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
     Calvin calvin;

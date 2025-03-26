@@ -47,11 +47,10 @@ public class CameraReactionUltimate extends LinearOpMode {
 
         private static int notFoundTickerY = 0;
         private static int notFoundTickerX = 0;
-
         public final static  int moveOn = 15;
         public double minPosition = 0.74;
         public double maxPosition = 1;
-        public double step = 0.01;
+        public double step = 0.005;
         public static double deadzone = 10;
         public static double maxOffset = 100;
         public static double minPower = 0.1;
@@ -180,8 +179,8 @@ public class CameraReactionUltimate extends LinearOpMode {
                 return true;
             }
 
-            double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
-            double adjustedPower = Math.max(minPower, power * powerScale);
+
+            double adjustedPower = power;
 
             if (xOffset > 0) {
                 drive.setDrivePowers(new PoseVelocity2d(

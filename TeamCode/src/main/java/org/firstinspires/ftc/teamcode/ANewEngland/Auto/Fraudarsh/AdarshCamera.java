@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.Fraudarsh;
+/*package org.firstinspires.ftc.teamcode.ANewEngland.Auto.Fraudarsh;
 import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.FOREVER;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesInside;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.hSlidesOutside;
@@ -165,4 +165,4 @@ public class AdarshCamera extends LinearOpMode {
             );
         }
     }
-}
+}*/

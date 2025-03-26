@@ -12,7 +12,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.ANewEngland.Camera.SampleDetectionFinal;
+
+import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -21,7 +22,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous (name = "TheBestAuto", group = "NEAuto")
 public class AdarshCamera extends LinearOpMode {
     private OpenCvWebcam detectionApparatus;
-    private SampleDetectionFinal.BlueObjectPipeline blueDetect;
+    private BlueObjectPipeline blueDetect;
     public class extendo {
         Calvin calvin;
         public double yCoord;
@@ -86,7 +87,7 @@ public class AdarshCamera extends LinearOpMode {
          hardwareMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName.class, "Webcam 1"),
          camStream
         );
-        blueDetect = new SampleDetectionFinal.BlueObjectPipeline();
+        blueDetect = new BlueObjectPipeline(detectionApparatus);
         detectionApparatus.setPipeline(blueDetect);
         detectionApparatus.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
@@ -120,7 +121,4 @@ public class AdarshCamera extends LinearOpMode {
             );
         }
     }
-
 }
-
-

@@ -16,18 +16,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.RedObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.YellowObjectPipeline;
-import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
+import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+
 @Config
 @Autonomous
-public class CameraReactionsSupreme extends LinearOpMode {
+public class CameraReactionUltimate extends LinearOpMode {
     @Config
     public static class Offset {
         Calvin calvin;
@@ -232,7 +233,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 //targetPos = Math.min(maxPosition, currentPos + step);
                 targetPos = Math.max(minPosition, currentPos - step);
             }
-
+          
             //i live my life in fear
             if (targetPos <= minPosition) {
                 targetPos = minPosition; //double checking, i dont want our servos breaking
@@ -357,13 +358,14 @@ public class CameraReactionsSupreme extends LinearOpMode {
 
         offset = new Offset(hardwareMap,new Pose2d(0,0,0));
         waitForStart();
-
-        Actions.runBlocking(
-                new ParallelAction(
-                        offset.YOffsetYellow(),
-                        offset.XOffsetYellow()
-                )
-        );
+        while(opModeIsActive()) {
+            Actions.runBlocking(
+                    new ParallelAction(
+                            offset.YOffsetYellow(),
+                            offset.XOffsetYellow()
+                    )
+            );
+        }
 
     }
 }

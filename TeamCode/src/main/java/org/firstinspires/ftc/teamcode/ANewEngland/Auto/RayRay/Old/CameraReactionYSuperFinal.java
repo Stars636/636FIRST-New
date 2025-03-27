@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.Old;
 
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -17,21 +18,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.RedObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.YellowObjectPipeline;
-import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPipeline;
+import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
-@Config
-@Autonomous
 @Disabled
-public class CameraReactionsSupreme extends LinearOpMode {
-    @Config
-    public static class Offset {
+
+@Autonomous
+public class CameraReactionYSuperFinal extends LinearOpMode {
+
+    public static class OffsetY {
         Calvin calvin;
         PinpointDrive drive;
         OpenCvWebcam webcam;
@@ -40,7 +41,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
         BlueObjectPipeline bPipeline;
 
         public static double INVALID = 100000;
-        public static double power = 0.3;
+        public static double power = 0.35;
         public static int pipeline = 0;
         private int tickerX = 0;
         private int tickerY = 0;
@@ -48,16 +49,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
 
         private static int notFoundTickerY = 0;
         private static int notFoundTickerX = 0;
-
-        public final static  int moveOn = 15;
+        public static int moveOn = 5;
         public static double minPosition = 0.74;
         public static double maxPosition = 1;
         public static double step = 0.005;
-        public static double deadzone = 10;
+        public static double deadzone = 40;
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
-        public Offset(HardwareMap hardwareMap, Pose2d pose) {
+        public OffsetY(HardwareMap hardwareMap, Pose2d pose) {
             calvin = new Calvin(hardwareMap);
             //this.drive = new PinpointDrive(hardwareMap, pose);
             drive = new PinpointDrive(hardwareMap, pose);
@@ -76,7 +76,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
             rPipeline = new RedObjectPipeline(webcam);
             yPipeline = new YellowObjectPipeline(webcam);
             bPipeline = new BlueObjectPipeline(webcam);
-            webcam.setPipeline(yPipeline);
+            webcam.setPipeline(bPipeline);
 
             /*
              * Open the connection to the camera device. New in v1.4.0 is the ability
@@ -110,7 +110,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                      * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                      * away from the user.
                      */
-
+                    FtcDashboard.getInstance().startCameraStream(webcam,10);
                     webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
                 }
 
@@ -120,6 +120,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                     /*
                      * This will be called if the camera could not be opened
                      */
+
                 }
             });
 
@@ -148,14 +149,11 @@ public class CameraReactionsSupreme extends LinearOpMode {
             return new stopStreaming();
         }
 
-        public boolean XOffsetAction(@NonNull TelemetryPacket telemetryPacket, double xOffset) {
+        public boolean XOffsetAction(@NonNull TelemetryPacket telemetryPacket, double xOffset, boolean found) {
 
-            if (xOffset == INVALID) { //if you don't detect anything, don't move
+            if (!found) { //if you don't detect anything, don't move
                 notFoundTickerX++;
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(0, 0),
-                        0
-                ));
+
                 if (notFoundTickerX >= moveOn) {
                     notFoundTickerX = 0;
                     drive.setDrivePowers(new PoseVelocity2d(
@@ -181,20 +179,23 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 return true;
             }
 
-            double powerScale = Math.min(1.0, Math.abs(xOffset)/maxOffset);
-            double adjustedPower = Math.max(minPower, power * powerScale);
+
+            double adjustedPower = power;
 
             if (xOffset > 0) {
-                drive.setDrivePowers(new PoseVelocity2d(
-                        new Vector2d(0, adjustedPower),
-                        0
-                ));
-            } else {
+                tickerX = 0;
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, -adjustedPower),
                         0
                 ));
+            } else {
+                tickerX = 0;
+                drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(0, adjustedPower),
+                        0
+                ));
             }
+
 
             telemetryPacket.put("X Offset", xOffset);
             telemetryPacket.put("Drive Power", adjustedPower);
@@ -203,8 +204,11 @@ public class CameraReactionsSupreme extends LinearOpMode {
             return true;
         }
 
-        public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset) {
-            if (yOffset == INVALID) { //if you don't detect anything, don't move
+        public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset, boolean found) {
+            double currentPos = calvin.hSlidesLeft.getPosition();
+            telemetryPacket.put("position",currentPos);
+            telemetryPacket.put("Y Offset", yOffset);
+            if (!found) { //if you don't detect anything, don't move
                 notFoundTickerY++;
                 if (notFoundTickerY >= moveOn) {
                     notFoundTickerY = 0;
@@ -224,7 +228,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 return true;
             }
 
-            double currentPos = calvin.hSlidesLeft.getPosition();
+
             double targetPos = currentPos;
 
             if (yOffset > 10) {
@@ -234,7 +238,7 @@ public class CameraReactionsSupreme extends LinearOpMode {
                 //targetPos = Math.min(maxPosition, currentPos + step);
                 targetPos = Math.max(minPosition, currentPos - step);
             }
-
+          
             //i live my life in fear
             if (targetPos <= minPosition) {
                 targetPos = minPosition; //double checking, i dont want our servos breaking
@@ -245,7 +249,6 @@ public class CameraReactionsSupreme extends LinearOpMode {
             calvin.hSlidesLeft.setPosition(targetPos);
             calvin.hSlidesRight.setPosition(targetPos);
 
-            telemetryPacket.put("Y Offset", yOffset);
             telemetryPacket.put("Slide Position", targetPos);
 
             tickerY = 0;
@@ -255,14 +258,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                  //prevents setting the pipelines at the same time
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 0) {
                         webcam.setPipeline(rPipeline);
                         pipeline = 0; // 0 is red, 1 is yellow, 2 is blue
                     }
-                }
+                //}
                 double yOffset = rPipeline.getYOffset(); //
-                return YOffsetAction(telemetryPacket,yOffset);
+                boolean found = rPipeline.getIsFound();
+                return YOffsetAction(telemetryPacket,yOffset, found);
             }
         }
         public Action YOffsetRed() {
@@ -271,14 +275,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class YOffsetBlueSide implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 2) {
                         webcam.setPipeline(bPipeline);
                         pipeline = 2;
                     }
-                }
+                //}
                 double yOffset = bPipeline.getYOffset();
-                return YOffsetAction(telemetryPacket,yOffset);
+                boolean found = bPipeline.getIsFound();
+                return YOffsetAction(telemetryPacket,yOffset, found);
             }
         }
         public Action YOffsetBlue() {
@@ -287,14 +292,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class YOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+               // synchronized (Offset.this) {
                     if (pipeline != 1) {
                         webcam.setPipeline(yPipeline);
                         pipeline = 1;
                     }
-                }
+                //}
                 double yOffset = yPipeline.getYOffset();
-                return YOffsetAction(telemetryPacket,yOffset);
+                boolean found = yPipeline.getIsFound();
+                return YOffsetAction(telemetryPacket,yOffset, found);
             }
         }
         public Action YOffsetYellow() {
@@ -303,14 +309,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class XOffsetYellow implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+               // synchronized (Offset.this) {
                     if (pipeline != 1) {
                         webcam.setPipeline(yPipeline);
                         pipeline = 1;
                     }
-               }
+               //}
                 double xOffset = yPipeline.getXOffset();
-                return XOffsetAction(telemetryPacket,xOffset);
+                boolean found = yPipeline.getIsFound();
+                return XOffsetAction(telemetryPacket,xOffset,found);
             }
         }
         public Action XOffsetYellow() {
@@ -321,14 +328,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class XOffsetRed implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 0) {
                         webcam.setPipeline(rPipeline);
                         pipeline = 0;
                     }
-               }
+              // }
                 double xOffset = rPipeline.getXOffset();
-                return XOffsetAction(telemetryPacket,xOffset);
+                boolean found = rPipeline.getIsFound();
+                return XOffsetAction(telemetryPacket,xOffset,found);
             }
         }
         public Action XOffsetRed() {
@@ -337,14 +345,15 @@ public class CameraReactionsSupreme extends LinearOpMode {
         public class XOffsetBlue implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                synchronized (Offset.this) {
+                //synchronized (Offset.this) {
                     if (pipeline != 2) {
                         webcam.setPipeline(bPipeline);
                         pipeline = 2;
                     }
-                }
+                //}
                 double xOffset = bPipeline.getXOffset();
-                return XOffsetAction(telemetryPacket,xOffset);
+                boolean found = bPipeline.getIsFound();
+                return XOffsetAction(telemetryPacket,xOffset,found);
 
             }
         }
@@ -352,20 +361,20 @@ public class CameraReactionsSupreme extends LinearOpMode {
             return new XOffsetBlue();
         }
     }
-    Offset offset;
+    OffsetY offset;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        offset = new Offset(hardwareMap,new Pose2d(0,0,0));
+        offset = new OffsetY(hardwareMap,new Pose2d(0,0,0));
         waitForStart();
-
-        Actions.runBlocking(
-                new ParallelAction(
-                        offset.YOffsetYellow(),
-                        offset.XOffsetYellow()
-                )
-        );
+        while(opModeIsActive()) {
+            Actions.runBlocking(
+                    new ParallelAction(
+                            offset.YOffsetBlue()
+                    )
+            );
+        }
 
     }
 }

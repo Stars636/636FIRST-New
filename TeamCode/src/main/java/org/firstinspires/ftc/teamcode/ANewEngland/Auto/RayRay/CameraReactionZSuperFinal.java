@@ -58,10 +58,10 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
-        public OffsetFraud(HardwareMap hardwareMap, Pose2d pose) {
+        public OffsetFraud(HardwareMap hardwareMap, PinpointDrive drive) {
             calvin = new Calvin(hardwareMap);
             //this.drive = new PinpointDrive(hardwareMap, pose);
-            drive = new PinpointDrive(hardwareMap, pose);
+            this.drive = drive;
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
@@ -151,6 +151,9 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
         }
 
         public boolean XOffsetAction(@NonNull TelemetryPacket telemetryPacket, double xOffset, boolean found) {
+            telemetryPacket.put("tickerX",tickerX);
+            telemetryPacket.put("tickerX",tickerX);
+            telemetryPacket.put("Found", found);
             if (!found) { //if you don't detect anything, don't move
                 notFoundTickerX++;
 
@@ -160,6 +163,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                             new Vector2d(0, 0),
                             0
                     ));
+                    drive.updatePoseEstimate();
                     return false;
                 }
                 return true;
@@ -171,6 +175,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                         new Vector2d(0, 0),
                         0
                 ));
+                drive.updatePoseEstimate();
                 tickerX++;
                 if (tickerX >= checker) {
                     tickerX = 0;
@@ -188,12 +193,14 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                         new Vector2d(0, -adjustedPower),
                         0
                 ));
+                drive.updatePoseEstimate();
             } else {
                 tickerX = 0;
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, adjustedPower),
                         0
                 ));
+                drive.updatePoseEstimate();
             }
 
 
@@ -205,6 +212,8 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
         }
 
         public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset, boolean found) {
+            telemetryPacket.put("tickerX",tickerX);
+            telemetryPacket.put("Found", found);
             if (!found) { //if you don't detect anything, don't move
                 notFoundTickerY++;
                 if (notFoundTickerY >= moveOn) {
@@ -363,8 +372,10 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+        offset = new OffsetFraud(hardwareMap, drive);
 
-        offset = new OffsetFraud(hardwareMap,new Pose2d(0,0,0));
+
         waitForStart();
         while(opModeIsActive()) {
             Actions.runBlocking(
@@ -377,8 +388,3 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
 
     }
 }
-// if (yOffset > 10) {
-//                    targetPos = Math.min(maxPosition, currentPos + step);
-//                } else if (yOffset < -10) {
-//                    targetPos = Math.max(minPosition, currentPos - step);
-//                }

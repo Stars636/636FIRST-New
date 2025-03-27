@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.Old;
 
 
 import androidx.annotation.NonNull;
@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -27,11 +28,11 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Config
+@Disabled
 @Autonomous
-public class CameraReactionYSuperFinal extends LinearOpMode {
-    @Config
-    public static class OffsetY {
+public class CameraReactionXSuperFinal extends LinearOpMode {
+
+    public static class OffsetX {
         Calvin calvin;
         PinpointDrive drive;
         OpenCvWebcam webcam;
@@ -48,15 +49,15 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
 
         private static int notFoundTickerY = 0;
         private static int notFoundTickerX = 0;
-        public static int moveOn = 5;
+        public final static int moveOn = 15;
         public static double minPosition = 0.74;
         public static double maxPosition = 1;
         public static double step = 0.005;
-        public static double deadzone = 40;
+        public static double deadzone = 20;
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
-        public OffsetY(HardwareMap hardwareMap, Pose2d pose) {
+        public OffsetX(HardwareMap hardwareMap, Pose2d pose) {
             calvin = new Calvin(hardwareMap);
             //this.drive = new PinpointDrive(hardwareMap, pose);
             drive = new PinpointDrive(hardwareMap, pose);
@@ -194,7 +195,6 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
                 ));
             }
 
-
             telemetryPacket.put("X Offset", xOffset);
             telemetryPacket.put("Drive Power", adjustedPower);
 
@@ -203,9 +203,6 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
         }
 
         public boolean YOffsetAction(@NonNull TelemetryPacket telemetryPacket,double yOffset, boolean found) {
-            double currentPos = calvin.hSlidesLeft.getPosition();
-            telemetryPacket.put("position",currentPos);
-            telemetryPacket.put("Y Offset", yOffset);
             if (!found) { //if you don't detect anything, don't move
                 notFoundTickerY++;
                 if (notFoundTickerY >= moveOn) {
@@ -226,7 +223,7 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
                 return true;
             }
 
-
+            double currentPos = calvin.hSlidesLeft.getPosition();
             double targetPos = currentPos;
 
             if (yOffset > 10) {
@@ -247,6 +244,7 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
             calvin.hSlidesLeft.setPosition(targetPos);
             calvin.hSlidesRight.setPosition(targetPos);
 
+            telemetryPacket.put("Y Offset", yOffset);
             telemetryPacket.put("Slide Position", targetPos);
 
             tickerY = 0;
@@ -359,17 +357,17 @@ public class CameraReactionYSuperFinal extends LinearOpMode {
             return new XOffsetBlue();
         }
     }
-    OffsetY offset;
+    OffsetX offset;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        offset = new OffsetY(hardwareMap,new Pose2d(0,0,0));
+        offset = new OffsetX(hardwareMap,new Pose2d(0,0,0));
         waitForStart();
         while(opModeIsActive()) {
             Actions.runBlocking(
                     new ParallelAction(
-                            offset.YOffsetBlue()
+                            offset.XOffsetBlue()
                     )
             );
         }

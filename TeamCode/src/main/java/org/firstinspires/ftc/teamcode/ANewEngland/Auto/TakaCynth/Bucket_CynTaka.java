@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth;
 
 
 import com.acmerobotics.dashboard.config.Config;
@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionZSuperFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
@@ -46,7 +47,7 @@ public class Bucket_CynTaka extends LinearOpMode {
 
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
-        CameraReactionZSuperFinal.OffsetFraud offsetFraud = new CameraReactionZSuperFinal.OffsetFraud(hardwareMap,new Pose2d(0,0,0));
+        CameraReactionZSuperFinal.OffsetFraud offsetFraud = new CameraReactionZSuperFinal.OffsetFraud(hardwareMap,drive);
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
@@ -91,13 +92,6 @@ public class Bucket_CynTaka extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
-
-
-
-
-
-                 
-
         //we will create macros in the future, to remove room for error
         waitForStart();
         //calvin.initialPositions();
@@ -136,60 +130,9 @@ public class Bucket_CynTaka extends LinearOpMode {
 
                     )
 
-                            //sPickup
-
-                            
-
             );
-            
-            /*drive.followTrajectorySequence(b1);
 
-            calvin.moveVerticalSlidesTo(specimenStartDepositVerticalSlides);
-            calvin.wait(0.5);
-            calvin.specimenDeposit();
-            calvin.wait(2);
 
-            drive.followTrajectorySequence(b2);
-            drive.followTrajectorySequence(b3);
-            drive.followTrajectorySequence(b4);
-            drive.followTrajectorySequence(b5);
-            drive.followTrajectorySequence(b6);
-            drive.followTrajectorySequence(b7);
-            drive.followTrajectorySequence(b8);
-            drive.followTrajectorySequence(b9);
-            drive.followTrajectorySequence(b10);
-            drive.followTrajectorySequence(b11);
-            drive.followTrajectorySequence(b12);
-
-            //should i just do a loop?
-
-            //scoring 1st specimen
-            calvin.specimenPickUp();
-            calvin.wait(1);
-            drive.followTrajectorySequence(bDeposit);
-            calvin.specimenDeposit();
-            calvin.wait(2);
-            drive.followTrajectorySequence(bPickup);
-
-            //scoring 2nd specimen
-            calvin.specimenPickUp();
-            calvin.wait(1);
-            drive.followTrajectorySequence(bDeposit);
-            calvin.specimenDeposit();
-            calvin.wait(2);
-            drive.followTrajectorySequence(bPickup);
-
-            //scoring 3rd specimen
-            calvin.specimenPickUp();
-            calvin.wait(1);
-            drive.followTrajectorySequence(bDeposit);
-            calvin.specimenDeposit();
-            calvin.wait(2);
-
-            //park
-            drive.followTrajectorySequence(bPickup);
-
-            calvin.wait(30000);*/
 
         }
     }

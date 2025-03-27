@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionBad;
 import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionZSuperFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -23,9 +24,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous
 @Config
-public class Bucket_CynTaka extends LinearOpMode {
+public class Bucket_CynTakaBackUp extends LinearOpMode {
     
-    PinpointDrive drive;
+    MecanumDrive drive;
     double fraudOffset = 12.5;
     public static int fraudWait = 1;
     
@@ -46,14 +47,13 @@ public class Bucket_CynTaka extends LinearOpMode {
 
 
 
-        //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
-        CameraReactionZSuperFinal.OffsetFraud offsetFraud = new CameraReactionZSuperFinal.OffsetFraud(hardwareMap,drive);
+        //drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
         //if you are coming from meep meep, define your initial here
-
+        drive = new MecanumDrive(hardwareMap, startPose);
+        CameraReactionBad.OffsetBad offsetFraud = new CameraReactionBad.OffsetBad(hardwareMap, drive);
 
         // Set the initial pose of the robot
 
@@ -121,12 +121,6 @@ public class Bucket_CynTaka extends LinearOpMode {
                                     offsetFraud.YOffsetYellow()
                             ),
                             s4,
-                            /*drive.actionBuilder(drive.getPoseEstimate())  // Continue from current pose
-                                    .add(new ParallelAction(
-                                            offsetFraud.XOffsetYellow(),
-                                            offsetFraud.YOffsetYellow()
-                                    ))
-                                    .build(),*/
                             new SleepAction(fraudWait),
                             s5,
                             new SleepAction(fraudWait),

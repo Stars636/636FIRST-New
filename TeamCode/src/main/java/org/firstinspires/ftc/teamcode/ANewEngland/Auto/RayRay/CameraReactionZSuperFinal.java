@@ -163,7 +163,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                             new Vector2d(0, 0),
                             0
                     ));
-                    drive.updatePoseEstimate();
+                    //drive.updatePoseEstimate();
                     return false;
                 }
                 return true;
@@ -175,7 +175,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                         new Vector2d(0, 0),
                         0
                 ));
-                drive.updatePoseEstimate();
+                //drive.updatePoseEstimate();
                 tickerX++;
                 if (tickerX >= checker) {
                     tickerX = 0;
@@ -193,14 +193,15 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
                         new Vector2d(0, -adjustedPower),
                         0
                 ));
-                drive.updatePoseEstimate();
+               // drive.updatePoseEstimate();
             } else {
                 tickerX = 0;
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, adjustedPower),
                         0
                 ));
-                drive.updatePoseEstimate();
+               // drive.updatePoseEstimate();
+
             }
 
 

@@ -120,6 +120,12 @@ public class Bucket_CynTaka extends LinearOpMode {
                                     offsetFraud.YOffsetYellow()
                             ),
                             s4,
+                            drive.actionBuilder(drive.getPoseEstimate())  // Continue from current pose
+                                    .add(new ParallelAction(
+                                            offsetFraud.XOffsetYellow(),
+                                            offsetFraud.YOffsetYellow()
+                                    ))
+                                    .build(),
                             new SleepAction(fraudWait),
                             s5,
                             new SleepAction(fraudWait),

@@ -28,9 +28,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous (name = "PowerOfConnection", group = "NEAuto")
-public class
-
-Cyntakacynth extends LinearOpMode {
+public class Cyntakacynth extends LinearOpMode {
 
     private OpenCvWebcam webcam;
     //private SampleDetectionFinal.RedObjectPipeline redObjectPipeline;

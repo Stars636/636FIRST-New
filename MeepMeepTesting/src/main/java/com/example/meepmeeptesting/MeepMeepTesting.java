@@ -3,6 +3,7 @@ package com.example.meepmeeptesting;
 import static java.lang.Math.PI;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -11,8 +12,8 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
 
-        double xInitial = -45; //i have Initial variables because in real life i think the robot will start from zero
-        double yInitial = -64;// so use Initial variables haha
+        double xInitial = -45+45; //i have Initial variables because in real life i think the robot will start from zero
+        double yInitial = -64+64;// so use Initial variables haha
 
         double xStart = 0;
         double yStart = -64;
@@ -29,6 +30,9 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity basketBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12)
+                .build();
+        RoadRunnerBotEntity cyntakaBot = new DefaultBotBuilder(meepMeep)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 12)
                 .build();
         RoadRunnerBotEntity turnBot = new DefaultBotBuilder(meepMeep)
@@ -48,6 +52,8 @@ public class MeepMeepTesting {
 
         Pose2d startPose = new Pose2d(0, 0, 0);
         Pose2d scorePosee = new Pose2d(xInitial + 12, yInitial + 12, Math.toRadians(-45));
+        Pose2d scorePoseee = new Pose2d(xInitial + 8.5, yInitial + 15, Math.toRadians(-45)); //(9, 15)
+
 
         turnBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xInitial, xInitial, 0))
                 .splineToLinearHeading(scorePosee, Math.toRadians(0))
@@ -78,6 +84,19 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(scorePose, Math.toRadians(50))
                 .splineToLinearHeading(new Pose2d(xInitial + 23, yInitial + 56, Math.toRadians(0)), Math.toRadians(50))
                 .splineToLinearHeading(scorePose, Math.toRadians(50))
+                .build());
+
+        double fraudOffset = 12.5;
+        cyntakaBot.runAction(cyntakaBot.getDrive().actionBuilder(new Pose2d(8.5, 15, Math.toRadians(-45)))
+                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 16.85, Math.toRadians(0)), Math.toRadians(0))
+                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial + 15.5, yInitial + 17, Math.toRadians(28)), Math.toRadians(0))
+                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(130))//turning towards submersibl
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial - 23, Math.toRadians(90)), Math.toRadians(90))
                 .build());
 
         specimenAndBasket.runAction(specimenAndBasket.getDrive().actionBuilder(new Pose2d(xBegin, yBegin, 3*PI/2))
@@ -124,11 +143,12 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(basketBot)
+                //.addEntity(basketBot)
                 //.addEntity(specimenBot)
                 //.addEntity(specimenAndBasket)
                 //.addEntity(turnBot)
                 //.addEntity(myBot)
+                .addEntity(cyntakaBot)
                 .start();
     }
 }

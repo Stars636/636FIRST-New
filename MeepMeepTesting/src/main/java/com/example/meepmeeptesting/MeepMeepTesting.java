@@ -12,8 +12,8 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
 
-        double xInitial = -45+45; //i have Initial variables because in real life i think the robot will start from zero
-        double yInitial = -64+64;// so use Initial variables haha
+        double xInitial = -45; //i have Initial variables because in real life i think the robot will start from zero
+        double yInitial = -64;// so use Initial variables haha
 
         double xStart = 0;
         double yStart = -64;
@@ -86,18 +86,7 @@ public class MeepMeepTesting {
                 .splineToLinearHeading(scorePose, Math.toRadians(50))
                 .build());
 
-        double fraudOffset = 12.5;
-        cyntakaBot.runAction(cyntakaBot.getDrive().actionBuilder(new Pose2d(8.5, 15, Math.toRadians(-45)))
-                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 16.85, Math.toRadians(0)), Math.toRadians(0))
-                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(xInitial + 15.5, yInitial + 17, Math.toRadians(28)), Math.toRadians(0))
-                .splineToLinearHeading(scorePoseee, Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(130))//turning towards submersibl
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial - 23, Math.toRadians(90)), Math.toRadians(90))
-                .build());
+
 
         specimenAndBasket.runAction(specimenAndBasket.getDrive().actionBuilder(new Pose2d(xBegin, yBegin, 3*PI/2))
                 .splineToLinearHeading(new Pose2d(xBegin, yBegin + 25, Math.toRadians(270)), Math.toRadians(270)) //moves to score specimen
@@ -143,12 +132,12 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                //.addEntity(basketBot)
+                .addEntity(basketBot)
                 //.addEntity(specimenBot)
                 //.addEntity(specimenAndBasket)
                 //.addEntity(turnBot)
                 //.addEntity(myBot)
-                .addEntity(cyntakaBot)
+                //.addEntity(cyntakaBot)
                 .start();
     }
 }

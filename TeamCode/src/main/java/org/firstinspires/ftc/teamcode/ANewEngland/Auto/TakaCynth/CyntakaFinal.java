@@ -36,7 +36,7 @@ public class CyntakaFinal extends LinearOpMode {
     public static int numY = 20;
     public static double increment = 0.0003;
     public static double power = 0.4;
-    public static int pipeline = 0; //0 = red; 1 = yellow; 2 = blue;
+    public static int pipeline = 1; //0 = red; 1 = yellow; 2 = blue;
 
 
     public static class Cameraing {
@@ -50,10 +50,10 @@ public class CyntakaFinal extends LinearOpMode {
         //private SampleSplitPlusColor.YellowObjectPipeline yellowObjectPipeline;
         YellowObjectPipeline yellowObjectPipeline;
 
-        public Cameraing(HardwareMap hardwareMap, PinpointDrive drive) {
+        public Cameraing(HardwareMap hardwareMap, Pose2d pose2d) {
 
             calvin = new Calvin(hardwareMap);
-            this.drive = drive;
+            drive = new PinpointDrive(hardwareMap, pose2d);
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                     "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()
             );
@@ -65,7 +65,7 @@ public class CyntakaFinal extends LinearOpMode {
             blueObjectPipeline = new BlueObjectPipeline(webcam);
             yellowObjectPipeline = new YellowObjectPipeline(webcam);
 
-            webcam.setPipeline(blueObjectPipeline);
+            webcam.setPipeline(yellowObjectPipeline);
 
             webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                 @Override
@@ -244,7 +244,7 @@ public class CyntakaFinal extends LinearOpMode {
 
     }
 
-
+    PinpointDrive drive;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -252,8 +252,8 @@ public class CyntakaFinal extends LinearOpMode {
         telemetry.addLine("Camera Streaming...");
         telemetry.update();
 
-        PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
-        Cameraing camera = new Cameraing(hardwareMap, drive);
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+        Cameraing camera = new Cameraing(hardwareMap, new Pose2d(0,0,0));
 
         waitForStart();
 
@@ -261,8 +261,10 @@ public class CyntakaFinal extends LinearOpMode {
 
             Actions.runBlocking(
                     new ParallelAction(
-                            camera.xOffsetBlue(),
-                            camera.yOffsetBlue()
+                            //camera.xOffsetBlue(),
+                            //camera.yOffsetBlue()
+                            camera.xOffsetYellow(),
+                            camera.yOffsetYellow()
                     )
 
             );

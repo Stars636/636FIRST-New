@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth;
 
 
+import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.fraudTurn;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -77,9 +79,20 @@ public class CyntakaBucketPaths extends LinearOpMode {
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 + 13, Math.toRadians(25)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 - 6, Math.toRadians(75)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
+        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a10 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial, Math.toRadians(-90)), Math.toRadians(0));
+        TrajectoryActionBuilder a11 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
+
+
+
 
         //-40, -32
         //-65, -45
@@ -91,6 +104,10 @@ public class CyntakaBucketPaths extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
+        Action s8 = a8.build();
+        Action s9 = a9.build();
+        Action s10 = a10.build();
+        Action s11 = a11.build();
 
 
 
@@ -124,7 +141,14 @@ public class CyntakaBucketPaths extends LinearOpMode {
                             s6,
                             new SleepAction(fraudWait),
                             s7,
-                            new SleepAction(fraudWait)
+                            new SleepAction(fraudWait),
+                            s8,
+                            new SleepAction(fraudWait),
+                            s9,
+                            new SleepAction(fraudWait),
+                            s10,
+                            new SleepAction(fraudWait),
+                            s11
 
                     )
 

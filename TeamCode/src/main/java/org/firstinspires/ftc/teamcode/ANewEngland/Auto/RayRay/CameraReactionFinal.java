@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.Old;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay;
 
 
 import androidx.annotation.NonNull;
@@ -13,7 +13,6 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -28,11 +27,11 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Disabled
-@Autonomous
-public class CameraReactionXSuperFinal extends LinearOpMode {
 
-    public static class OffsetX {
+@Autonomous
+public class CameraReactionFinal extends LinearOpMode {
+    @Config
+    public static class OffsetFinal {
         Calvin calvin;
         PinpointDrive drive;
         OpenCvWebcam webcam;
@@ -52,14 +51,15 @@ public class CameraReactionXSuperFinal extends LinearOpMode {
         public final static int moveOn = 15;
         public static double minPosition = 0.74;
         public static double maxPosition = 1;
-        public static double step = 0.005;
-        public static double deadzone = 20;
+        public static double step = 0.0003;
+        public static double deadzoneX = 20;
+        public static double deadzoneY = 35;
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
-        public OffsetX(HardwareMap hardwareMap, Pose2d pose) {
+        public OffsetFinal(HardwareMap hardwareMap, Pose2d pose) {
             calvin = new Calvin(hardwareMap);
-            //this.drive = new PinpointDrive(hardwareMap, pose);
+            //this.drive = drive;
             drive = new PinpointDrive(hardwareMap, pose);
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -165,7 +165,7 @@ public class CameraReactionXSuperFinal extends LinearOpMode {
             }
             notFoundTickerX = 0;
 
-            if (Math.abs(xOffset) < deadzone) {
+            if (Math.abs(xOffset) < deadzoneX) {
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, 0),
                         0
@@ -213,7 +213,7 @@ public class CameraReactionXSuperFinal extends LinearOpMode {
             }
             notFoundTickerY = 0;
 
-            if (Math.abs(yOffset) < deadzone) { //if its in range, don't move
+            if (Math.abs(yOffset) < deadzoneY) { //if its in range, don't move
                 tickerY++;
                 if (tickerY >= checker) { //only consider it done when its been in range for 5 calculations
                     //this is so it doesn't stop immediately if it sweeps past it
@@ -357,17 +357,20 @@ public class CameraReactionXSuperFinal extends LinearOpMode {
             return new XOffsetBlue();
         }
     }
-    OffsetX offset;
+
+
+    OffsetFinal offset;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        offset = new OffsetX(hardwareMap,new Pose2d(0,0,0));
+        offset = new OffsetFinal(hardwareMap, new Pose2d(0,0,0));
         waitForStart();
         while(opModeIsActive()) {
             Actions.runBlocking(
                     new ParallelAction(
-                            offset.XOffsetBlue()
+                            offset.XOffsetBlue(),
+                            offset.YOffsetBlue()
                     )
             );
         }

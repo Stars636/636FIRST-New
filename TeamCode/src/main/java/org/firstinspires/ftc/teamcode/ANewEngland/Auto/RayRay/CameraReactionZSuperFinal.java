@@ -41,7 +41,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
 
         public static double INVALID = 100000;
         public static double power = 0.35;
-        public static int pipeline = 0;
+        public static int pipeline = 1;
         private int tickerX = 0;
         private int tickerY = 0;
         public static final int checker = 5;
@@ -77,7 +77,7 @@ public class CameraReactionZSuperFinal extends LinearOpMode {
             rPipeline = new RedObjectPipeline(webcam);
             yPipeline = new YellowObjectPipeline(webcam);
             bPipeline = new BlueObjectPipeline(webcam);
-            webcam.setPipeline(bPipeline);
+            webcam.setPipeline(yPipeline);
 
             /*
              * Open the connection to the camera device. New in v1.4.0 is the ability

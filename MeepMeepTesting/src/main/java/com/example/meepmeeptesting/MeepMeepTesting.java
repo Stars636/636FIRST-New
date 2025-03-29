@@ -93,8 +93,6 @@ public class MeepMeepTesting {
                 //score specimen
                 .splineToLinearHeading(new Pose2d(xBegin - 48, yBegin + 16, Math.toRadians(90)), Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(xBegin + offset, yBegin + 10, Math.toRadians(0)), Math.toRadians(0))
-
-
                 .build());
 
         specimenBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xStart, yStart, 3*PI/2))

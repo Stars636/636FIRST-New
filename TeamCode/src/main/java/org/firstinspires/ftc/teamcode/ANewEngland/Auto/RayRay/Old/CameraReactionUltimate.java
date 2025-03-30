@@ -33,7 +33,7 @@ public class CameraReactionUltimate extends LinearOpMode {
 
     public static class Offset {
         Calvin calvin;
-        PinpointDrive drive;
+        public PinpointDrive drive;
         OpenCvWebcam webcam;
         RedObjectPipeline rPipeline;
         YellowObjectPipeline yPipeline;

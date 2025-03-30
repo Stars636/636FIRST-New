@@ -33,7 +33,7 @@ public class CameraReactionFinal extends LinearOpMode {
     @Config
     public static class OffsetFinal {
         Calvin calvin;
-        PinpointDrive drive;
+        public PinpointDrive drive;
         OpenCvWebcam webcam;
         RedObjectPipeline rPipeline;
         YellowObjectPipeline yPipeline;

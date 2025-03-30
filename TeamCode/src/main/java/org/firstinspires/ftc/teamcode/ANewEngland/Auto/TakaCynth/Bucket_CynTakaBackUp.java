@@ -15,11 +15,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionBad;
-import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionZSuperFinal;
+import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.Old.CameraReactionBad;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 
 @Autonomous

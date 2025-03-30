@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.Old;
 
 
 import androidx.annotation.NonNull;
@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -22,6 +21,7 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.BlueObjectPip
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.RedObjectPipeline;
 import org.firstinspires.ftc.teamcode.ANewEngland.Camera.Pipelines.YellowObjectPipeline;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -30,11 +30,11 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
-public class CameraReactionZSuperDuperFinal extends LinearOpMode {
+public class CameraReactionBad extends LinearOpMode {
     @Config
-    public static class OffsetFraud {
+    public static class OffsetBad {
         Calvin calvin;
-        PinpointDrive drive;
+        MecanumDrive drive;
         OpenCvWebcam webcam;
         RedObjectPipeline rPipeline;
         YellowObjectPipeline yPipeline;
@@ -42,7 +42,7 @@ public class CameraReactionZSuperDuperFinal extends LinearOpMode {
 
         public static double INVALID = 100000;
         public static double power = 0.35;
-        public static int pipeline = 1;
+        public static int pipeline = 0;
         private int tickerX = 0;
         private int tickerY = 0;
         public static final int checker = 5;
@@ -59,7 +59,7 @@ public class CameraReactionZSuperDuperFinal extends LinearOpMode {
         public static double maxOffset = 100;
         public static double minPower = 0.1;
 
-        public OffsetFraud(HardwareMap hardwareMap, PinpointDrive drive) {
+        public OffsetBad(HardwareMap hardwareMap, MecanumDrive drive) {
             calvin = new Calvin(hardwareMap);
             //this.drive = new PinpointDrive(hardwareMap, pose);
             this.drive = drive;
@@ -78,7 +78,7 @@ public class CameraReactionZSuperDuperFinal extends LinearOpMode {
             rPipeline = new RedObjectPipeline(webcam);
             yPipeline = new YellowObjectPipeline(webcam);
             bPipeline = new BlueObjectPipeline(webcam);
-            webcam.setPipeline(yPipeline);
+            webcam.setPipeline(bPipeline);
 
             /*
              * Open the connection to the camera device. New in v1.4.0 is the ability
@@ -370,20 +370,20 @@ public class CameraReactionZSuperDuperFinal extends LinearOpMode {
             return new XOffsetBlue();
         }
     }
-    OffsetFraud offset;
+    OffsetBad offset;
 
     @Override
     public void runOpMode() throws InterruptedException {
         PinpointDrive drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
-        offset = new OffsetFraud(hardwareMap, drive);
+        offset = new OffsetBad(hardwareMap, drive);
 
 
         waitForStart();
         while(opModeIsActive()) {
             Actions.runBlocking(
-                    new SequentialAction(
-                            offset.XOffsetYellow(),
-                            offset.YOffsetYellow()
+                    new ParallelAction(
+                            offset.XOffsetBlue(),
+                            offset.YOffsetBlue()
                     )
             );
         }

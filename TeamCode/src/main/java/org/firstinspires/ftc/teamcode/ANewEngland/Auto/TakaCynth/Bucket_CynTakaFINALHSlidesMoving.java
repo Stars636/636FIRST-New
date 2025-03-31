@@ -646,14 +646,9 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                 }
                             },
                             s9
-
-
                     )
-
             );
-
-
-
+            
         }
     }
 }

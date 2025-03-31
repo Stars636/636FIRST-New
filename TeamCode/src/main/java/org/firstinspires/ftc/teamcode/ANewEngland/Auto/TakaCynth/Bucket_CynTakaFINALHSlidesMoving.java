@@ -549,7 +549,6 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                     new SleepAction(3)
                             ),
                             s1,
-                            new SleepAction(fraudWait),
                             s2,
                             hSlides.hSlidesOutside(),
                             new SleepAction(fraudWait),
@@ -572,9 +571,8 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                     return false;
                                 }
                             },
-                            new SleepAction(fraudWait),
+                            hSlides.hSlidesInside(),
                             s3,
-                            new SleepAction(fraudWait),
                             s4,
                             hSlides.hSlidesOutside(),
                             new SleepAction(fraudWait),
@@ -596,10 +594,8 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                     return false;
                                 }
                             },
-
-                            new SleepAction(fraudWait),
+                            hSlides.hSlidesInside(),
                             s5,
-                            new SleepAction(fraudWait),
                             s6,
                             hSlides.hSlidesOutside(),
                             new SleepAction(fraudWait),
@@ -621,9 +617,8 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                     return false;
                                 }
                             },
-                            new SleepAction(fraudWait),
+                            hSlides.hSlidesInside(),
                             s7,
-                            new SleepAction(fraudWait),
                             s8,
                             hSlides.hSlidesOutside(),
                             new SleepAction(fraudWait),
@@ -645,6 +640,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                     return false;
                                 }
                             },
+                            hSlides.hSlidesInside(),
                             s9
                     )
             );

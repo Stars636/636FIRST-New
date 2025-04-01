@@ -1,46 +1,6 @@
 package org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth;
 
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
-
-import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFinal;
-import org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3;
-import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
-import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
@@ -65,11 +25,32 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransf
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFinal;
+import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
+
 @Autonomous
 @Config
-public class Bucket_CynTaka extends LinearOpMode {
-    
-    PinpointDrive drive;
+public class Bucket_CynTakaFINALHSlidesMovingPart2 extends LinearOpMode {
+
+
     public static double FOREVER = 30;
 
     public static class HorizontalSlides {
@@ -462,9 +443,9 @@ public class Bucket_CynTaka extends LinearOpMode {
 
     }
     double fraudOffset = 12.5;
-    public static int fraudWait = 1;
+    public static double fraudWait = 0.5;
     CameraReactionFinal.OffsetFinal offsetFinal;
-    
+
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
@@ -489,7 +470,7 @@ public class Bucket_CynTaka extends LinearOpMode {
 
 
         //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
@@ -512,7 +493,7 @@ public class Bucket_CynTaka extends LinearOpMode {
         // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
-        TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
+        TrajectoryActionBuilder a1 = calvin.drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
@@ -523,8 +504,12 @@ public class Bucket_CynTaka extends LinearOpMode {
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(25)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 - 6, Math.toRadians(75)), Math.toRadians(0));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
+        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
 
 
@@ -535,7 +520,11 @@ public class Bucket_CynTaka extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
-        //we will create macros in the future, to remove room for error
+        Action s8 = a8.build();
+        Action s9 = a9.build();
+
+
+
         waitForStart();
         //calvin.initialPositions();
 
@@ -560,8 +549,8 @@ public class Bucket_CynTaka extends LinearOpMode {
                                     new SleepAction(3)
                             ),
                             s1,
-                            new SleepAction(fraudWait),
                             s2,
+                            hSlides.hSlidesOutside(),
                             new SleepAction(fraudWait),
                             new Action() {
                                 @Override
@@ -570,6 +559,7 @@ public class Bucket_CynTaka extends LinearOpMode {
                                     return false;
                                 }
                             },
+
                             new ParallelAction(
                                     offsetFinal.XOffsetYellow(),
                                     offsetFinal.YOffsetYellow()
@@ -577,14 +567,14 @@ public class Bucket_CynTaka extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
+                                    calvin.drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
-                            new SleepAction(fraudWait),
+                            hSlides.hSlidesInside(),
                             s3,
-                            new SleepAction(fraudWait),
                             s4,
+                            hSlides.hSlidesOutside(),
                             new SleepAction(fraudWait),
                             new Action() {
                                 @Override
@@ -600,15 +590,15 @@ public class Bucket_CynTaka extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
+                                    calvin.drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
-
-                            new SleepAction(fraudWait),
+                            hSlides.hSlidesInside(),
                             s5,
-                            new SleepAction(fraudWait),
                             s6,
+                            hSlides.hSlidesOutside(),
+                            new SleepAction(fraudWait),
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -623,20 +613,38 @@ public class Bucket_CynTaka extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
+                                    calvin.drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
-                            new SleepAction(fraudWait),
+                            hSlides.hSlidesInside(),
                             s7,
-                            new SleepAction(fraudWait)
-
+                            s8,
+                            hSlides.hSlidesOutside(),
+                            new SleepAction(fraudWait),
+                            new Action() {
+                                @Override
+                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                                    calvin.drive.updatePoseEstimate();
+                                    return false;
+                                }
+                            },
+                            new ParallelAction(
+                                    offsetFinal.XOffsetYellow(),
+                                    offsetFinal.YOffsetYellow()
+                            ),
+                            new Action() {
+                                @Override
+                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                                    calvin.drive.updatePoseEstimate();
+                                    return false;
+                                }
+                            },
+                            hSlides.hSlidesInside(),
+                            s9
                     )
-
             );
-
-
-
+            
         }
     }
 }

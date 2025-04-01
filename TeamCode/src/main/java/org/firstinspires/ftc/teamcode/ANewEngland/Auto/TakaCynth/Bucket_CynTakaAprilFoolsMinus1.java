@@ -34,6 +34,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -470,7 +471,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
 
 
         //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        //drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
@@ -509,8 +510,10 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
-        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
+        TrajectoryActionBuilder a9 = a8.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a10 = a9.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(180));
 
 
         Action s1 = a1.build();
@@ -522,6 +525,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
         Action s7 = a7.build();
         Action s8 = a8.build();
         Action s9 = a9.build();
+        Action s10 = a10.build();
 
 
 
@@ -715,18 +719,20 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
                                             depositWrist.depositWristPassive(),
                                             new SleepAction(fraudWait)
                                     )
-                            )
-                            /*new ParallelAction(
+                            ),
+                            new ParallelAction(
                                     //vSlides.slidesDown(),
                                     s8, //move to submersible
                                     new SequentialAction(
                                             new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
                                             hSlides.hSlidesOutside(),
                                             new SleepAction(fraudWait),
                                             new Action() {
                                                 @Override
                                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                                    offsetFinal.drive.updatePoseEstimate();
+                                                    calvin.drive.updatePoseEstimate();
                                                     return false;
                                                 }
                                             },
@@ -741,17 +747,60 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
                                                     return false;
                                                 }
                                             },
-                                            new SleepAction(fraudWait + fraudWait)
+                                            new SleepAction(fraudWait + fraudWait),
+
+                                            //pickup and transfer:
+                                            intakeArm.armPassive(),
+                                            intakeElbow.elbowPassive(),
+                                            new SleepAction(fraudWait),
+
+                                            intakeArm.armHover(),
+                                            intakeElbow.elbowHover(),
+                                            intakeWrist.intakeWristClockwise(),
+                                            new SleepAction(fraudWait),
+                                            intakeElbow.elbowIntake(),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.closeIntakeClaw(),
+                                            new SleepAction(fraudWait),
+                                            intakeWrist.neutralPos(),
+                                            intakeArm.armTransfer(),
+                                            intakeElbow.elbowTransfer(),
+                                            new SleepAction(fraudWait),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmTransfer(),
+                                            depositWrist.depositWristTransfer(),
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawClose(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.openIntakeClaw()
                                     )
                             ),
-
-
-                            //pick up sub1
-                            s9
-                            //score sub1
-
-                             */
-
+                            new ParallelAction(
+                                    //vSlides.slidesUp(),
+                                    s9,
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait),
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(fraudWait+0.07),
+                                            depositClaw.depositClawOpen(),//SCORE YAYY FIFTH SAMPLE
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                    )
+                            ),
+                            new ParallelAction(
+                                    //vSlides.slidesDown(),
+                                    new SequentialAction(
+                                            s10,
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmScore(),
+                                            depositWrist.depositWristScore()
+                                    )
+                            )
 
                     )
 

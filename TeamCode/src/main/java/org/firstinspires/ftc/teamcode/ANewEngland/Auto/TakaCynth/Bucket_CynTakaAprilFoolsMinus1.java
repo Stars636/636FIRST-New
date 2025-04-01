@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 @Config
 public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
 
-    PinpointDrive drive;
+    //PinpointDrive drive;
     public static double FOREVER = 30;
 
     public static class HorizontalSlides {
@@ -494,7 +494,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
         // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
-        TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
+        TrajectoryActionBuilder a1 = calvin.drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
@@ -743,7 +743,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
                                             new Action() {
                                                 @Override
                                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                                    drive.updatePoseEstimate();
+                                                    calvin.drive.updatePoseEstimate();
                                                     return false;
                                                 }
                                             },

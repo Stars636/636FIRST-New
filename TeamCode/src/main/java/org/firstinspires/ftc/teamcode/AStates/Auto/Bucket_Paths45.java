@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.AStates.Auto;
 
 
-import static org.firstinspires.ftc.teamcode.AStates.Auto.Bucket_AutoTest3.fraudTurn;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -16,7 +14,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ANewEngland.Bot.CalvinNE;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
@@ -24,9 +21,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous
 @Config
-public class Bucket_Paths2 extends LinearOpMode {
+public class Bucket_Paths45 extends LinearOpMode {
     
-    PinpointDrive drive;
+    MecanumDrive drive;
     double fraudOffset = 12.5;
     public static int fraudWait = 2;
     
@@ -36,15 +33,19 @@ public class Bucket_Paths2 extends LinearOpMode {
 
 
 
-
+        Calvin calvin = new Calvin(hardwareMap);
         //Zhang we need using encode for auto but in teleop we need run without encoder
         // so im putting this here for you
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
 
 
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);

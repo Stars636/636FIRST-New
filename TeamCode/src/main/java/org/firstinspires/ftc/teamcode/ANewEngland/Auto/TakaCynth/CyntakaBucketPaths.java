@@ -34,13 +34,13 @@ public class CyntakaBucketPaths extends LinearOpMode {
 
 
 
-        Calvin calvin = new Calvin(hardwareMap);
+        //Calvin calvin = new Calvin(hardwareMap);
         //Zhang we need using encode for auto but in teleop we need run without encoder
         // so im putting this here for you
-        calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //calvin.vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        //calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 

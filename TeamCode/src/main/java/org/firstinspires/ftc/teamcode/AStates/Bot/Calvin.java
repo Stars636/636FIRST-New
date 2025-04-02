@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AStates.Bot;
 
+import static org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFinal.OffsetFinal.power;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawOpen;
 
@@ -8,6 +9,9 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -18,6 +22,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
+
 @Config
 public class Calvin {
     public DcMotorEx leftFront, rightFront, leftBack, rightBack;
@@ -109,9 +117,11 @@ public class Calvin {
 
 
     public static boolean isTargeting = false; //Todo: make the vertical slides able to go to a specific position
+    public PinpointDrive drive;
 
 
     public Calvin(HardwareMap hardwareMap) {
+        drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,0));
         rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");//
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");//
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");//
@@ -457,6 +467,13 @@ public class Calvin {
     //We can always make the timer faster, so please don't worry
 
     //Todo: Auto functions
+
+    public void drive(double power) {
+        drive.setDrivePowers(new PoseVelocity2d(
+                new Vector2d(0, power),
+                0));
+    }
+
 /*
 
 }

@@ -34,6 +34,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -46,11 +47,11 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous
+@Autonomous (name = "Bucket_Auto 3/31/25", group = "NE")
 @Config
-public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
+public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
 
-    PinpointDrive drive;
+    //PinpointDrive drive;
     public static double FOREVER = 30;
 
     public static class HorizontalSlides {
@@ -470,7 +471,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
 
 
         //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        //drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
@@ -493,7 +494,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
         // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
-        TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
+        TrajectoryActionBuilder a1 = calvin.drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
@@ -509,8 +510,10 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
-        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
+        TrajectoryActionBuilder a9 = a8.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a10 = a9.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(180));
 
 
         Action s1 = a1.build();
@@ -522,6 +525,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
         Action s7 = a7.build();
         Action s8 = a8.build();
         Action s9 = a9.build();
+        Action s10 = a10.build();
 
 
 
@@ -548,103 +552,262 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                                     vSlides.slidesDown(),
                                     new SleepAction(3)
                             ),
-                            s1,
-                            s2,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
+                            //score
+                            new ParallelAction(
+                                    //vSlides.slidesUp(), //SLIDES GOING UP
+                                    s1, //MOVE TO SCORING
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait),
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawOpen(),//SCORE YAYY FIRST SAMPLE
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                    )
 
-                            new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
                             ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s3,
-                            s4,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
                             new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
+                                    //vSlides.slidesDown(),
+                                    s2,
+                                    new SequentialAction(
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            // GO TO SECOND SAMPLE
+                                            hSlides.hSlidesOutside(),
+
+                                            intakeArm.armPassive(),
+                                            intakeElbow.elbowPassive(),
+                                            new SleepAction(fraudWait),
+
+                                            intakeArm.armHover(),
+                                            intakeElbow.elbowHover(),
+                                            intakeWrist.neutralPos(),
+                                            new SleepAction(fraudWait),
+                                            intakeElbow.elbowIntake(),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.closeIntakeClaw(),
+                                            new SleepAction(fraudWait),
+                                            intakeArm.armTransfer(),
+                                            intakeElbow.elbowTransfer(),
+                                            new SleepAction(fraudWait),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmTransfer(),
+                                            depositWrist.depositWristTransfer(),
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawClose(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.openIntakeClaw()
+                                    )
                             ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s5,
-                            s6,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
                             new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
+                                    //vSlides.slidesUp(),
+                                    s3,
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait),
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(fraudWait+0.07),
+                                            depositClaw.depositClawOpen(),//SCORE YAYY 2nd SAMPLE
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                    )
                             ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s7,
-                            s8,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
                             new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
+                                    //vSlides.slidesDown(),
+                                    s4,
+                                    new SequentialAction(
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            // GO TO THIRD SAMPLE
+                                            hSlides.hSlidesOutside(),
+
+                                            intakeArm.armPassive(),
+                                            intakeElbow.elbowPassive(),
+                                            new SleepAction(fraudWait),
+
+                                            intakeArm.armHover(),
+                                            intakeElbow.elbowHover(),
+                                            intakeWrist.neutralPos(),
+                                            new SleepAction(fraudWait),
+                                            intakeElbow.elbowIntake(),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.closeIntakeClaw(),
+                                            new SleepAction(fraudWait),
+                                            intakeArm.armTransfer(),
+                                            intakeElbow.elbowTransfer(),
+                                            new SleepAction(fraudWait),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmTransfer(),
+                                            depositWrist.depositWristTransfer(),
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawClose(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.openIntakeClaw()
+                                    )
                             ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s9
+                            new ParallelAction(
+                                    //vSlides.slidesUp(),
+                                    s5,
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait),
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(fraudWait+0.07),
+                                            depositClaw.depositClawOpen(),//SCORE YAYY THIRD SAMPLE
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                    )
+                            ),
+                            new ParallelAction(
+                                    //vSlides.slidesDown(),
+                                    s6,
+                                    new SequentialAction(
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            // GO TO LAST SAMPLE
+                                            hSlides.hSlidesOutside(),
+
+                                            intakeArm.armPassive(),
+                                            intakeElbow.elbowPassive(),
+                                            new SleepAction(fraudWait),
+
+                                            intakeArm.armHover(),
+                                            intakeElbow.elbowHover(),
+                                            intakeWrist.intakeWristClockwise(),
+                                            new SleepAction(fraudWait),
+                                            intakeElbow.elbowIntake(),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.closeIntakeClaw(),
+                                            new SleepAction(fraudWait),
+                                            intakeWrist.neutralPos(),
+                                            intakeArm.armTransfer(),
+                                            intakeElbow.elbowTransfer(),
+                                            new SleepAction(fraudWait),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmTransfer(),
+                                            depositWrist.depositWristTransfer(),
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawClose(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.openIntakeClaw()
+                                    )
+                            ),
+                            new ParallelAction(
+                                    //vSlides.slidesUp(),
+                                    s7,
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait),
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(fraudWait+0.07),
+                                            depositClaw.depositClawOpen(),//SCORE YAYY FOURTH SAMPLE
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                    )
+                            ),
+                            new ParallelAction(
+                                    //vSlides.slidesDown(),
+                                    s8, //move to submersible
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            hSlides.hSlidesOutside(),
+                                            new SleepAction(fraudWait),
+                                            new Action() {
+                                                @Override
+                                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                                                    calvin.drive.updatePoseEstimate();
+                                                    return false;
+                                                }
+                                            },
+                                            new ParallelAction(
+                                                    offsetFinal.XOffsetYellow(),
+                                                    offsetFinal.YOffsetYellow()
+                                            ),
+                                            new Action() {
+                                                @Override
+                                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                                                    calvin.drive.updatePoseEstimate();
+                                                    return false;
+                                                }
+                                            },
+                                            new SleepAction(fraudWait + fraudWait),
+
+                                            //pickup and transfer:
+                                            intakeArm.armPassive(),
+                                            intakeElbow.elbowPassive(),
+                                            new SleepAction(fraudWait),
+
+                                            intakeArm.armHover(),
+                                            intakeElbow.elbowHover(),
+                                            intakeWrist.intakeWristClockwise(),
+                                            new SleepAction(fraudWait),
+                                            intakeElbow.elbowIntake(),
+                                            intakeArm.armIntake(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.closeIntakeClaw(),
+                                            new SleepAction(fraudWait),
+                                            intakeWrist.neutralPos(),
+                                            intakeArm.armTransfer(),
+                                            intakeElbow.elbowTransfer(),
+                                            new SleepAction(fraudWait),
+                                            hSlides.hSlidesInside(),
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmTransfer(),
+                                            depositWrist.depositWristTransfer(),
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawClose(),
+                                            new SleepAction(fraudWait),
+                                            intakeClaw.openIntakeClaw()
+                                    )
+                            ),
+                            new ParallelAction(
+                                    //vSlides.slidesUp(),
+                                    s9,
+                                    new SequentialAction(
+                                            new SleepAction(fraudWait + fraudWait),
+                                            depositWrist.depositWristScore(),
+                                            depositArm.depositArmScore(),
+                                            new SleepAction(fraudWait+0.07),
+                                            depositClaw.depositClawOpen(),//SCORE YAYY FIFTH SAMPLE
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmPassive(),
+                                            depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait)
+                                    )
+                            ),
+                            new ParallelAction(
+                                    //vSlides.slidesDown(),
+                                    new SequentialAction(
+                                            s10,
+                                            new SleepAction(fraudWait),
+                                            depositArm.depositArmScore(),
+                                            depositWrist.depositWristScore()
+                                    )
+                            )
+
                     )
+
             );
-            
+
+
+
         }
     }
 }

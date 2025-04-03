@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous (name = "Bucket_Auto NoCamera", group = "NE")
+@Autonomous (group = "NE")
 @Config
 public class SlidesUp extends LinearOpMode {
 
@@ -137,6 +137,8 @@ public class SlidesUp extends LinearOpMode {
 
 
         public void moveVerticalSlidesTo(int targetPosition) {
+           calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             calvin.vSlidesLeft.setTargetPosition(targetPosition);
             calvin.vSlidesLeft.setPower(0.7);
             calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);

@@ -133,6 +133,8 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
         }
 
         public void moveVerticalSlidesTo(int targetPosition) {
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             calvin.vSlidesLeft.setTargetPosition(targetPosition);
             calvin.vSlidesLeft.setPower(0.7);
             calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);

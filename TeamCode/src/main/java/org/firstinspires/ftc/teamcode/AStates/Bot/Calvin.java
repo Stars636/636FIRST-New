@@ -133,6 +133,8 @@ public class Calvin {
         leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -184,8 +186,8 @@ public class Calvin {
         hSlidesRight.setDirection(Servo.Direction.REVERSE);
 
         //We switched the arm and elbow
-        //intakeArm.setDirection(Servo.Direction.REVERSE);
-        //intakeElbow.setDirection(Servo.Direction.REVERSE);
+        intakeArm.setDirection(Servo.Direction.REVERSE);
+        intakeElbow.setDirection(Servo.Direction.REVERSE);
         depositArm.setDirection(Servo.Direction.REVERSE);
 
 

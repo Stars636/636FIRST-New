@@ -549,8 +549,20 @@ public class CalvinTeleFinal extends LinearOpMode {
             if (gamepad1.x && !lvl3) {
                 calvin.hangRight.setTargetPosition(calvin.hookHang);
                 calvin.hangLeft.setTargetPosition(calvin.hookHang);
-                calvin.vSlidesRight.setPower(0.5);
-                calvin.vSlidesLeft.setPower(0.5);
+                calvin.hangRight.setPower(0.5);
+                calvin.hangLeft.setPower(0.5);
+                calvin.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                calvin.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lvl3 = true;
+            }
+            else if (gamepad1.x && lvl3) {
+                calvin.hangRight.setTargetPosition(calvin.hookRetracted);
+                calvin.hangLeft.setTargetPosition(calvin.hookRetracted);
+                calvin.hangRight.setPower(-0.5);
+                calvin.hangLeft.setPower(-0.5);
+                calvin.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                calvin.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lvl3 = false;
             }
 
 

@@ -45,6 +45,7 @@ public class Calvin {
 
     public static int vSlideHang;
     public static int hookHang;
+    public static int hookRetracted;
 
     public static int lowBucket = 1400; //todo: test this
 
@@ -153,9 +154,9 @@ public class Calvin {
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

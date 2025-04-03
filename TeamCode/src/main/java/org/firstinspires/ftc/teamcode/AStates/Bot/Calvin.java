@@ -32,7 +32,7 @@ public class Calvin {
     public DcMotorImplEx vSlidesLeft, vSlidesRight;
 
     public DcMotorImplEx hangRight, hangLeft;
-    public ServoImplEx servHangRight, servHangLeft;
+    //public ServoImplEx servHangRight, servHangLeft;
 
 
     public ServoImplEx intakeClaw, intakeWrist, intakeElbow, intakeArm;
@@ -41,6 +41,10 @@ public class Calvin {
 
     public ServoImplEx hSlidesLeft, hSlidesRight;
 
+
+
+    public static int vSlideHang;
+    public static int hookHang;
 
     public static int lowBucket = 1400; //todo: test this
 
@@ -136,10 +140,13 @@ public class Calvin {
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        /*hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        hangLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         vSlidesLeft = hardwareMap.get(DcMotorImplEx.class, "vSlidesLeft");//
@@ -173,13 +180,13 @@ public class Calvin {
         depositArm = hardwareMap.get(ServoImplEx.class, "depositArm");//
         depositWrist = hardwareMap.get(ServoImplEx.class, "depositWrist");//
 
-        servHangRight = hardwareMap.get(ServoImplEx.class, "servHangRight");//
-        servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
+        //servHangRight = hardwareMap.get(ServoImplEx.class, "servHangRight");//
+        //servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
         hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
         hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
 
 
-        servHangLeft.setDirection(Servo.Direction.REVERSE);
+       // servHangLeft.setDirection(Servo.Direction.REVERSE);
         hSlidesLeft = hardwareMap.get(ServoImplEx.class, "hSlidesLeft");//
         hSlidesRight = hardwareMap.get(ServoImplEx.class, "hSlidesRight");//
         hSlidesLeft.setDirection(Servo.Direction.FORWARD);

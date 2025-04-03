@@ -32,6 +32,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltR
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
@@ -60,6 +61,9 @@ public class CalvinTeleFinal extends LinearOpMode {
     boolean hookExtended = false;
 
     boolean driverLB = false;
+
+    boolean lvl2 = false;
+    boolean lvl3 = false;
 
     //Transfer and the timers
     public ElapsedTime transferTime = new ElapsedTime();
@@ -501,7 +505,7 @@ public class CalvinTeleFinal extends LinearOpMode {
 
             //Todo: test both codes, if both work, then use the more streamlined one
 
-            if (gamepad1.x && !changedDX && !hookExtended) {
+            /*if (gamepad1.x && !changedDX && !hookExtended) {
                 //calvin.servHangRight.setPosition(hookExtend);
                 //calvin.servHangLeft.setPosition(calvin.hookExtend + 0.01);
                 hookExtended = true;
@@ -515,20 +519,42 @@ public class CalvinTeleFinal extends LinearOpMode {
             }
             else if  (!gamepad1.x) {
                 changedDX = false;
-            }
+            }*/
 
             //TODO: Test both codes, if both work, use the more streamlined one
 
 //TODO: Test both codes, if both work, use the more streamlined one
-            if (gamepad1.y) {
+            /*if (gamepad1.y) {
                 check = true;
             }
             if (check) {
                 calvin.hangRight.setPower(-1);
                 calvin.hangLeft.setPower(1);
+            }*/
+
+
+
+
+            //New Englands Hang
+            if (gamepad1.y && !lvl2 ) {
+                calvin.vSlidesRight.setTargetPosition(calvin.vSlideHang);
+                calvin.vSlidesLeft.setTargetPosition(calvin.vSlideHang);
+                calvin.vSlidesRight.setPower(0.5);
+                calvin.vSlidesLeft.setPower(0.5);
+                calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lvl2 = true;
             }
-            // Conrad kindly mention that x and y should move the servos and
-            // a and b should move the motors? i think
+
+            if (gamepad1.x && !lvl3) {
+                calvin.hangRight.setTargetPosition(calvin.hookHang);
+                calvin.hangLeft.setTargetPosition(calvin.hookHang);
+                calvin.vSlidesRight.setPower(0.5);
+                calvin.vSlidesLeft.setPower(0.5);
+            }
+
+
+
 
 
             telemetry.addData("isMacroing", isMajorMacroing);
@@ -540,8 +566,8 @@ public class CalvinTeleFinal extends LinearOpMode {
             telemetry.addData("Intake Claw", intakeClawMacro);
             telemetry.addData("Intake Claw Pos", calvin.intakeClaw.getPosition());
             telemetry.addData("Deposit Claw", depositClawMacro);
-            telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
-            telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
+            //telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
+            //telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
             telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
             telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
             telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());

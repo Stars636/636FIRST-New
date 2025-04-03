@@ -43,9 +43,9 @@ public class Calvin {
 
 
 
-    public static int vSlideHang;
-    public static int hookHang;
-    public static int hookRetracted;
+    public static int vSlideHang = 300;
+    public static int hookHang = 300;
+    public static int hookRetracted = 100;
 
     public static int lowBucket = 1400; //todo: test this
 

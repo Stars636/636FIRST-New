@@ -600,8 +600,8 @@ public class Specimen_PathsThree extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            calvin.servHangLeft.setPosition(0);
-            calvin.servHangRight.setPosition(0);
+           // calvin.servHangLeft.setPosition(0);
+            //calvin.servHangRight.setPosition(0);
             Actions.runBlocking(
                     new SequentialAction(
                             s1

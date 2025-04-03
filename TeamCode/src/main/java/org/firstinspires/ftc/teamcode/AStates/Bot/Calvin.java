@@ -53,7 +53,7 @@ public class Calvin {
 
     public static int lowSpecimen = 1000; //todo: test this(low priority)
 
-    public static int highBucket = 2800;
+    public static int highBucket = 3600;
 
     public static double hookExtend = 0.53;
     public static double hookRetract = 0;
@@ -85,7 +85,7 @@ public class Calvin {
     public static double hSlidesInside = 1;
     public static double hSlidesOutside = 0.74;
     public static double intakeClawOpen = 0.0;
-    public static double intakeClawClosed = 0.43;
+    public static double intakeClawClosed = 0.4;
     public static double intakeClawTransferPos = 0.7;
     public static double intakeClawTransferRot = 0.12;
     public static double intakeClawTransferRotHalf = 0;
@@ -141,6 +141,10 @@ public class Calvin {
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
+        hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
+
+
         hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -154,9 +158,9 @@ public class Calvin {
         vSlidesRight = hardwareMap.get(DcMotorImplEx.class, "vSlidesRight");//
 
         vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vSlidesRight.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         vSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vSlidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -183,8 +187,7 @@ public class Calvin {
 
         //servHangRight = hardwareMap.get(ServoImplEx.class, "servHangRight");//
         //servHangLeft = hardwareMap.get(ServoImplEx.class, "servHangLeft");//
-        hangRight = hardwareMap.get(DcMotorImplEx.class, "hangRight");//
-        hangLeft = hardwareMap.get(DcMotorImplEx.class, "hangLeft");//
+
 
 
        // servHangLeft.setDirection(Servo.Direction.REVERSE);

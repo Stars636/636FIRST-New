@@ -500,14 +500,11 @@ public class CalvinTeleTest extends LinearOpMode {
             //Todo: test both codes, if both work, then use the more streamlined one
 
             if (gamepad1.x && !changedDX && !hookExtended) {
-                calvin.servHangRight.setPosition(Calvin.hookExtend);
-                calvin.servHangLeft.setPosition(Calvin.hookExtend + 0.01);
                 hookExtended = true;
                 changedDX = true;
             }
             else if (gamepad1.x && !changedDX && hookExtended) {
-                calvin.servHangRight.setPosition(Calvin.hookRetract);
-                calvin.servHangLeft.setPosition(Calvin.hookRetract);
+
                 hookExtended = false;
                 changedDX = true;
             }
@@ -567,8 +564,8 @@ public class CalvinTeleTest extends LinearOpMode {
             telemetry.addData("Intake Claw", intakeClawMacro);
             telemetry.addData("Intake Claw Pos", calvin.intakeClaw.getPosition());
             telemetry.addData("Deposit Claw", depositClawMacro);
-            telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
-            telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
+
+
             telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
             telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
             telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());

@@ -606,8 +606,7 @@ public class Specimen_CynTaka extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            calvin.servHangLeft.setPosition(0);
-            calvin.servHangRight.setPosition(0);
+
             Actions.runBlocking(
                     new SequentialAction(
                             new ParallelAction(

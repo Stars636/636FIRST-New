@@ -1,9 +1,6 @@
-package org.firstinspires.ftc.teamcode.AStates.Old;
+package org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth;
 
 
-import static org.firstinspires.ftc.teamcode.AStates.Old.PIDController.Kd;
-import static org.firstinspires.ftc.teamcode.AStates.Old.PIDController.Ki;
-import static org.firstinspires.ftc.teamcode.AStates.Old.PIDController.Kp;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
@@ -26,12 +23,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp1;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.pickUp2;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart1;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart2;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart3;
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.transferPart4;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
 import androidx.annotation.NonNull;
 
@@ -43,27 +35,26 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Disabled
+@Autonomous (name = "Bucket_Auto NoCamera", group = "NE")
 @Config
-@Autonomous (name = "NO_Bucket_Auto", group = "Autonomous")
+public class SlidesUp extends LinearOpMode {
 
-public class Bucket_Auto extends LinearOpMode {
-
-
-
-
+    //PinpointDrive drive;
     public static double FOREVER = 30;
+
 
     public static class HorizontalSlides {
 
@@ -143,45 +134,42 @@ public class Bucket_Auto extends LinearOpMode {
             calvin = new Calvin(hardwareMap);
         }
 
+
+
         public void moveVerticalSlidesTo(int targetPosition) {
-                // obtain the encoder position
-                double encoderPosition = calvin.vSlidesLeft.getCurrentPosition();
-                // calculate the error
-                double error = targetPosition - encoderPosition;
-                // rate of change of the error
-                double derivative = (error - lastError) / timer.seconds();
-                // sum of all error over time
-                integralSum = integralSum + (error * timer.seconds());
+            calvin.vSlidesLeft.setTargetPosition(targetPosition);
+            calvin.vSlidesLeft.setPower(0.7);
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                double power = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+            calvin.vSlidesRight.setTargetPosition(targetPosition);
+            calvin.vSlidesRight.setPower(0.7);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                calvin.vSlidesLeft.setPower(power);
-                calvin.vSlidesRight.setPower(power);
-                lastError = error;
-                // reset the timer for next time
-                timer.reset();
+
         }
-        public class SlidesUp implements Action {
+        public class SlidesUpP implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
                 moveVerticalSlidesTo(highBucket);
-
+                telemetryPacket.put("left",calvin.vSlidesLeft.getCurrentPosition());
+                telemetryPacket.put("right",calvin.vSlidesLeft.getCurrentPosition());
 
                 return false;
             }
         }
 
         public Action slidesUp() {
-            return new SlidesUp();
+            return new SlidesUpP();
         }
 
         public class SlidesDown implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-                moveVerticalSlidesTo(5);
-
+                moveVerticalSlidesTo(0);
+                telemetryPacket.put("left",calvin.vSlidesLeft.getCurrentPosition());
+                telemetryPacket.put("right",calvin.vSlidesLeft.getCurrentPosition());
                 return false;
             }
         }
@@ -208,6 +196,18 @@ public class Bucket_Auto extends LinearOpMode {
 
         public Action neutralPos() {
             return new NeutralPos();
+        }
+
+        public class IntakeWristClockwise implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                calvin.intakeWrist.setPosition(intakeWristTiltRight);
+                return false;
+            }
+        }
+
+        public Action intakeWristClockwise() {
+            return new IntakeWristClockwise();
         }
 
     }
@@ -263,7 +263,7 @@ public class Bucket_Auto extends LinearOpMode {
         }
 
         public Action elbowHover() {
-            return new ElbowPassive();
+            return new ElbowHover();
         }
 
     }
@@ -319,7 +319,7 @@ public class Bucket_Auto extends LinearOpMode {
         }
 
         public Action armHover() {
-            return new ArmPassive();
+            return new ArmHover();
         }
 
     }
@@ -402,6 +402,7 @@ public class Bucket_Auto extends LinearOpMode {
 
     }
 
+
     public static class DepositWrist {
 
         Calvin calvin;
@@ -447,18 +448,27 @@ public class Bucket_Auto extends LinearOpMode {
         }
 
     }
-
+    public static double fraudOffset = 12.5;
+    public static double fraudWait = 0.5;
+    CameraReactionFinal.OffsetFinal offsetFinal;
     PinpointDrive drive;
+
+    public static double bucket1 =8;
+    public static double bucket1X =12.5;
+    public static double bucket2 =17;
+    public static double bucket2X =11.5;
+    public static double bucket3 =5;
+    public static double bucket3X =38;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
-
-
         ElapsedTime et = new ElapsedTime();
+
+
+
         Calvin calvin = new Calvin(hardwareMap);
+
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         VerticalSlides vSlides = new VerticalSlides(hardwareMap);
         IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
@@ -468,25 +478,18 @@ public class Bucket_Auto extends LinearOpMode {
         DepositClaw depositClaw = new DepositClaw(hardwareMap);
         DepositArm depositArm = new DepositArm(hardwareMap);
         HorizontalSlides hSlides = new HorizontalSlides(hardwareMap);
-
-        //where hslides cynthia? where hslides
-        //please add idk how to do ur thing LOL
         //Zhang we need using encode for auto but in teleop we need run without encoder
         // so im putting this here for you
-        //Calvin.Claw claw = new Calvin.Claw();
 
 
-        double xInitial = 0;
-        double yInitial = 0;
-        int fraudOffset = 15;
-        double fraudWait = 2.5;
-        double fraudMediumWait = 0.75;
-        //im killing myself <3 - arjun
-        double fraudSmallWait = 0.5;
 
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        //drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
+        Pose2d startPose = new Pose2d(0, 0, 0);
+        offsetFinal = new CameraReactionFinal.OffsetFinal(hardwareMap, startPose);
         //if you are coming from meep meep, define your initial here
 
 
@@ -496,6 +499,8 @@ public class Bucket_Auto extends LinearOpMode {
 
         //If  a Pose2d is repetitive, define it here:
 
+        double xInitial = 0;
+        double yInitial = 0;
 
         // Set the initial pose of the robot
         //drive.setPoseEstimate(startPose);
@@ -506,18 +511,25 @@ public class Bucket_Auto extends LinearOpMode {
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + bucket1X, yInitial + bucket1, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a3 = a2.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + bucket2X, yInitial + bucket2, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 15, Math.toRadians(25)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial +  bucket3X , yInitial + bucket3, Math.toRadians(75)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
-
+        TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(100));
+        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a10 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial, Math.toRadians(-90)), Math.toRadians(100));
+        TrajectoryActionBuilder a11 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
 
 
         Action s1 = a1.build();
@@ -527,169 +539,36 @@ public class Bucket_Auto extends LinearOpMode {
         Action s5 = a5.build();
         Action s6 = a6.build();
         Action s7 = a7.build();
+        Action s8 = a8.build();
+        Action s9 = a9.build();
+        Action s10 = a10.build();
+
 
 
         waitForStart();
+        //calvin.initialPositions();
 
         telemetry.addLine("Best Wishes.");
         telemetry.update();
+
 
         while (opModeIsActive()) {
 
             Actions.runBlocking(
                     new SequentialAction(
-                            new ParallelAction(
-                                    depositArm.depositArmPassive(),
-                                    depositWrist.depositWristPassive(),
-                                    depositClaw.depositClawClose(),
-                                    hSlides.hSlidesInside(),
-                                    intakeArm.armPassive(),
-                                    intakeElbow.elbowPassive(),
-                                    intakeWrist.neutralPos(),
-                                    intakeClaw.openIntakeClaw(),
-                                    vSlides.slidesDown()
-                            ), //STARTING POSITIONS
-                            new ParallelAction(
-                                    vSlides.slidesUp(), //SLIDES GOING UP
-                                    s1, //MOVE TO SCORING
-                                    new SequentialAction(
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY FIRST SAMPLE
-                                            new SleepAction(fraudMediumWait)
-                                    )
-
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesDown(),
-                                    s2,
-                                    new SequentialAction(
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            // GO TO SECOND SAMPLE
-                                            hSlides.hSlidesOutside(),
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            new SleepAction(fraudMediumWait),
-                                            intakeArm.armIntake(),
-                                            intakeElbow.elbowIntake(),
-                                            new SleepAction(pickUp1),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(pickUp2),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(transferPart1),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(transferPart2),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(transferPart3),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(transferPart4),
-                                            intakeClaw.openIntakeClaw()
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesUp(),
-                                    s3,
-                                    new SequentialAction(
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY SECOND SAMPLE
-                                            new SleepAction(fraudMediumWait)
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesDown(),
-                                    s4,
-                                    new SequentialAction(
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            // GO TO SECOND SAMPLE
-                                            hSlides.hSlidesOutside(),
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            new SleepAction(fraudMediumWait),
-                                            intakeArm.armIntake(),
-                                            intakeElbow.elbowIntake(),
-                                            new SleepAction(pickUp1),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(pickUp2),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(transferPart1),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(transferPart2),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(transferPart3),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(transferPart4),
-                                            intakeClaw.openIntakeClaw()
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesUp(),
-                                    s5,
-                                    new SequentialAction(
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY THIRD SAMPLE
-                                            new SleepAction(fraudMediumWait)
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesDown(),
-                                    s6,
-                                    new SequentialAction(
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            // GO TO SECOND SAMPLE
-                                            hSlides.hSlidesOutside(),
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            new SleepAction(fraudMediumWait),
-                                            intakeArm.armIntake(),
-                                            intakeElbow.elbowIntake(),
-                                            new SleepAction(pickUp1),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(pickUp2),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(transferPart1),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(transferPart2),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(transferPart3),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(transferPart4),
-                                            intakeClaw.openIntakeClaw()
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesUp(),
-                                    s7,
-                                    new SequentialAction(
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait + fraudWait),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY FOURTH SAMPLE
-                                            new SleepAction(fraudMediumWait)
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesDown(),
+                        new ParallelAction(
+                            vSlides.slidesUp(),
+                            new SequentialAction(
                                     new SleepAction(FOREVER)
                             )
 
+                        ),
+                        new SleepAction(FOREVER)
                     )
             );
 
+
+
         }
     }
-
 }

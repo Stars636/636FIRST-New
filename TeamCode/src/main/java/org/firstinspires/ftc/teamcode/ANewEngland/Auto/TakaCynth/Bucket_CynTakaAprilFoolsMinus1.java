@@ -446,6 +446,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
     double fraudOffset = 12.5;
     public static double fraudWait = 0.5;
     CameraReactionFinal.OffsetFinal offsetFinal;
+    PinpointDrive drive;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -454,7 +455,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
 
 
         Calvin calvin = new Calvin(hardwareMap);
-
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         VerticalSlides vSlides = new VerticalSlides(hardwareMap);
         IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
@@ -494,7 +495,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
         // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
-        TrajectoryActionBuilder a1 = calvin.drive.actionBuilder(startPose)
+        TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
@@ -732,7 +733,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
                                             new Action() {
                                                 @Override
                                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                                    calvin.drive.updatePoseEstimate();
+                                                    drive.updatePoseEstimate();
                                                     return false;
                                                 }
                                             },
@@ -743,7 +744,7 @@ public class Bucket_CynTakaAprilFoolsMinus1 extends LinearOpMode {
                                             new Action() {
                                                 @Override
                                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                                    calvin.drive.updatePoseEstimate();
+                                                    drive.updatePoseEstimate();
                                                     return false;
                                                 }
                                             },

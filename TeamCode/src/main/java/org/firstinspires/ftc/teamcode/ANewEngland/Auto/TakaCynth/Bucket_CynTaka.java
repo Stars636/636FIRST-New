@@ -69,7 +69,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltR
 @Config
 public class Bucket_CynTaka extends LinearOpMode {
     
-    PinpointDrive drive;
+
     public static double FOREVER = 30;
 
     public static class HorizontalSlides {
@@ -464,11 +464,11 @@ public class Bucket_CynTaka extends LinearOpMode {
     double fraudOffset = 12.5;
     public static int fraudWait = 1;
     CameraReactionFinal.OffsetFinal offsetFinal;
+    PinpointDrive drive;
     
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
-
 
 
         Calvin calvin = new Calvin(hardwareMap);
@@ -566,7 +566,7 @@ public class Bucket_CynTaka extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                    drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
@@ -589,7 +589,7 @@ public class Bucket_CynTaka extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                    drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
@@ -612,7 +612,7 @@ public class Bucket_CynTaka extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                   drive.updatePoseEstimate();
                                     return false;
                                 }
                             },

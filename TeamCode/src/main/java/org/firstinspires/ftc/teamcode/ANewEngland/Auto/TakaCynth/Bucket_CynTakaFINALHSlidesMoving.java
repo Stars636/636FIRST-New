@@ -39,6 +39,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -446,6 +447,8 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
     public static double fraudWait = 0.5;
     CameraReactionFinal.OffsetFinal offsetFinal;
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
@@ -453,7 +456,9 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
 
 
         Calvin calvin = new Calvin(hardwareMap);
-
+        calvin.leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        calvin.leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         VerticalSlides vSlides = new VerticalSlides(hardwareMap);
         IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
@@ -555,7 +560,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                    drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
@@ -579,7 +584,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                    drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
@@ -602,7 +607,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                    drive.updatePoseEstimate();
                                     return false;
                                 }
                             },
@@ -625,7 +630,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
                             new Action() {
                                 @Override
                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    calvin.drive.updatePoseEstimate();
+                                    drive.updatePoseEstimate();
                                     return false;
                                 }
                             },

@@ -117,11 +117,11 @@ public class Calvin {
 
 
     public static boolean isTargeting = false; //Todo: make the vertical slides able to go to a specific position
-    public PinpointDrive drive;
+    //public PinpointDrive drive;
 
 
     public Calvin(HardwareMap hardwareMap) {
-        drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,0));
+        //drive = new PinpointDrive(hardwareMap,new Pose2d(0,0,0));
         rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");//
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");//
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");//
@@ -470,11 +470,11 @@ public class Calvin {
 
     //Todo: Auto functions
 
-    public void drive(double power) {
+    /*public void drive(double power) {
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(0, power),
                 0));
-    }
+    }*/
 
 /*
 

@@ -35,6 +35,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -44,6 +45,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous (name = "Bucket_Auto NoCamera", group = "NE")
 @Config
@@ -441,9 +443,17 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
         }
 
     }
-    double fraudOffset = 12.5;
+    public static double fraudOffset = 12.5;
     public static double fraudWait = 0.5;
     CameraReactionFinal.OffsetFinal offsetFinal;
+    PinpointDrive drive;
+
+    public static double bucket1 =8;
+    public static double bucket1X =12.5;
+    public static double bucket2 =17;
+    public static double bucket2X =11.5;
+    public static double bucket3 =5;
+    public static double bucket3X =38;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -453,6 +463,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
 
         Calvin calvin = new Calvin(hardwareMap);
 
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         VerticalSlides vSlides = new VerticalSlides(hardwareMap);
         IntakeWrist intakeWrist = new IntakeWrist(hardwareMap);
@@ -492,27 +503,28 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
         // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
-        TrajectoryActionBuilder a1 = calvin.drive.actionBuilder(startPose)
+        TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + bucket1X, yInitial + bucket1, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a3 = a2.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + bucket2X, yInitial + bucket2, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 - 6, Math.toRadians(75)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial +  bucket3X , yInitial + bucket3, Math.toRadians(75)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
-        TrajectoryActionBuilder a9 = a8.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(100));
+        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a10 = a7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(180));
-
+                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial, Math.toRadians(-90)), Math.toRadians(100));
+        TrajectoryActionBuilder a11 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
 
 
         Action s1 = a1.build();
@@ -548,8 +560,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                     intakeElbow.elbowPassive(),
                                     intakeWrist.neutralPos(),
                                     intakeClaw.openIntakeClaw(),
-                                    vSlides.slidesDown(),
-                                    new SleepAction(3)
+                                    vSlides.slidesDown()
                             ),
                             //score
                             new ParallelAction(
@@ -672,6 +683,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                     //vSlides.slidesDown(),
                                     s6,
                                     new SequentialAction(
+                                            new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
                                             // GO TO LAST SAMPLE
@@ -791,15 +803,8 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             new SleepAction(fraudWait)
                                     )
                             ),*/
-                            new ParallelAction(
-                                    //vSlides.slidesDown(),
-                                    new SequentialAction(
-                                            s10,
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmScore(),
-                                            depositWrist.depositWristScore()
-                                    )
-                            )
+                            new SleepAction(FOREVER)
+
 
                     )
 

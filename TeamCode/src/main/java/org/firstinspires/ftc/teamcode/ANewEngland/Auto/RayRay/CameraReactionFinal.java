@@ -56,10 +56,10 @@ public class CameraReactionFinal extends LinearOpMode {
         public static double deadzoneY = 35;
         public static double maxOffset = 100;
         public static double minPower = 0.1;
-
+        public PinpointDrive drive;
         public OffsetFinal(HardwareMap hardwareMap, Pose2d pose) {
             calvin = new Calvin(hardwareMap);
-            //this.drive = drive;
+            drive = new PinpointDrive(hardwareMap, pose);
 
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -155,7 +155,7 @@ public class CameraReactionFinal extends LinearOpMode {
 
                 if (notFoundTickerX >= moveOn) {
                     notFoundTickerX = 0;
-                    calvin.drive.setDrivePowers(new PoseVelocity2d(
+                    drive.setDrivePowers(new PoseVelocity2d(
                             new Vector2d(0, 0),
                             0
                     ));
@@ -166,7 +166,7 @@ public class CameraReactionFinal extends LinearOpMode {
             notFoundTickerX = 0;
 
             if (Math.abs(xOffset) < deadzoneX) {
-                calvin.drive.setDrivePowers(new PoseVelocity2d(
+                drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, 0),
                         0
                 ));
@@ -183,13 +183,13 @@ public class CameraReactionFinal extends LinearOpMode {
 
             if (xOffset > 0) {
                 tickerX = 0;
-                calvin.drive.setDrivePowers(new PoseVelocity2d(
+                drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, -adjustedPower),
                         0
                 ));
             } else {
                 tickerX = 0;
-                calvin.drive.setDrivePowers(new PoseVelocity2d(
+                drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(0, adjustedPower),
                         0
                 ));

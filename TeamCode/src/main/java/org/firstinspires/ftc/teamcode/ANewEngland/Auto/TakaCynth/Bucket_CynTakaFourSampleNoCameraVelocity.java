@@ -32,6 +32,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -40,11 +41,13 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFinal;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous (name = "velocity fun", group = "NE")
 @Config
@@ -445,7 +448,9 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
     double fraudOffset = 12.5;
     public static double fraudWait = 0.5;
     public static double fraudSpeed = 20.0;
+    public static double fraudAccel = 20.0;
     CameraReactionFinal.OffsetFinal offsetFinal;
+    PinpointDrive pinpointDrive;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -454,6 +459,9 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
 
 
         Calvin calvin = new Calvin(hardwareMap);
+        calvin.leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        calvin.leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        pinpointDrive = new PinpointDrive(hardwareMap,new Pose2d(0,0,0));
 
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         VerticalSlides vSlides = new VerticalSlides(hardwareMap);
@@ -475,10 +483,8 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
-        offsetFinal = new CameraReactionFinal.OffsetFinal(hardwareMap, startPose);
+        //offsetFinal = new CameraReactionFinal.OffsetFinal(hardwareMap, startPose);
         //if you are coming from meep meep, define your initial here
-
-
         // Set the initial pose of the robot
 
         // Define the trajectories for moving forward
@@ -488,33 +494,35 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
         double xInitial = 0;
         double yInitial = 0;
 
+
         // Set the initial pose of the robot
         //drive.setPoseEstimate(startPose);
 
         // Define the trajectory for moving forward
 
         Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
-        TrajectoryActionBuilder a1 = calvin.drive.actionBuilder(startPose)
+        TrajectoryActionBuilder a1 = pinpointDrive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(fraudSpeed));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a3 = a2.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(fraudSpeed));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 - 6, Math.toRadians(75)), Math.toRadians(0), new TranslationalVelConstraint(fraudSpeed));
+                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 - 6, Math.toRadians(75)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
-        TrajectoryActionBuilder a9 = a8.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(100));
+        TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a10 = a7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(180));
-
+                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial, Math.toRadians(-90)), Math.toRadians(100));
+        TrajectoryActionBuilder a11 = a6.endTrajectory().fresh()
+                .splineToLinearHeading(scorePose, Math.toRadians(0));
 
 
         Action s1 = a1.build();
@@ -550,8 +558,7 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
                                     intakeElbow.elbowPassive(),
                                     intakeWrist.neutralPos(),
                                     intakeClaw.openIntakeClaw(),
-                                    vSlides.slidesDown(),
-                                    new SleepAction(3)
+                                    vSlides.slidesDown()
                             ),
                             //score
                             new ParallelAction(
@@ -720,7 +727,7 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
                                             depositWrist.depositWristPassive(),
                                             new SleepAction(fraudWait)
                                     )
-                            ),
+                            )
                             /*new ParallelAction(
                                     //vSlides.slidesDown(),
                                     s8, //move to submersible
@@ -793,7 +800,7 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
                                             new SleepAction(fraudWait)
                                     )
                             ),*/
-                            new ParallelAction(
+                           /* new ParallelAction(
                                     //vSlides.slidesDown(),
                                     new SequentialAction(
                                             s10,
@@ -801,7 +808,7 @@ public class Bucket_CynTakaFourSampleNoCameraVelocity extends LinearOpMode {
                                             depositArm.depositArmScore(),
                                             depositWrist.depositWristScore()
                                     )
-                            )
+                            )*/
 
                     )
 

@@ -307,7 +307,16 @@ public class MecanumDrive {
                 t = Actions.now() - beginTs;
             }
 
-            if (t >= timeTrajectory.duration) {
+
+            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+
+            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+            Pose2d error = txWorldTarget.value().minusExp(pose);
+
+            if ((t >= timeTrajectory.duration && error.position.norm() < 2
+                    && robotVelRobot.linearVel.norm() < 0.5 && error.heading.real < 1.5 && error.heading.imag < 1.5)
+                    || t >= timeTrajectory.duration + 1) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
@@ -315,11 +324,6 @@ public class MecanumDrive {
 
                 return false;
             }
-
-            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
-            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
-
-            PoseVelocity2d robotVelRobot = updatePoseEstimate();
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
                     PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
@@ -350,7 +354,7 @@ public class MecanumDrive {
             p.put("y", pose.position.y);
             p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
 
-            Pose2d error = txWorldTarget.value().minusExp(pose);
+
             p.put("xError", error.position.x);
             p.put("yError", error.position.y);
             p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
@@ -506,3 +510,78 @@ public class MecanumDrive {
         );
     }
 }
+//og trajectory follower
+//@Override
+//        public boolean run(@NonNull TelemetryPacket p) {
+//            double t;
+//            if (beginTs < 0) {
+//                beginTs = Actions.now();
+//                t = 0;
+//            } else {
+//                t = Actions.now() - beginTs;
+//            }
+//
+//            if (t >= timeTrajectory.duration) {
+//                leftFront.setPower(0);
+//                leftBack.setPower(0);
+//                rightBack.setPower(0);
+//                rightFront.setPower(0);
+//
+//                return false;
+//            }
+//
+//            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+//            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+//
+//            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+//
+//            PoseVelocity2dDual<Time> command = new HolonomicController(
+//                    PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
+//                    PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
+//            )
+//                    .compute(txWorldTarget, pose, robotVelRobot);
+//            driveCommandWriter.write(new DriveCommandMessage(command));
+//
+//            MecanumKinematics.WheelVelocities<Time> wheelVels = kinematics.inverse(command);
+//            double voltage = voltageSensor.getVoltage();
+//
+//            final MotorFeedforward feedforward = new MotorFeedforward(PARAMS.kS,
+//                    PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick);
+//            double leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage;
+//            double leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage;
+//            double rightBackPower = feedforward.compute(wheelVels.rightBack) / voltage;
+//            double rightFrontPower = feedforward.compute(wheelVels.rightFront) / voltage;
+//            mecanumCommandWriter.write(new MecanumCommandMessage(
+//                    voltage, leftFrontPower, leftBackPower, rightBackPower, rightFrontPower
+//            ));
+//
+//            leftFront.setPower(leftFrontPower);
+//            leftBack.setPower(leftBackPower);
+//            rightBack.setPower(rightBackPower);
+//            rightFront.setPower(rightFrontPower);
+//
+//            p.put("x", pose.position.x);
+//            p.put("y", pose.position.y);
+//            p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
+//
+//            Pose2d error = txWorldTarget.value().minusExp(pose);
+//            p.put("xError", error.position.x);
+//            p.put("yError", error.position.y);
+//            p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
+//
+//            // only draw when active; only one drive action should be active at a time
+//            Canvas c = p.fieldOverlay();
+//            drawPoseHistory(c);
+//
+//            c.setStroke("#4CAF50");
+//            Drawing.drawRobot(c, txWorldTarget.value());
+//
+//            c.setStroke("#3F51B5");
+//            Drawing.drawRobot(c, pose);
+//
+//            c.setStroke("#4CAF50FF");
+//            c.setStrokeWidth(1);
+//            c.strokePolyline(xPoints, yPoints);
+//
+//            return true;
+//        }

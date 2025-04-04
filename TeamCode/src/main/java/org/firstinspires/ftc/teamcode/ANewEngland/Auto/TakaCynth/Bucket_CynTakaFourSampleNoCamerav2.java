@@ -48,9 +48,9 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous (name = "Bucket_Auto FINAL", group = "NE")
+@Autonomous (name = "Bucket_Auto FINAL V2", group = "NE")
 @Config
-public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
+public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
 
     //PinpointDrive drive;
     public static double FOREVER = 30;
@@ -595,10 +595,10 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                             ),
                             //score
                             s1,
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(highBucket), //SLIDES GOING UP
+
+                            vSlides.slidesToPosition(highBucket), //SLIDES GOING UP
                                      //MOVE TO SCORING
-                                    new SequentialAction(
+                            new SequentialAction(
                                             new SleepAction(fraudWait),
                                             new SleepAction(fraudWait),
                                             new SleepAction(fraudWait),
@@ -611,12 +611,9 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositWrist.depositWristPassive(),
                                             new SleepAction(fraudWait)
 
-                                    )
-
                             ),
                             s2,
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(0),
+                            vSlides.slidesToPosition(3),
                                     new SequentialAction(
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
@@ -647,11 +644,10 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositClaw.depositClawClose(),
                                             new SleepAction(fraudWait),
                                             intakeClaw.openIntakeClaw()
-                                    )
-                            ),
+                                    ),
+
                             s3,
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(highBucket),
+                                    vSlides.slidesToPosition(3),
 
                                     new SequentialAction(
                                             new SleepAction(fraudWait),
@@ -666,11 +662,9 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositWrist.depositWristPassive(),
                                             new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
-                                    )
-                            ),
+                                    ),
                             s4,
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(0),
+                                    vSlides.slidesToPosition(3),
                                     new SequentialAction(
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
@@ -701,10 +695,8 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositClaw.depositClawClose(),
                                             new SleepAction(fraudWait),
                                             intakeClaw.openIntakeClaw()
-                                    )
-                            ),
+                                    ),
                             s5,
-                            new ParallelAction(
                                     vSlides.slidesToPosition(highBucket),
 
                                     new SequentialAction(
@@ -720,11 +712,9 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositWrist.depositWristPassive(),
                                             new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
-                                    )
-                            ),
+                                    ),
                             s6,
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(0),
+                                    vSlides.slidesToPosition(3),
                                     new SequentialAction(
                                             new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
@@ -757,10 +747,8 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositClaw.depositClawClose(),
                                             new SleepAction(fraudWait),
                                             intakeClaw.openIntakeClaw()
-                                    )
-                            ),
-                            s7,
-                            new ParallelAction(
+                                    ),
+                                    s7,
                                     vSlides.slidesToPosition(highBucket),
                                     new SequentialAction(
                                             new SleepAction(fraudWait),
@@ -774,86 +762,12 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
                                             new SleepAction(fraudWait)
-                                    )
-                            ),
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(0),
+                                    ),
+                                    vSlides.slidesToPosition(3),
                                     //s8, //move to submersible
-                                    new SequentialAction(
-                                            new SleepAction(fraudWait),
-                                            // depositArm.depositArmPassive(),
-                                            //depositWrist.depositWristPassive(),
-                                            //hSlides.hSlidesOutside(),
-                                            new SleepAction(FOREVER)
-                                            /*new Action() {
-                                                @Override
-                                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                                    calvin.drive.updatePoseEstimate();
-                                                    return false;
-                                                }
-                                            },
-                                            new ParallelAction(
-                                                    offsetFinal.XOffsetYellow(),
-                                                    offsetFinal.YOffsetYellow()
-                                            ),
-                                            new Action() {
-                                                @Override
-                                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                                    calvin.drive.updatePoseEstimate();
-                                                    return false;
-                                                }
-                                            },
-                                            new SleepAction(fraudWait + fraudWait),
 
-                                            //pickup and transfer:
-                                            intakeArm.armPassive(),
-                                            intakeElbow.elbowPassive(),
-                                            new SleepAction(fraudWait),
-
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            intakeWrist.intakeWristClockwise(),
-                                            new SleepAction(fraudWait),
-                                            intakeElbow.elbowIntake(),
-                                            intakeArm.armIntake(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudWait),
-                                            intakeWrist.neutralPos(),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudWait),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudWait),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.openIntakeClaw()
-                                            */
-                                    )
-                            ),
-                            /*new ParallelAction(
-                                    //vSlides.slidesUp(),
-                                    s9,
-                                    new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait),
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait+0.07),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY FIFTH SAMPLE
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            new SleepAction(fraudWait)
-                                    )
-                            ),*/
-                            new SleepAction(FOREVER)
-
-
+                                    new SleepAction(FOREVER)
                     )
-
             );
 
 

@@ -606,6 +606,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
                                     )
 
@@ -657,6 +658,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
                                     )
                             ),
@@ -707,6 +709,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
                                     )
                             ),
@@ -759,19 +762,20 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
+                                            new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
                                     )
                             ),
-                            /*new ParallelAction(
-                                    //vSlides.slidesDown(),
-                                    s8, //move to submersible
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(highBucket),
+                                    //s8, //move to submersible
                                     new SequentialAction(
                                             new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            hSlides.hSlidesOutside(),
-                                            new SleepAction(fraudWait),
-                                            new Action() {
+                                            // depositArm.depositArmPassive(),
+                                            //depositWrist.depositWristPassive(),
+                                            //hSlides.hSlidesOutside(),
+                                            new SleepAction(FOREVER)
+                                            /*new Action() {
                                                 @Override
                                                 public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                                                     calvin.drive.updatePoseEstimate();
@@ -817,9 +821,10 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             depositClaw.depositClawClose(),
                                             new SleepAction(fraudWait),
                                             intakeClaw.openIntakeClaw()
+                                            */
                                     )
                             ),
-                            new ParallelAction(
+                            /*new ParallelAction(
                                     //vSlides.slidesUp(),
                                     s9,
                                     new SequentialAction(

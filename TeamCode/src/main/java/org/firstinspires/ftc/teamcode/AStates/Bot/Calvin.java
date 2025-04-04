@@ -53,7 +53,7 @@ public class Calvin {
 
     public static int lowSpecimen = 1000; //todo: test this(low priority)
 
-    public static int highBucket = 4150;
+    public static int highBucket = 4100;
 
     public static double hookExtend = 0.53;
     public static double hookRetract = 0;

@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -25,6 +26,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 @Config
 @Autonomous
+@Disabled
 public class AdarshCamerav2 extends LinearOpMode {
     @Config
     public static class DistFromCenter {

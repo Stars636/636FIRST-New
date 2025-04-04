@@ -88,11 +88,14 @@ public class MeepMeepTesting {
 
 
 
-        specimenAndBasket.runAction(specimenAndBasket.getDrive().actionBuilder(new Pose2d(xBegin, yBegin, 3*PI/2))
-                .splineToLinearHeading(new Pose2d(xBegin, yBegin + 25, Math.toRadians(270)), Math.toRadians(270)) //moves to score specimen
+        specimenAndBasket.runAction(specimenAndBasket.getDrive().actionBuilder(new Pose2d(xInitial+8, yInitial, PI/2))
+                //splineToLinearHeading(new Pose2d(xBegin, yBegin + 25, Math.toRadians(270)), Math.toRadians(270)) //moves to score specimen
                 //score specimen
-                .splineToLinearHeading(new Pose2d(xBegin - 48, yBegin + 16, Math.toRadians(90)), Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(xBegin + offset, yBegin + 10, Math.toRadians(0)), Math.toRadians(0))
+                //splineToLinearHeading(new Pose2d(xBegin - 48, yBegin + 16, Math.toRadians(90)), Math.toRadians(270))
+                //.splineToLinearHeading(new Pose2d(xBegin + offset, yBegin + 10, Math.toRadians(0)), Math.toRadians(0))
+
+                .splineToLinearHeading(new Pose2d(xInitial+8, yInitial + 58, Math.toRadians(180)), Math.toRadians(100))
+                .splineToLinearHeading(new Pose2d(xInitial +20, yInitial +58, Math.toRadians(180)), Math.toRadians(150))
                 .build());
 
         specimenBot.runAction(basketBot.getDrive().actionBuilder(new Pose2d(xStart, yStart, 3*PI/2))
@@ -130,9 +133,9 @@ public class MeepMeepTesting {
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(basketBot)
+                //.addEntity(basketBot)
                 //.addEntity(specimenBot)
-                //.addEntity(specimenAndBasket)
+                .addEntity(specimenAndBasket)
                 //.addEntity(turnBot)
                 //.addEntity(myBot)
                 //.addEntity(cyntakaBot)

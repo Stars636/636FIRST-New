@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
 @Autonomous
 @Config
+@Disabled
 public class Bucket_CynTakaBackUp extends LinearOpMode {
     
     MecanumDrive drive;

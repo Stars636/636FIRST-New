@@ -35,12 +35,11 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -48,12 +47,11 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous
+@Autonomous (name = "Specimen_Auto Park", group = "NE")
 @Config
-@Disabled
-public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
+public class SpecSideLvl1 extends LinearOpMode {
 
-    PinpointDrive drive;
+    //PinpointDrive drive;
     public static double FOREVER = 30;
 
     public static class HorizontalSlides {
@@ -445,11 +443,17 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
         }
 
     }
-    double fraudOffset = 12.5;
+    public static double fraudOffset = 12.5;
     public static double fraudWait = 0.5;
     CameraReactionFinal.OffsetFinal offsetFinal;
+    PinpointDrive drive;
 
-
+    public static double bucket1 =8;
+    public static double bucket1X =12.5;
+    public static double bucket2 =17;
+    public static double bucket2X =11.5;
+    public static double bucket3 =5;
+    public static double bucket3X =38;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -458,8 +462,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
 
 
         Calvin calvin = new Calvin(hardwareMap);
-        calvin.leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        calvin.leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
         VerticalSlides vSlides = new VerticalSlides(hardwareMap);
@@ -477,7 +480,7 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
 
 
         //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
+        //drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
 
         // Define the starting pose (e.g., starting point on the field)
         Pose2d startPose = new Pose2d(0, 0, 0);
@@ -503,22 +506,28 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 10, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + bucket1X, yInitial + bucket1, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a3 = a2.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset, yInitial + 17, Math.toRadians(0)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + bucket2X, yInitial + bucket2, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + fraudOffset + 15, yInitial + 15 - 6, Math.toRadians(75)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial +  bucket3X , yInitial + bucket3, Math.toRadians(75)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a8 = a7.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(0));
+                .splineToLinearHeading(new Pose2d(xInitial + 64, yInitial, Math.toRadians(-90)), Math.toRadians(100));
         TrajectoryActionBuilder a9 = a6.endTrajectory().fresh()
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
+        TrajectoryActionBuilder a10 = a7.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial, Math.toRadians(-90)), Math.toRadians(100));
 
+        TrajectoryActionBuilder a11 = drive.actionBuilder(startPose)
+                .splineToLinearHeading(new Pose2d(xInitial+58, yInitial -8, Math.toRadians(180)), Math.toRadians(100));
+        TrajectoryActionBuilder a12 = a11.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial-20, Math.toRadians(-90)), Math.toRadians(100));
 
         Action s1 = a1.build();
         Action s2 = a2.build();
@@ -529,6 +538,10 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
         Action s7 = a7.build();
         Action s8 = a8.build();
         Action s9 = a9.build();
+        Action s10 = a10.build();
+
+        Action s11 = a11.build();
+        Action s12 = a12.build();
 
 
 
@@ -542,116 +555,20 @@ public class Bucket_CynTakaFINALHSlidesMoving extends LinearOpMode {
         while (opModeIsActive()) {
 
             Actions.runBlocking(
-                    new SequentialAction(
-                            new ParallelAction(
-                                    depositArm.depositArmPassive(),
-                                    depositWrist.depositWristPassive(),
-                                    depositClaw.depositClawClose(),
-                                    hSlides.hSlidesInside(),
-                                    intakeArm.armPassive(),
-                                    intakeElbow.elbowPassive(),
-                                    intakeWrist.neutralPos(),
-                                    intakeClaw.openIntakeClaw(),
-                                    vSlides.slidesDown(),
-                                    new SleepAction(3)
-                            ),
-                            s1,
-                            s2,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
 
-                            new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
-                            ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s3,
-                            s4,
+                    new SequentialAction(
                             hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
-                            ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s5,
-                            s6,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
-                            ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s7,
-                            s8,
-                            hSlides.hSlidesOutside(),
-                            new SleepAction(fraudWait),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            new ParallelAction(
-                                    offsetFinal.XOffsetYellow(),
-                                    offsetFinal.YOffsetYellow()
-                            ),
-                            new Action() {
-                                @Override
-                                public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                                    drive.updatePoseEstimate();
-                                    return false;
-                                }
-                            },
-                            hSlides.hSlidesInside(),
-                            s9
+                            new SleepAction(FOREVER),
+                            new SleepAction(FOREVER),
+                            new SleepAction(FOREVER),
+                            new SleepAction(FOREVER),
+                            new SleepAction(FOREVER)
                     )
+
             );
-            
+
+
+
         }
     }
 }

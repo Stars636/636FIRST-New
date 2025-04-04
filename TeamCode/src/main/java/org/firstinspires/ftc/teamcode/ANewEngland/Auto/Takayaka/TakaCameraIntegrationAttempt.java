@@ -20,6 +20,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -35,6 +36,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
+@Disabled
 public class TakaCameraIntegrationAttempt extends LinearOpMode {
 
     Calvin calvin;

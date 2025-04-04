@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous (name = "Bucket_Auto NoCamera", group = "NE")
+@Autonomous (name = "Bucket_Auto FINAL", group = "NE")
 @Config
 public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
 
@@ -493,7 +493,7 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
 
 
 
-        Calvin calvin = new Calvin(hardwareMap);
+        //Calvin calvin = new Calvin(hardwareMap);
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
@@ -599,6 +599,8 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                     s1, //MOVE TO SCORING
                                     new SequentialAction(
                                             new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudWait),
@@ -606,8 +608,8 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                             new SleepAction(fraudWait),
                                             depositArm.depositArmPassive(),
                                             depositWrist.depositWristPassive(),
-                                            new SleepAction(fraudWait),
                                             new SleepAction(fraudWait)
+
                                     )
 
                             ),
@@ -650,7 +652,9 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                     vSlides.slidesToPosition(highBucket),
                                     s3,
                                     new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudWait+0.07),
@@ -701,7 +705,9 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                     vSlides.slidesToPosition(highBucket),
                                     s5,
                                     new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudWait+0.07),
@@ -754,7 +760,9 @@ public class Bucket_CynTakaFourSampleNoCamera extends LinearOpMode {
                                     vSlides.slidesToPosition(highBucket),
                                     s7,
                                     new SequentialAction(
-                                            new SleepAction(fraudWait + fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
+                                            new SleepAction(fraudWait),
                                             depositWrist.depositWristScore(),
                                             depositArm.depositArmScore(),
                                             new SleepAction(fraudWait+0.07),

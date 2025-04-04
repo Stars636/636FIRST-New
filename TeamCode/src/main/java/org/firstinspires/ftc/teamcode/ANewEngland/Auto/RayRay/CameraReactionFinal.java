@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -29,6 +30,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 
 @Autonomous
+@Disabled
 public class CameraReactionFinal extends LinearOpMode {
     @Config
     public static class OffsetFinal {

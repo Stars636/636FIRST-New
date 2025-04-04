@@ -557,8 +557,16 @@ public class SpecSideLvl1 extends LinearOpMode {
             Actions.runBlocking(
 
                     new SequentialAction(
-                            hSlides.hSlidesOutside(),
+                            depositArm.depositArmPassive(),
+                            depositWrist.depositWristPassive(),
+                            depositClaw.depositClawClose(),
+                            hSlides.hSlidesInside(),
+                            intakeArm.armPassive(),
+                            intakeElbow.elbowPassive(),
+                            intakeWrist.neutralPos(),
+                            intakeClaw.openIntakeClaw(),
                             new SleepAction(FOREVER),
+                            hSlides.hSlidesOutside(),
                             new SleepAction(FOREVER),
                             new SleepAction(FOREVER),
                             new SleepAction(FOREVER),

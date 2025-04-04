@@ -59,7 +59,7 @@ public class Calvin {
     public static double hookRetract = 0;
 
     public static double depositClawOpen = 0;
-    public static double depositClawClosed = 0.47;
+    public static double depositClawClosed = 0.48;
     public static double depositClawPassivePos = 0.6;   //0.78
 
     public static double depositClawPassiveRot = 0.3;
@@ -92,7 +92,7 @@ public class Calvin {
 
     public static double intakeClawPassivePos = 0.4;
     public static double intakeClawPassiveRot = 0.3;
-    public static double intakeClawHoverPos = 0.5;
+    public static double intakeClawHoverPos = 0.52;
     public static double intakeClawHoverRot = 0.99;
     public static double intakeClawGrabPos = 0.45;
     public static double intakeClawGrabRot = 0.95;

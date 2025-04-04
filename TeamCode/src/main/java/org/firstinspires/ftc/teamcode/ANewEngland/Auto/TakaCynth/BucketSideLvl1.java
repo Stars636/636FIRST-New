@@ -526,9 +526,14 @@ public class BucketSideLvl1 extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial, Math.toRadians(-90)), Math.toRadians(100));
 
         TrajectoryActionBuilder a11 = drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(xInitial+58, yInitial -8, Math.toRadians(180)), Math.toRadians(100));
+                //.splineToLinearHeading(new Pose2d(xInitial+58, yInitial -8, Math.toRadians(180)), Math.toRadians(100));
+                .setTangent(Math.toRadians(0))
+                .lineToX(58);
         TrajectoryActionBuilder a12 = a11.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(xInitial + 58, yInitial-20, Math.toRadians(-90)), Math.toRadians(100));
+                .turn(90)
+                .lineToY(- 20);
+
+                //.splineToLinearHeading(new Pose2d(xInitial + 58, yInitial-20, Math.toRadians(-90)), Math.toRadians(100));
 
         Action s1 = a1.build();
         Action s2 = a2.build();

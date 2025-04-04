@@ -54,6 +54,7 @@ public class SlidesUp extends LinearOpMode {
 
     //PinpointDrive drive;
     public static double FOREVER = 30;
+    public static double konoPower = 0.5;
 
 
     public static class HorizontalSlides {
@@ -126,8 +127,7 @@ public class SlidesUp extends LinearOpMode {
 
     public static class VerticalSlides {
         Calvin calvin;
-        public static double integralSum = 0;
-        public static double lastError = 0;
+
 
         ElapsedTime timer = new ElapsedTime();
         public VerticalSlides(HardwareMap hardwareMap) {
@@ -137,14 +137,12 @@ public class SlidesUp extends LinearOpMode {
 
 
         public void moveVerticalSlidesTo(int targetPosition) {
-           calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             calvin.vSlidesLeft.setTargetPosition(targetPosition);
-            calvin.vSlidesLeft.setPower(0.7);
+            calvin.vSlidesLeft.setPower(konoPower);
             calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             calvin.vSlidesRight.setTargetPosition(targetPosition);
-            calvin.vSlidesRight.setPower(0.7);
+            calvin.vSlidesRight.setPower(konoPower);
             calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 

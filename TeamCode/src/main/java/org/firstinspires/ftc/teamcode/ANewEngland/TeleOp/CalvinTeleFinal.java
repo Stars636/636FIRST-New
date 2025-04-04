@@ -580,8 +580,8 @@ public class CalvinTeleFinal extends LinearOpMode {
             telemetry.addData("Deposit Claw", depositClawMacro);
             //telemetry.addData("Hang SEervo", calvin.servHangLeft.getPosition());
             //telemetry.addData("Hang Power", calvin.servHangLeft.getPosition());
-            telemetry.addData("Vslides", calvin.vSlidesLeft.getCurrentPosition());
-            telemetry.addData("Vslides", calvin.vSlidesRight.getCurrentPosition());
+            telemetry.addData("VslidesLeft", calvin.vSlidesLeft.getCurrentPosition());
+            telemetry.addData("VslidesRight", calvin.vSlidesRight.getCurrentPosition());
             telemetry.addData("HangRight", calvin.hangLeft.getCurrentPosition());
             telemetry.addData("HangLeft", calvin.hangRight.getCurrentPosition());
             telemetry.addData("check", check);

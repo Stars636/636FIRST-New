@@ -38,6 +38,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -50,6 +51,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 @Autonomous (name = "Bucket_Auto FINAL V3", group = "NE")
 @Config
+@Disabled
 public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
 
     //PinpointDrive drive;
@@ -156,16 +158,6 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 int currentLeft = calvin.vSlidesLeft.getCurrentPosition();
                 int currentRight = calvin.vSlidesRight.getCurrentPosition();
                 double currentPosition = (currentRight);
-                if (currentPosition >= highBucket - TOLERANCE) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
-                if (currentPosition <= TOLERANCE) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
 
                 // Calculate PID components
                 double error = targetPosition - currentPosition;
@@ -179,6 +171,16 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 // Clamp power between -1 and 1
                 power = Math.max(-1, Math.min(1, power));
 
+                if (currentPosition >= highBucket - TOLERANCE && targetPosition > currentPosition) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                if (currentPosition <= TOLERANCE && targetPosition < currentPosition ) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
                 // Apply power
                 calvin.vSlidesLeft.setPower(power);
                 calvin.vSlidesRight.setPower(power);
@@ -201,7 +203,7 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                     return false;
                 }
                 return true;
-                //return Math.abs(error) < TOLERANCE;
+
             }
         }
 
@@ -217,7 +219,7 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                             return false;
                         }
                     },
-                    new SlidesPIDAction()
+                    new VerticalSlides.SlidesPIDAction()
             );
         }
     }
@@ -614,12 +616,11 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                                     intakeClaw.openIntakeClaw()
                             ),
                             //score
-
-
-                            vSlides.slidesToPosition(slidesUp), //SLIDES GOING UP
-
+                            //MOVE TO SCORING
                             s1,
-                                     //MOVE TO SCORING
+                            new ParallelAction(
+                                            vSlides.slidesToPosition(slidesUp)
+                            ),
                             new SequentialAction(
                                             new SleepAction(fraudWait),
                                             new SleepAction(fraudWait),

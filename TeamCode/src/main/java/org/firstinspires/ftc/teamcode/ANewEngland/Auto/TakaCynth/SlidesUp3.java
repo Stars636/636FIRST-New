@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawPassiv
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferPos;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
+import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristNormalLeft;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
 
 import androidx.annotation.NonNull;
@@ -38,8 +39,8 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -49,13 +50,14 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous (name = "Bucket_Auto FINAL V2", group = "NE")
+@Autonomous (name = "Bucket_Auto SUPERFINAL", group = "NE")
 @Config
-@Disabled
-public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
+public class SlidesUp3 extends LinearOpMode {
 
     //PinpointDrive drive;
     public static double FOREVER = 30;
+    public static double konoPower = 0.5;
+
 
     public static class HorizontalSlides {
 
@@ -124,7 +126,6 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
             return new OpenIntakeClaw();
         }
     }
-
     public static PIDCoefficients pidCoefficients = new PIDCoefficients(0.023, 0.000, 0.00);
     public static class VerticalSlides {
         Calvin calvin;
@@ -171,6 +172,16 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
                 // Clamp power between -1 and 1
                 power = Math.max(-1, Math.min(1, power));
 
+                if (currentPosition >= highBucket - TOLERANCE && targetPosition > currentPosition) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                if (currentPosition <= TOLERANCE && targetPosition < currentPosition ) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
                 // Apply power
                 calvin.vSlidesLeft.setPower(power);
                 calvin.vSlidesRight.setPower(power);
@@ -187,7 +198,13 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
                 packet.put("Power", power);
 
                 // Check if within tolerance
-                return Math.abs(error) < TOLERANCE;
+                if (Math.abs(error) < TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                return true;
+
             }
         }
 
@@ -227,16 +244,16 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
             return new NeutralPos();
         }
 
-        public class IntakeWristClockwise implements Action {
+        public class IntakeWristPerp implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                calvin.intakeWrist.setPosition(intakeWristTiltRight);
+                calvin.intakeWrist.setPosition(intakeWristNormalLeft);
                 return false;
             }
         }
 
-        public Action intakeWristClockwise() {
-            return new IntakeWristClockwise();
+        public Action intakeWristPerp() {
+            return new IntakeWristPerp();
         }
 
     }
@@ -479,23 +496,25 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
     }
     public static double fraudOffset = 12.5;
     public static double fraudWait = 0.5;
+    public static double clawWait = 0.1;
     CameraReactionFinal.OffsetFinal offsetFinal;
     PinpointDrive drive;
 
-    public static double bucket1 =8;
-    public static double bucket1X =13;
-    public static double bucket2 =17;
-    public static double bucket2X =11.5;
-    public static double bucket3 =5;
-    public static double bucket3X =38;
-
+    public static double bucket1 =8.75; //8
+    public static double bucket1X =17.35; //12.5
+    public static double bucket2 =20.25; //17
+    public static double bucket2X =16; //11.5
+    public static double bucket3 =5.75;
+    public static double bucket3X =40;
+    public static int slidesUp = 3900;
+    public static int slidesDown = 20;
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime et = new ElapsedTime();
 
 
 
-        //Calvin calvin = new Calvin(hardwareMap);
+        Calvin calvin = new Calvin(hardwareMap);
 
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         IntakeClaw intakeClaw = new IntakeClaw(hardwareMap);
@@ -536,7 +555,7 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(xInitial + 9, yInitial + 14, Math.toRadians(-45));
+        Pose2d scorePose = new Pose2d(xInitial + 6, yInitial + 20, Math.toRadians(-45));
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
@@ -595,180 +614,159 @@ public class Bucket_CynTakaFourSampleNoCamerav2 extends LinearOpMode {
                                     intakeWrist.neutralPos(),
                                     intakeClaw.openIntakeClaw()
                             ),
-                            //score
-                            s1,
-
-                            vSlides.slidesToPosition(highBucket), //SLIDES GOING UP
-                                     //MOVE TO SCORING
+                        s1,
+                        new ParallelAction(
+                            vSlides.slidesToPosition(slidesUp)
+                        ),
+                        new SequentialAction(
+                                depositArm.depositArmScore(),
+                                depositWrist.depositWristScore(),
+                                new SleepAction(fraudWait),
+                                depositClaw.depositClawOpen(),//SCORE YAYY FIRST SAMPLE
+                                new SleepAction(clawWait),
+                                depositArm.depositArmPassive(),
+                                depositWrist.depositWristPassive(),
+                                new SleepAction(fraudWait)
+                        ),
+                        new ParallelAction(
+                            vSlides.slidesToPosition(slidesDown)
+                        ),
+                            s2,
                             new SequentialAction(
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY FIRST SAMPLE
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            new SleepAction(fraudWait)
+                                    hSlides.hSlidesOutside(),
+                                    intakeArm.armHover(),
+                                    intakeElbow.elbowHover(),
+                                    intakeWrist.neutralPos(),
+                                    new SleepAction(fraudWait),
+                                    intakeElbow.elbowIntake(),
+                                    intakeArm.armIntake(),
+                                    new SleepAction(clawWait),
+                                    intakeClaw.closeIntakeClaw(),
+                                    new SleepAction(clawWait),
+                                    intakeArm.armTransfer(),
+                                    intakeElbow.elbowTransfer(),
+                                    new SleepAction(fraudWait),
+                                    hSlides.hSlidesInside(),
+                                    new SleepAction(fraudWait),
+                                    depositArm.depositArmTransfer(),
+                                    depositWrist.depositWristTransfer(),
+                                    new SleepAction(0.3),
+                                    depositClaw.depositClawClose(),
+                                    new SleepAction(clawWait),
+                                    intakeClaw.openIntakeClaw(),
+                                    new SleepAction(fraudWait)
+                            ),
+                            s3,
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(slidesUp)
+                            ),
+                            new SequentialAction(
+                                    depositArm.depositArmScore(),
+                                    depositWrist.depositWristScore(),
+                                    new SleepAction(fraudWait),
+                                    depositClaw.depositClawOpen(),//SCORE YAYY SECOND SAMPLE
+                                    new SleepAction(clawWait),
+                                    depositArm.depositArmPassive(),
+                                    depositWrist.depositWristPassive(),
+                                    new SleepAction(fraudWait)
+                            ),
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(slidesDown)
+                            ),
+                            s4,
+                            new SequentialAction(
+                                    hSlides.hSlidesOutside(),
+                                    intakeArm.armHover(),
+                                    intakeElbow.elbowHover(),
+                                    intakeWrist.neutralPos(),
+                                    new SleepAction(fraudWait),
+                                    intakeElbow.elbowIntake(),
+                                    intakeArm.armIntake(),
+                                    new SleepAction(clawWait),
+                                    intakeClaw.closeIntakeClaw(),
+                                    new SleepAction(clawWait),
+                                    intakeArm.armTransfer(),
+                                    intakeElbow.elbowTransfer(),
+                                    new SleepAction(fraudWait),
+                                    hSlides.hSlidesInside(),
+                                    new SleepAction(fraudWait),
+                                    depositArm.depositArmTransfer(),
+                                    depositWrist.depositWristTransfer(),
+                                    new SleepAction(0.3),
+                                    depositClaw.depositClawClose(),
+                                    new SleepAction(clawWait),
+                                    intakeClaw.openIntakeClaw(),
+                                    new SleepAction(fraudWait)
 
                             ),
-                            s2,
-                            vSlides.slidesToPosition(3),
-                                    new SequentialAction(
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            // GO TO SECOND SAMPLE
-                                            hSlides.hSlidesOutside(),
-
-                                            intakeArm.armPassive(),
-                                            intakeElbow.elbowPassive(),
-                                            new SleepAction(fraudWait),
-
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            intakeWrist.neutralPos(),
-                                            new SleepAction(fraudWait),
-                                            intakeElbow.elbowIntake(),
-                                            intakeArm.armIntake(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudWait),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudWait),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudWait),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.openIntakeClaw()
-                                    ),
-
-                            s3,
-                                    vSlides.slidesToPosition(3),
-
-                                    new SequentialAction(
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait+0.07),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY 2nd SAMPLE
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait)
-                                    ),
-                            s4,
-                                    vSlides.slidesToPosition(3),
-                                    new SequentialAction(
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            // GO TO THIRD SAMPLE
-                                            hSlides.hSlidesOutside(),
-
-                                            intakeArm.armPassive(),
-                                            intakeElbow.elbowPassive(),
-                                            new SleepAction(fraudWait),
-
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            intakeWrist.neutralPos(),
-                                            new SleepAction(fraudWait),
-                                            intakeElbow.elbowIntake(),
-                                            intakeArm.armIntake(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudWait),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudWait),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudWait),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.openIntakeClaw()
-                                    ),
                             s5,
-                                    vSlides.slidesToPosition(highBucket),
-
-                                    new SequentialAction(
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait+0.07),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY THIRD SAMPLE
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait)
-                                    ),
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(slidesUp)
+                            ),
+                            new SequentialAction(
+                                    depositArm.depositArmScore(),
+                                    depositWrist.depositWristScore(),
+                                    new SleepAction(fraudWait),
+                                    depositClaw.depositClawOpen(),//SCORE YAYY SECOND SAMPLE
+                                    new SleepAction(clawWait),
+                                    depositArm.depositArmPassive(),
+                                    depositWrist.depositWristPassive(),
+                                    new SleepAction(fraudWait)
+                            ),
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(slidesDown)
+                            ),
+                            new SequentialAction(
+                                    intakeArm.armPassive(),
+                                    intakeElbow.elbowPassive()
+                            ),
+                            /*
                             s6,
-                                    vSlides.slidesToPosition(3),
-                                    new SequentialAction(
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            // GO TO LAST SAMPLE
-                                            hSlides.hSlidesOutside(),
+                            new SequentialAction(
+                                    hSlides.hSlidesOutside(),
+                                    intakeArm.armHover(),
+                                    intakeElbow.elbowHover(),
+                                    intakeWrist.intakeWristPerp(),
+                                    new SleepAction(fraudWait),
+                                    intakeElbow.elbowIntake(),
+                                    intakeArm.armIntake(),
+                                    new SleepAction(clawWait),
+                                    intakeClaw.closeIntakeClaw(),
+                                    new SleepAction(clawWait),
+                                    intakeWrist.neutralPos(),
+                                    intakeArm.armTransfer(),
+                                    intakeElbow.elbowTransfer(),
+                                    new SleepAction(fraudWait),
+                                    hSlides.hSlidesInside(),
+                                    new SleepAction(fraudWait),
+                                    depositArm.depositArmTransfer(),
+                                    depositWrist.depositWristTransfer(),
+                                    new SleepAction(0.3),
+                                    depositClaw.depositClawClose(),
+                                    new SleepAction(clawWait),
+                                    intakeClaw.openIntakeClaw(),
+                                    new SleepAction(fraudWait)
+                            ),
+                            s7,
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(slidesUp)
+                            ),
+                            new SequentialAction(
+                                    depositArm.depositArmScore(),
+                                    depositWrist.depositWristScore(),
+                                    new SleepAction(fraudWait),
+                                    depositClaw.depositClawOpen(),//SCORE YAYY SECOND SAMPLE
+                                    new SleepAction(clawWait),
+                                    depositArm.depositArmPassive(),
+                                    depositWrist.depositWristPassive(),
+                                    new SleepAction(fraudWait)
+                            ),
+                            new ParallelAction(
+                                    vSlides.slidesToPosition(slidesDown)
+                            ),
 
-                                            intakeArm.armPassive(),
-                                            intakeElbow.elbowPassive(),
-                                            new SleepAction(fraudWait),
-
-                                            intakeArm.armHover(),
-                                            intakeElbow.elbowHover(),
-                                            intakeWrist.intakeWristClockwise(),
-                                            new SleepAction(fraudWait),
-                                            intakeElbow.elbowIntake(),
-                                            intakeArm.armIntake(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.closeIntakeClaw(),
-                                            new SleepAction(fraudWait),
-                                            intakeWrist.neutralPos(),
-                                            intakeArm.armTransfer(),
-                                            intakeElbow.elbowTransfer(),
-                                            new SleepAction(fraudWait),
-                                            hSlides.hSlidesInside(),
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmTransfer(),
-                                            depositWrist.depositWristTransfer(),
-                                            new SleepAction(fraudWait),
-                                            depositClaw.depositClawClose(),
-                                            new SleepAction(fraudWait),
-                                            intakeClaw.openIntakeClaw()
-                                    ),
-                                    s7,
-                                    vSlides.slidesToPosition(highBucket),
-                                    new SequentialAction(
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            new SleepAction(fraudWait),
-                                            depositWrist.depositWristScore(),
-                                            depositArm.depositArmScore(),
-                                            new SleepAction(fraudWait+0.07),
-                                            depositClaw.depositClawOpen(),//SCORE YAYY FOURTH SAMPLE
-                                            new SleepAction(fraudWait),
-                                            depositArm.depositArmPassive(),
-                                            depositWrist.depositWristPassive(),
-                                            new SleepAction(fraudWait)
-                                    ),
-                                    vSlides.slidesToPosition(3),
-                                    //s8, //move to submersible
-
-                                    new SleepAction(FOREVER)
+                             */
+                            new SleepAction(FOREVER)
                     )
             );
 

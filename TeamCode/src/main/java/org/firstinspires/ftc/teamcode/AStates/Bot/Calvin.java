@@ -92,7 +92,7 @@ public class Calvin {
 
     public static double intakeClawPassivePos = 0.4;
     public static double intakeClawPassiveRot = 0.3;
-    public static double intakeClawHoverPos = 0.52;
+    public static double intakeClawHoverPos = 0.51;
     public static double intakeClawHoverRot = 0.99;
     public static double intakeClawGrabPos = 0.45;
     public static double intakeClawGrabRot = 0.95;
@@ -239,7 +239,7 @@ public class Calvin {
     public void initialBucket() {
         hSlidesLeft.setPosition(hSlidesInside);
         hSlidesRight.setPosition(hSlidesInside);
-        intakeClaw.setPosition(intakeClawOpen);
+        intakeClaw.setPosition(intakeClawClosed);
         intakeWrist.setPosition(intakeWristFlat);
         intakeElbow.setPosition(intakeClawPassiveRot);
         intakeArm.setPosition(intakeClawPassivePos);

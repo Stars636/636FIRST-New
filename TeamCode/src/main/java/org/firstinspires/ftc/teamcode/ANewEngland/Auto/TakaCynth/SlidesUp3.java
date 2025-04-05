@@ -500,12 +500,15 @@ public class SlidesUp3 extends LinearOpMode {
     CameraReactionFinal.OffsetFinal offsetFinal;
     PinpointDrive drive;
 
-    public static double bucket1 =8.75; //8
-    public static double bucket1X =17.35; //12.5
-    public static double bucket2 =20.25; //17
-    public static double bucket2X =16; //11.5
-    public static double bucket3 =5.75;
+    public static double bucket1 =9.5; //8
+    public static double bucket1X =16.55; //12.5
+    public static double bucket2 =19.5; //17
+    public static double bucket2X =15.75; //11.5
+    public static double bucket3 =7.8;
     public static double bucket3X =40;
+    public static double scoreX =6;
+    public static double scoreY =23;
+
     public static int slidesUp = 3900;
     public static int slidesDown = 20;
     @Override
@@ -555,7 +558,8 @@ public class SlidesUp3 extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(xInitial + 6, yInitial + 20, Math.toRadians(-45));
+        Pose2d scorePose = new Pose2d(xInitial + 6.25, yInitial + 20.25, Math.toRadians(-45));
+        Pose2d scorePose2 = new Pose2d(xInitial + scoreX, yInitial + scoreY, Math.toRadians(-45));
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
@@ -565,7 +569,7 @@ public class SlidesUp3 extends LinearOpMode {
         TrajectoryActionBuilder a4 = a3.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial + bucket2X, yInitial + bucket2, Math.toRadians(0)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a5 = a4.endTrajectory().fresh()
-                .splineToLinearHeading(scorePose, Math.toRadians(0));
+                .splineToLinearHeading(scorePose2, Math.toRadians(0));
         TrajectoryActionBuilder a6 = a5.endTrajectory().fresh()
                 .splineToLinearHeading(new Pose2d(xInitial +  bucket3X , yInitial + bucket3, Math.toRadians(75)), Math.toRadians(0), new TranslationalVelConstraint(40));
         TrajectoryActionBuilder a7 = a6.endTrajectory().fresh()
@@ -720,7 +724,7 @@ public class SlidesUp3 extends LinearOpMode {
                                     intakeArm.armPassive(),
                                     intakeElbow.elbowPassive()
                             ),
-                            /*
+
                             s6,
                             new SequentialAction(
                                     hSlides.hSlidesOutside(),
@@ -734,6 +738,10 @@ public class SlidesUp3 extends LinearOpMode {
                                     intakeClaw.closeIntakeClaw(),
                                     new SleepAction(clawWait),
                                     intakeWrist.neutralPos(),
+                                    intakeArm.armHover(),
+                                    intakeElbow.elbowHover()
+                                    ),
+                                    /*
                                     intakeArm.armTransfer(),
                                     intakeElbow.elbowTransfer(),
                                     new SleepAction(fraudWait),
@@ -766,6 +774,7 @@ public class SlidesUp3 extends LinearOpMode {
                             ),
 
                              */
+                            new SleepAction(FOREVER),
                             new SleepAction(FOREVER)
                     )
             );

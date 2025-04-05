@@ -156,16 +156,6 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 int currentLeft = calvin.vSlidesLeft.getCurrentPosition();
                 int currentRight = calvin.vSlidesRight.getCurrentPosition();
                 double currentPosition = (currentRight);
-                if (currentPosition >= highBucket - TOLERANCE) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
-                if (currentPosition <= TOLERANCE ) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
 
                 // Calculate PID components
                 double error = targetPosition - currentPosition;
@@ -195,13 +185,7 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 packet.put("Power", power);
 
                 // Check if within tolerance
-                if (Math.abs(error) < TOLERANCE) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
-                return true;
-
+                return Math.abs(error) < TOLERANCE;
             }
         }
 
@@ -502,8 +486,10 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
     public static double bucket2X =11.5;
     public static double bucket3 =5;
     public static double bucket3X =38;
-    public static double scoreX =6;
-    public static double scoreY = 20;
+    public static int slidesDown = 20;
+    public static double scoreX = 7;
+    public static double scoreY = 12;
+    public static int slidesUp = 1000;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -552,7 +538,7 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(scoreX, scoreY, Math.toRadians(-45));
+        Pose2d scorePose = new Pose2d(xInitial + scoreX, yInitial + scoreY, Math.toRadians(-45));
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()
@@ -612,9 +598,11 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                                     intakeClaw.openIntakeClaw()
                             ),
                             //score
-                            s1,
 
-                            vSlides.slidesToPosition(highBucket), //SLIDES GOING UP
+
+                            vSlides.slidesToPosition(slidesUp), //SLIDES GOING UP
+
+                            s1,
                                      //MOVE TO SCORING
                             new SequentialAction(
                                             new SleepAction(fraudWait),
@@ -630,7 +618,12 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                                             new SleepAction(fraudWait)
 
                             ),
-                            vSlides.slidesToPosition(0),
+                            vSlides.slidesToPosition(slidesDown),
+
+                            //s2,
+
+
+
                             new SleepAction(FOREVER)
 
 

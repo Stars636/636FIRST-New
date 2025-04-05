@@ -53,7 +53,7 @@ public class Calvin {
 
     public static int lowSpecimen = 1000; //todo: test this(low priority)
 
-    public static int highBucket = 4000;
+    public static int highBucket = 2000;
 
     public static double hookExtend = 0.53;
     public static double hookRetract = 0;
@@ -64,7 +64,7 @@ public class Calvin {
 
     public static double depositClawPassiveRot = 0.3;
 
-    public static double depositClawTransferPos = 0.7;   //0.80
+    public static double depositClawTransferPos = 0.715;   //0.80
 
     public static double depositClawTransferRot = 0.1;  //0.18
 
@@ -87,7 +87,7 @@ public class Calvin {
     public static double intakeClawOpen = 0.0;
     public static double intakeClawClosed = 0.4;
     public static double intakeClawTransferPos = 0.67;
-    public static double intakeClawTransferRot = 0.12;
+    public static double intakeClawTransferRot = 0.15;
     public static double intakeClawTransferRotHalf = 0;
 
     public static double intakeClawPassivePos = 0.4;

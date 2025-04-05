@@ -75,8 +75,8 @@ public class CalvinTeleFinal extends LinearOpMode {
 
     //Pickup timers
     public ElapsedTime pickUpTime = new ElapsedTime();
-    public static double pickUp1 = 0.06;//lower this over time LOL
-    public static double pickUp2 = 0.06;
+    public static double pickUp1 = 0.1;//lower this over time LOL
+    public static double pickUp2 = 0.1;
 
 
     public static boolean isMajorMacroing = false;

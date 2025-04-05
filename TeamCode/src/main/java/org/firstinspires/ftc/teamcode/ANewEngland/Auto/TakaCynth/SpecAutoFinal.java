@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode.AStates.Auto;
+ package org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth;
 
 
-import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.highBucket;
-import static org.firstinspires.ftc.teamcode.AStates.Old.Specimen_PathsTwo.fraudOffset;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawClosed;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawOpen;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.depositClawPassivePos;
@@ -30,6 +28,7 @@ import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransf
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeClawTransferRot;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristFlat;
 import static org.firstinspires.ftc.teamcode.AStates.Bot.Calvin.intakeWristTiltRight;
+import static org.firstinspires.ftc.teamcode.AStates.Old.Specimen_PathsTwo.fraudOffset;
 
 import androidx.annotation.NonNull;
 
@@ -46,10 +45,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ANewEngland.Auto.TakaCynth.SlidesUp3;
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
@@ -58,7 +55,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 @Config
 @Autonomous(name = "Specimen Auto 2/6/2025", group = "STATES")
 
-public class Specimen_Auto_Four extends LinearOpMode {
+public class SpecAutoFinal extends LinearOpMode {
 
     //Todo: have hang open before auto
     public static double FOREVER = 30;
@@ -133,99 +130,48 @@ public class Specimen_Auto_Four extends LinearOpMode {
 
     public static class VerticalSlides {
         Calvin calvin;
-        ElapsedTime timer = new ElapsedTime();
-        // Tune these values
-        double targetPosition = 0;
-        double integralSum = 0;
-        double lastError = 0;
-        static double TOLERANCE = 20; // Encoder ticks tolerance
+        public static double integralSum = 0;
+        public static double lastError = 0;
 
+        ElapsedTime timer = new ElapsedTime();
         public VerticalSlides(HardwareMap hardwareMap) {
             calvin = new Calvin(hardwareMap);
-            resetEncoders();
-            setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        private void resetEncoders() {
-            calvin.vSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            calvin.vSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
+        public void moveVerticalSlidesTo(int targetPosition) {
+            calvin.vSlidesLeft.setTargetPosition(targetPosition);
+            calvin.vSlidesLeft.setPower(0.8);
+            calvin.vSlidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        private void setMode(DcMotor.RunMode mode) {
-            calvin.vSlidesLeft.setMode(mode);
-            calvin.vSlidesRight.setMode(mode);
+            calvin.vSlidesRight.setTargetPosition(targetPosition);
+            calvin.vSlidesRight.setPower(0.8);
+            calvin.vSlidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         }
-        public static PIDCoefficients pidCoefficients = new PIDCoefficients(0.023, 0.000, 0.00);
-        public class SlidesPIDAction implements Action {
+        public class SlidesHighChamber implements Action {
             @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                // Get current positions
-                int currentLeft = calvin.vSlidesLeft.getCurrentPosition();
-                int currentRight = calvin.vSlidesRight.getCurrentPosition();
-                double currentPosition = (currentRight);
-
-                // Calculate PID components
-                double error = targetPosition - currentPosition;
-                integralSum += error * timer.seconds();
-                double derivative = (error - lastError) / timer.seconds();
-
-                double power = pidCoefficients.p * error
-                        + pidCoefficients.i * integralSum
-                        + pidCoefficients.d * derivative;
-
-                // Clamp power between -1 and 1
-                power = Math.max(-1, Math.min(1, power));
-
-                if (currentPosition >= highBucket - TOLERANCE && targetPosition > currentPosition) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
-                if (currentPosition <= TOLERANCE && targetPosition < currentPosition ) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
-                // Apply power
-                calvin.vSlidesLeft.setPower(power);
-                calvin.vSlidesRight.setPower(power);
-
-                // Update tracking variables
-                lastError = error;
-                timer.reset();
-
-                // Add telemetry
-                packet.put("Target", targetPosition);
-                packet.put("Current", currentPosition);
-                packet.put("CurrentLeft", currentLeft);
-                packet.put("CurrentRight", currentRight);
-                packet.put("Power", power);
-
-                // Check if within tolerance
-                if (Math.abs(error) < TOLERANCE) {
-                    calvin.vSlidesLeft.setPower(0);
-                    calvin.vSlidesRight.setPower(0);
-                    return false;
-                }
-                return true;
-
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                moveVerticalSlidesTo(highSpecimen);
+                return false;
             }
         }
 
-        public Action slidesToPosition(int position) {
-            return new SequentialAction(
-                    new Action() {
-                        @Override
-                        public boolean run(TelemetryPacket packet) {
-                            targetPosition = position;
-                            integralSum = 0;
-                            lastError = 0;
-                            timer.reset();
-                            return false;
-                        }
-                    },
-                    new VerticalSlides.SlidesPIDAction()
-            );
+        public Action slidesHighChamber() {
+            return new SlidesHighChamber();
+        }
+
+        public class SlidesDown implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                moveVerticalSlidesTo(0);
+
+                return false;
+            }
+        }
+
+        public Action slidesDown() {
+            return new SlidesDown();
         }
     }
 
@@ -459,7 +405,7 @@ public class Specimen_Auto_Four extends LinearOpMode {
         }
 
         public Action depositArmSpeciPosStart() {
-            return new DepositArm.DepositArmSpeciPosStart();
+            return new DepositArmSpeciPosStart();
         }
 
         public class DepositArmSpeciPosFinish implements Action {
@@ -471,7 +417,7 @@ public class Specimen_Auto_Four extends LinearOpMode {
         }
 
         public Action depositArmSpeciPosFinish() {
-            return new DepositArm.DepositArmSpeciPosFinish();
+            return new DepositArmSpeciPosFinish();
         }
 
 
@@ -533,7 +479,7 @@ public class Specimen_Auto_Four extends LinearOpMode {
         }
 
         public Action depositWristSpeciRotStart() {
-            return new DepositWrist.DepositWristSpeciRotStart();
+            return new DepositWristSpeciRotStart();
         }
 
         public class DepositWristSpeciRotFinish implements Action {
@@ -545,7 +491,7 @@ public class Specimen_Auto_Four extends LinearOpMode {
         }
 
         public Action depositWristSpeciRotFinish() {
-            return new DepositWrist.DepositWristSpeciRotFinish();
+            return new DepositWristSpeciRotFinish();
         }
 
     }
@@ -556,8 +502,6 @@ public class Specimen_Auto_Four extends LinearOpMode {
     public static double fraudSmallWait = 0.25;
     PinpointDrive drive;
 
-    public static int spec = 2500;
-    public static int low = 20;
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
@@ -662,9 +606,8 @@ public class Specimen_Auto_Four extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            // calvin.servHangLeft.setPosition(0);
-            // calvin.servHangRight.setPosition(0);
-
+            //calvin.servHangLeft.setPosition(0);
+            //calvin.servHangRight.setPosition(0);
             Actions.runBlocking(
                     new SequentialAction(
                             new ParallelAction(
@@ -678,72 +621,115 @@ public class Specimen_Auto_Four extends LinearOpMode {
                                     intakeClaw.openIntakeClaw()
                             ),
                             new ParallelAction(
-                                    vSlides.slidesToPosition(highSpecimen)
-                            ),
-                            new SleepAction(fraudSmallWait),
-                            s1,
-                            new SleepAction(fraudWait),
-                            depositClaw.depositClawOpen(), // we scored trust
+                                    vSlides.slidesHighChamber(),
+                                    new SequentialAction(
+                                        new SleepAction(fraudSmallWait),
+                                        s1,
+                                            new SequentialAction(
+                                            new SleepAction(fraudWait),
+                                            depositClaw.depositClawOpen()
+                                        )
+                                    )
 
-                            new SleepAction(fraudSmallWait),
-                            sFraud,
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(low)
-                            ),
-                            new SleepAction(fraudMediumWait),
-                            depositArm.depositArmSpeciPosStart(),
-                            depositWrist.depositWristSpeciRotStart(),
-                            new SleepAction(fraudWait + fraudWait + fraudWait),
-                            s2,
-                            new SleepAction(fraudWait + fraudMediumWait),
-                            depositClaw.depositClawClose(),
-                            new SleepAction(fraudSmallWait),
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(highSpecimen)
+                                    // we scored trust
                             ),
                             new SleepAction(fraudSmallWait),
-                            new SleepAction(fraudSmallWait),
-                            depositArm.depositArmSpeciPosFinish(),
-                            depositWrist.depositWristSpeciRotFinish(),
-                            new SleepAction(fraudSmallWait),
-                            sJoy,
-                            new SleepAction(fraudSmallWait),
-                            new SleepAction(fraudSmallWait),
-                            s3,
                             new ParallelAction(
-                                    vSlides.slidesToPosition(highSpecimen)
-                            ),
-                            new SleepAction(fraudSmallWait),
-                            depositArm.depositArmSpeciPosFinish(),
-                            depositWrist.depositWristSpeciRotFinish(),
-                            new SleepAction(fraudSmallWait),
-                            depositArm.depositArmSpeciPosFinish(),
-                            depositWrist.depositWristSpeciRotFinish(),
-                            new SleepAction(fraudWait),
-                            depositClaw.depositClawOpen(),
-                            sPark,
-                            new SleepAction(fraudWait),
-                            new ParallelAction(
-                                    vSlides.slidesToPosition(low)
-                            ),
-                            new SleepAction(fraudWait),
-                            intakeArm.armPassive(),
-                            intakeElbow.elbowPassive(),
-                            new SleepAction(FOREVER)
+                                    sFraud,
+                                    new ParallelAction(
+                                           vSlides.slidesDown(),
+                                            new SequentialAction(
+                                                    new ParallelAction(
+                                                            vSlides.slidesDown()
+                                                    ),
+                                                    new SleepAction(fraudMediumWait),
+                                                    new ParallelAction(
+                                                            vSlides.slidesDown()
+                                                    ),
+                                                    depositArm.depositArmSpeciPosStart(),
+                                                    depositWrist.depositWristSpeciRotStart(),
+                                                    new SleepAction(fraudWait+fraudWait+fraudWait+fraudWait),
+                                                    new ParallelAction(
+                                                            vSlides.slidesDown()
+                                                    ),
+                                                    s2,
+                                                    new ParallelAction(
+                                                            vSlides.slidesDown()
+                                                    ),
+                                                    new SleepAction(fraudWait+fraudMediumWait),
+                                                    depositClaw.depositClawClose(),
+                                                    new SleepAction(fraudSmallWait),
+                                                    new SleepAction(fraudSmallWait)
 
-            /* Future actions:
-            s5,
-            s6,
-            s7,
-            s8,
-            s9,
-            s10,
-            s11,
-            s12,
-            s13
-            */
+                                            )
+                                    ),
+                                    new ParallelAction(
+                                            vSlides.slidesHighChamber(),
+                                            new SequentialAction(
+                                                    new SleepAction(fraudWait)
+                                            )
+                                    )
+                            ),
+                            new ParallelAction(
+                                    vSlides.slidesHighChamber(),
+                                    new SequentialAction(
+                                            new ParallelAction(
+                                                    vSlides.slidesHighChamber()
+                                            ),
+                                            new SleepAction(fraudSmallWait),
+                                            new ParallelAction(
+                                                    vSlides.slidesHighChamber(),
+                                                    new SleepAction(fraudSmallWait),
+                                                    depositArm.depositArmSpeciPosFinish(),
+                                                    depositWrist.depositWristSpeciRotFinish()
+                                            ),
+                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(fraudSmallWait),
+                                            sJoy,
+                                            new SleepAction(fraudSmallWait),
+                                            new SleepAction(fraudSmallWait),
+                                            s3,
+                                            new SequentialAction(
+                                                    new ParallelAction(
+                                                            vSlides.slidesHighChamber(),
+                                                            depositArm.depositArmSpeciPosFinish(),
+                                                            depositWrist.depositWristSpeciRotFinish()
+                                                    ),
+                                                    new SleepAction(fraudSmallWait),
+                                                    depositArm.depositArmSpeciPosFinish(),
+                                                    depositWrist.depositWristSpeciRotFinish(),
+                                                    new SleepAction(fraudWait),
+                                                    depositClaw.depositClawOpen()
+                                            )
+                                    )
+
+                            ),
+                            new ParallelAction(
+                                    sPark,
+                                    new SequentialAction(
+                                            new ParallelAction(
+                                                    new SleepAction(fraudWait),
+                                                    vSlides.slidesDown(),
+                                                    intakeArm.armPassive(),
+                                                    intakeElbow.elbowPassive()
+
+                                            )
+                                    ),
+                                    new SleepAction(FOREVER)//,
+                                    /*s5,
+                                    s6,
+                                    s7,
+                                    s8,
+                                    s9,
+                                    s10,
+                                    s11,
+                                    s12,
+                                    s13*/
+                            )
                     )
             );
+
         }
     }
 

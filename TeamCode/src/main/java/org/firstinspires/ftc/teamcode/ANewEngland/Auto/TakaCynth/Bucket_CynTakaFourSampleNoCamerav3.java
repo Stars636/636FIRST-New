@@ -156,6 +156,16 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 int currentLeft = calvin.vSlidesLeft.getCurrentPosition();
                 int currentRight = calvin.vSlidesRight.getCurrentPosition();
                 double currentPosition = (currentRight);
+                if (currentPosition >= highBucket - TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                if (currentPosition <= TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
 
                 // Calculate PID components
                 double error = targetPosition - currentPosition;
@@ -185,7 +195,13 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 packet.put("Power", power);
 
                 // Check if within tolerance
-                return Math.abs(error) < TOLERANCE;
+                if (Math.abs(error) < TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                return true;
+                //return Math.abs(error) < TOLERANCE;
             }
         }
 

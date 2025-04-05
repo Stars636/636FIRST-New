@@ -71,7 +71,7 @@ public class Calvin {
     public static double depositClawScorePos = 0.3;
 
     public static double depositClawScoreRot = 0.9;
-    public static double depositClawSpeciPosStart = 0.03;
+    public static double depositClawSpeciPosStart = 0.0;
 
     public static double depositClawSpeciRotStart = 1;
 

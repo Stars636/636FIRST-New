@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.ANewEngland.Auto.RayRay.CameraReactionFina
 import org.firstinspires.ftc.teamcode.AStates.Bot.Calvin;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
-@Autonomous (name = "Bucket_Auto FINAL V2", group = "NE")
+@Autonomous (name = "Bucket_Auto FINAL V3", group = "NE")
 @Config
 public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
 
@@ -156,6 +156,16 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 int currentLeft = calvin.vSlidesLeft.getCurrentPosition();
                 int currentRight = calvin.vSlidesRight.getCurrentPosition();
                 double currentPosition = (currentRight);
+                if (currentPosition >= highBucket - TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                if (currentPosition <= TOLERANCE ) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
 
                 // Calculate PID components
                 double error = targetPosition - currentPosition;
@@ -185,7 +195,13 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
                 packet.put("Power", power);
 
                 // Check if within tolerance
-                return Math.abs(error) < TOLERANCE;
+                if (Math.abs(error) < TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                return true;
+
             }
         }
 
@@ -486,6 +502,8 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
     public static double bucket2X =11.5;
     public static double bucket3 =5;
     public static double bucket3X =38;
+    public static double scoreX =6;
+    public static double scoreY = 20;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -534,7 +552,7 @@ public class Bucket_CynTakaFourSampleNoCamerav3 extends LinearOpMode {
 
         // Define the trajectory for moving forward
 
-        Pose2d scorePose = new Pose2d(xInitial + 7, yInitial + 12, Math.toRadians(-45));
+        Pose2d scorePose = new Pose2d(scoreX, scoreY, Math.toRadians(-45));
         TrajectoryActionBuilder a1 = drive.actionBuilder(startPose)
                 .splineToLinearHeading(scorePose, Math.toRadians(0));
         TrajectoryActionBuilder a2 = a1.endTrajectory().fresh()

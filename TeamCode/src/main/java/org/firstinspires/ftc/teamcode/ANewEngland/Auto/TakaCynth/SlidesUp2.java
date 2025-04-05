@@ -170,6 +170,16 @@ public class SlidesUp2 extends LinearOpMode {
                 // Clamp power between -1 and 1
                 power = Math.max(-1, Math.min(1, power));
 
+                if (currentPosition >= highBucket - TOLERANCE && targetPosition > currentPosition) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                if (currentPosition <= TOLERANCE && targetPosition < currentPosition ) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
                 // Apply power
                 calvin.vSlidesLeft.setPower(power);
                 calvin.vSlidesRight.setPower(power);
@@ -186,7 +196,13 @@ public class SlidesUp2 extends LinearOpMode {
                 packet.put("Power", power);
 
                 // Check if within tolerance
-                return Math.abs(error) < TOLERANCE;
+                if (Math.abs(error) < TOLERANCE) {
+                    calvin.vSlidesLeft.setPower(0);
+                    calvin.vSlidesRight.setPower(0);
+                    return false;
+                }
+                return true;
+
             }
         }
 
